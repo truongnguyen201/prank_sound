@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.hola360.pranksounds.HomeFragment"
+        android:name="com.hola360.pranksounds.ui.home.HomeFragment"
         android:label="Home Fragment"
         tools:layout="@layout/fragment_home" />
 

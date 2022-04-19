@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.WindowManager
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hola360.pranksounds.R
@@ -15,21 +16,10 @@ import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.utils.Constants
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
-    //use SharedPreferences to save state accept policy
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var splashViewModel: SplashViewModel
     override fun initView() {
-        sharedPreferences =
-            requireContext().getSharedPreferences(Constants.PREFERENCE_NAME, Context.MODE_PRIVATE)
-        lateinit var action: Any
-
-        action = if (sharedPreferences.getBoolean("isAcceptPolicy", false)) {
-            SplashFragmentDirections.actionGlobalHomeFragment()
-        } else {
-            SplashFragmentDirections.actionGlobalPolicyFragment()
-        }
-
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(action as NavDirections)
+            findNavController().navigate(splashViewModel.action as NavDirections)
         }, 3000)
     }
 
@@ -38,7 +28,8 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
     }
 
     override fun initViewModel() {
-
+        val factory = SplashViewModel.Factory(requireActivity().application)
+        splashViewModel = ViewModelProvider(this, factory)[SplashViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

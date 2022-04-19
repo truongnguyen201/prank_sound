@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.hola360.pranksounds.MainActivity
 import com.hola360.pranksounds.R
@@ -13,25 +14,20 @@ import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.utils.Constants
 
 class PolicyFragment : BaseFragment<FragmentPolicyBinding>() {
+    private lateinit var policyViewModel: PolicyViewModel
 
     override fun initView() {
         //Set isAcceptPolicy as true when click on btStart
         binding.btStart.setOnClickListener {
-            val sharedPreferences = requireActivity().getSharedPreferences(
-                Constants.PREFERENCE_NAME,
-                Context.MODE_PRIVATE
-            )
-            val prefEditor = sharedPreferences.edit()
-            prefEditor.putBoolean("isAcceptPolicy", true)
-            prefEditor.apply()
-
+            policyViewModel.setAcceptPolicy()
             val action = PolicyFragmentDirections.actionGlobalHomeFragment()
             findNavController().navigate(action)
         }
     }
 
     override fun initViewModel() {
-
+        val factory = PolicyViewModel.Factory(requireActivity().application)
+        policyViewModel = ViewModelProvider(this, factory)[PolicyViewModel::class.java]
     }
 
     override fun getLayout(): Int {
