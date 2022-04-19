@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.hola360.pranksounds.ui.splash.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/fragment_splash"/>
+    <fragment
+        android:id="@+id/policyFragment"
+        android:name="com.hola360.pranksounds.ui.policy.PolicyFragment"
+        android:label="Policy"
+        tools:layout="@layout/fragment_policy"/>
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.hola360.pranksounds.HomeFragment"
+        android:label="Home Fragment"
+        tools:layout="@layout/fragment_home" />
+
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment" />
+    <action
+        android:id="@+id/action_global_policyFragment"
+        app:destination="@id/policyFragment"/>
+
+</navigation>
