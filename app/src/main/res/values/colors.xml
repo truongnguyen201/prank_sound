@@ -7,5 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="mockup_color">#C4C4C4</color>
+    <color name="design_color">#FEB850</color>
+
+    <color name="text_shadow">#00000040</color>
+
 </resources>

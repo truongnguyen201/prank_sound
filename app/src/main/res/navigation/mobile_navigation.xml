@@ -9,12 +9,17 @@
         android:id="@+id/splashFragment"
         android:name="com.hola360.pranksounds.ui.splash.SplashFragment"
         android:label="SplashFragment"
-        tools:layout="@layout/fragment_splash"/>
+        tools:layout="@layout/fragment_splash" />
+
     <fragment
         android:id="@+id/policyFragment"
         android:name="com.hola360.pranksounds.ui.policy.PolicyFragment"
-        android:label="Policy"
-        tools:layout="@layout/fragment_policy"/>
+        android:label="Privacy Policy"
+        tools:layout="@layout/fragment_policy" />
+
+    <action
+        android:id="@+id/action_global_policyFragment"
+        app:destination="@id/policyFragment" />
 
     <fragment
         android:id="@+id/homeFragment"
@@ -25,8 +30,65 @@
     <action
         android:id="@+id/action_global_homeFragment"
         app:destination="@id/homeFragment" />
+
+    <fragment
+        android:id="@+id/hairCuttingFragment"
+        android:name="com.hola360.pranksounds.ui.hair_cutting.HairCuttingFragment"
+        android:label="Hair Cutting"
+        tools:layout="@layout/fragment_hair_cutting" />
+
     <action
-        android:id="@+id/action_global_policyFragment"
-        app:destination="@id/policyFragment"/>
+        android:id="@+id/action_global_hairCuttingFragment"
+        app:destination="@id/hairCuttingFragment" />
+
+    <fragment
+        android:id="@+id/brokenScreenFragment"
+        android:name="com.hola360.pranksounds.ui.broken_screen.BrokenScreenFragment"
+        android:label="Broken Screen"
+        tools:layout="@layout/fragment_broken_screen" />
+
+    <action
+        android:id="@+id/action_global_brokenScreenFragment"
+        app:destination="@id/brokenScreenFragment" />
+
+    <fragment
+        android:id="@+id/callScreenFragment"
+        android:name="com.hola360.pranksounds.ui.call_screen.CallScreenFragment"
+        android:label="Call Screen "
+        tools:layout="@layout/fragment_call_screen" />
+
+    <action
+        android:id="@+id/action_global_callScreenFragment"
+        app:destination="@id/callScreenFragment" />
+
+    <fragment
+        android:id="@+id/soundFunnyFragment"
+        android:name="com.hola360.pranksounds.ui.sound_funny.SoundFunnyFragment"
+        android:label="Sound Category"
+        tools:layout="@layout/fragment_sound_funny" />
+
+    <action
+        android:id="@+id/action_global_soundFunnyFragment"
+        app:destination="@id/soundFunnyFragment" />
+
+    <fragment
+        android:id="@+id/taserPrankFragment"
+        android:name="com.hola360.pranksounds.ui.taser_prank.TaserPrankFragment"
+        android:label="Taser Prank"
+        tools:layout="@layout/fragment_taser_prank" />
+
+    <action
+        android:id="@+id/action_global_taserPrankFragment"
+        app:destination="@id/taserPrankFragment" />
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.hola360.pranksounds.ui.setting.SettingFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_setting" />
+
+    <action
+        android:id="@+id/action_global_settingFragment"
+        app:destination="@id/settingFragment" />
 
 </navigation>

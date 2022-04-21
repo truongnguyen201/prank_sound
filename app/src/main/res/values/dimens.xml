@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Splash Screen   -->
+    <dimen name="splash_text_size">40sp</dimen>
+
+    <!-- Policy Screen  -->
+    <dimen name="policy_detail_text_size">12sp</dimen>
+    <dimen name="policy_button_start_text_size">20sp</dimen>
+    <dimen name="policy_button_start_radius">24dp</dimen>
+
+    <!-- Home screen  -->
+    <dimen name="home_banner_radius">12dp</dimen>
+    <dimen name="home_prank_item_radius">12dp</dimen>
+    <dimen name="home_prank_item_text_size">16sp</dimen>
+    <dimen name="home_prank_list_margin">15dp</dimen>
+    <dimen name="home_prank_space">30dp</dimen>
+</resources>

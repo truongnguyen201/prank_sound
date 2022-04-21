@@ -3,19 +3,37 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- Policy Screen   -->
-
     <!-- Splash Screen   -->
+
+    <!-- Policy Screen   -->
     <string name="policy_start_button">Start</string>
     <string name="policy_detail">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
-        . Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-        qui officia deserunt mollit anim id est laborum.
+        I want to inform you that whenever you use my Service, in a case of an error in the app I
+        collect data and information (through third party products) on your phone called Log Data.
+        This Log Data may include information such as your device Internet Protocol (“IP”) address,
+        device name,operating system version, the configuration of the app when utilizing my Service,
+        the time and date of your use of the Service, and other statistics.\n\nCookies\n\nCookies are files
+        with a small amount of data that are commonly used as anonymous unique identifiers. These are
+        sent to your browser from the websites that you visit and are stored on your device’s internal
+        memory.\n\nThis Service does not use these “cookies” explicitly.However, the app may use third
+        party code and libraries that use “cookies” to collect information and improve their services.
+        You have the option to either accept or refuse these cookies and know when a cookie is being sent
+        to your device. If you choose to refuse our cookies, you may not be able to use some portions
+        of this Service.\n\nService Providers\n\nI may employ third-party companies and individuals due to
+        the following reasons:\n\nI may update our Privacy Policy from time to time. Thus, you are advised
+        to review this page periodically for any changes. I will notify you of any changes by posting
+        the new Privacy Policy on this page.\n\nContact Us If you have any questions or suggestions about
+        my Privacy Policy, do not hesitate to contact me
     </string>
 
     <!--   Home screen -->
     <string name="home_screen">Home Fragment</string>
+    <string name="prank_hair_cutting">Hair Cutting</string>
+    <string name="prank_broken_screen">Broken Screen</string>
+    <string name="prank_call_screen">Call Screen</string>
+    <string name="prank_sound_funny">Sound Funny</string>
+    <string name="prank_taser_prank">Taser Prank</string>
+    <string name="prank_setting">Settings</string>
+
 </resources>
+

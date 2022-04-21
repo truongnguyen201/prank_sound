@@ -33,12 +33,14 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.splashFragment, R.id.homeFragment -> binding.toolbar.visibility = View.GONE
                 R.id.policyFragment -> {
-                    val navIcon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_arrow_back)
+                    val navIcon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_close_24)
                     binding.toolbar.visibility = View.VISIBLE
                     binding.toolbar.navigationIcon = navIcon
                     binding.toolbar.setNavigationOnClickListener { finish() }
                 }
                 else -> {
+                    val navIcon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_arrow_back)
+                    binding.toolbar.navigationIcon = navIcon
                     binding.toolbar.visibility = View.VISIBLE
                 }
             }

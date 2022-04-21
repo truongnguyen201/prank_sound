@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.PrankSounds" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/mockup_color</item>
+        <item name="colorPrimary">@color/design_color</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="fontFamily">@font/roboto_regular</item>
     </style>
 
     <style name="Theme.PrankSounds.NoActionBar">
@@ -19,7 +20,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.PrankSounds.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.PrankSounds.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="fontWeight">600</item>
+        <item name="fontStyle">italic</item>
+    </style>
 
     <style name="Theme.PrankSounds.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
