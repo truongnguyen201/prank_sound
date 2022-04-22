@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Splash Screen   -->
-    <dimen name="splash_text_size">40sp</dimen>
+    <dimen name="splash_text_size">30sp</dimen>
+    <dimen name="splash_content_text_size">25sp</dimen>
+    <dimen name="splash_content_detail_text_size">13sp</dimen>
+    <dimen name="splash_padding_content">50sp</dimen>
+    <dimen name="splash_line_spacing">7dp</dimen>
 
     <!-- Policy Screen  -->
     <dimen name="policy_detail_text_size">12sp</dimen>

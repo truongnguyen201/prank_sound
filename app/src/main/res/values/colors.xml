@@ -11,6 +11,8 @@
     <color name="mockup_color">#C4C4C4</color>
     <color name="text_shadow">#00000040</color>
 
+    <!--  Splash screen-->
+    <color name="content_label_text_color">#BABABA</color>
     <!--  Policy Screen  -->
     <color name="policy_start_button">#FCA631</color>
 </resources>

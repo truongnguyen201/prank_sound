@@ -9,7 +9,6 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="100dp"
         tools:context=".ui.splash.SplashFragment">
 
         <androidx.constraintlayout.widget.Guideline
@@ -24,20 +23,69 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.62" />
+            app:layout_constraintGuide_percent="0.85" />
 
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/bg_splash_screen"
+            android:src="@drawable/bg_plash_1"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/glHorizontal1"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivLogo">
+
+            <TextView
+                android:id="@+id/tvContentLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/splash_line_spacing"
+                android:text="@string/content_label"
+                android:textColor="@color/black"
+                android:textSize="@dimen/splash_content_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvContentDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/splash_line_spacing"
+                android:text="@string/content_detail"
+                android:textColor="@color/content_label_text_color"
+                android:textSize="@dimen/splash_content_detail_text_size"
+                android:textStyle="normal" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:text="Version 1.0"
+            android:textColor="@color/black"
+            android:textSize="@dimen/splash_content_detail_text_size"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
