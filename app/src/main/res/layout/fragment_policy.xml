@@ -23,13 +23,6 @@
             app:layout_constraintGuide_percent="0.95" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/glHorizontal1"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.1 " />
-
-        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glHorizontal2"
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -39,15 +32,16 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="@string/policy_detail"
             android:textAlignment="inherit"
             android:textColor="@color/black"
             android:textSize="@dimen/policy_detail_text_size"
             app:layout_constraintEnd_toEndOf="@id/glVertical2"
             app:layout_constraintStart_toStartOf="@id/glVertical1"
-            app:layout_constraintTop_toTopOf="@id/glHorizontal1" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/btStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -14,4 +14,7 @@
     <dimen name="home_prank_item_text_size">16sp</dimen>
     <dimen name="home_prank_list_margin">15dp</dimen>
     <dimen name="home_prank_space">30dp</dimen>
+
+    <!-- Sound Funny Screen   -->
+    <dimen name="sound_category_item_radius">5dp</dimen>
 </resources>

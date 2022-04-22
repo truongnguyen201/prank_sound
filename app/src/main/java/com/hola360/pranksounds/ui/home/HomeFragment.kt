@@ -1,20 +1,14 @@
 package com.hola360.pranksounds.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentHomeBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.home.adapter.PrankAdapter
-import com.hola360.pranksounds.ui.policy.PolicyFragmentDirections
 import com.hola360.pranksounds.utils.GridSpacingItemDecoration
-import kotlin.math.roundToInt
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private lateinit var prankAdapter: PrankAdapter
@@ -34,8 +28,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             rvPranks.layoutManager = GridLayoutManager(requireContext(), 2)
             rvPranks.setHasFixedSize(true)
             val spacing = resources.getDimensionPixelSize(R.dimen.home_prank_space)
-            rvPranks.addItemDecoration(GridSpacingItemDecoration(2,
-                spacing, false, 0))
+            rvPranks.addItemDecoration(
+                GridSpacingItemDecoration(
+                    2,
+                    spacing, false, 0
+                )
+            )
             rvPranks.adapter = prankAdapter
         }
         prankAdapter.setData(homeViewModel.mPrankList)
@@ -46,8 +44,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
     }
 
-    private fun handleOnItemClick(id: Int){
-        when(id){
+    private fun handleOnItemClick(id: Int) {
+        when (id) {
             1 -> {
                 action = HomeFragmentDirections.actionGlobalHairCuttingFragment()
             }
@@ -70,6 +68,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
         findNavController().navigate(action as NavDirections)
     }
+
 }
 
 
