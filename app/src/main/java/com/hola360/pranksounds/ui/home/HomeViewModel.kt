@@ -19,6 +19,13 @@ class HomeViewModel(app: Application) : ViewModel(){
         Prank(6, R.drawable.ic_setting, "Setting")
         )
 
+    val images = listOf<Int>(
+        R.drawable.banner_1,
+        R.drawable.banner_2,
+        R.drawable.banner_3,
+        R.drawable.banner_4,
+    )
+
     class Factory(private val app: Application) : ViewModelProvider.NewInstanceFactory(){
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(HomeViewModel::class.java)){

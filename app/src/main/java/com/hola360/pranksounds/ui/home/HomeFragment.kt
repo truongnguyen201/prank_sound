@@ -8,10 +8,12 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentHomeBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.home.adapter.PrankAdapter
+import com.hola360.pranksounds.ui.home.adapter.SlideAdapter
 import com.hola360.pranksounds.utils.GridSpacingItemDecoration
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private lateinit var prankAdapter: PrankAdapter
+    private lateinit var slideAdapter: SlideAdapter
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var action: Any
 
@@ -24,6 +26,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             handleOnItemClick(it)
         }
 
+        slideAdapter = SlideAdapter(homeViewModel.images)
+
         binding.apply {
             rvPranks.layoutManager = GridLayoutManager(requireContext(), 2)
             rvPranks.setHasFixedSize(true)
@@ -35,8 +39,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 )
             )
             rvPranks.adapter = prankAdapter
+            prankAdapter.setData(homeViewModel.mPrankList)
+            imageSlider.setSliderAdapter(slideAdapter)
+            imageSlider.startAutoCycle()
         }
-        prankAdapter.setData(homeViewModel.mPrankList)
+
     }
 
     override fun initViewModel() {

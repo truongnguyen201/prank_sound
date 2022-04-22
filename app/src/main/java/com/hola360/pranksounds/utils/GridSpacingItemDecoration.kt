@@ -36,7 +36,7 @@ class GridSpacingItemDecoration(
                 outRect.right =
                     spacing - (column + 1) * spacing / spanCount // spacing - (column + 1) * ((1f /    spanCount) * spacing)
                 if (position >= spanCount) {
-                    outRect.top = (spacing * 0.8).toInt() // item top
+                    outRect.top = (spacing * 0.5).toInt() // item top
                 }
             }
         } else {

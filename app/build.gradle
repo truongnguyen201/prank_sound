@@ -50,4 +50,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation nav_component_lib
+
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
 }

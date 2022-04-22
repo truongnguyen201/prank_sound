@@ -4,4 +4,5 @@
 
     <solid android:color="@color/white"/>
     <corners android:radius="@dimen/home_prank_item_radius"/>
+
 </shape>
