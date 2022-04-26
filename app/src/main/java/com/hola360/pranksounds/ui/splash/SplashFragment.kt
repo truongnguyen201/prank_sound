@@ -1,7 +1,6 @@
 package com.hola360.pranksounds.ui.splash
 
-import android.content.Context
-import android.content.SharedPreferences
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +9,7 @@ import android.view.WindowManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.hola360.pranksounds.MainActivity
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentSplashBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
@@ -19,8 +19,13 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
     private lateinit var splashViewModel: SplashViewModel
     override fun initView() {
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(splashViewModel.action as NavDirections)
-        }, 3000)
+            if (splashViewModel.action == null) {
+                requireActivity().startActivity(Intent(context, MainActivity::class.java))
+                requireActivity().finish()
+            } else {
+                findNavController().navigate(splashViewModel.action as NavDirections)
+            }
+        }, Constants.SPLASH_TIMING)
     }
 
     override fun getLayout(): Int {

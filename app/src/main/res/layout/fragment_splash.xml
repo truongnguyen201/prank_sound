@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="0.94" />
 
         <ImageView
             android:id="@+id/ivLogo"
@@ -32,12 +32,12 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/bg_plash_1"
             android:scaleType="fitXY"
+            android:src="@drawable/bg_plash"
+            app:layout_constraintBottom_toBottomOf="@id/glHorizontal1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/glHorizontal1"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,20 +71,18 @@
                 android:textSize="@dimen/splash_content_detail_text_size"
                 android:textStyle="normal" />
 
-
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_version"
+            android:id="@+id/tvVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginBottom="20dp"
-            android:text="Version 1.0"
+            android:text="@string/app_version"
             android:textColor="@color/black"
             android:textSize="@dimen/splash_content_detail_text_size"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/glHorizontal2"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

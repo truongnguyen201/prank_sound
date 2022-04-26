@@ -3,23 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/splashFragment">
-
-    <fragment
-        android:id="@+id/splashFragment"
-        android:name="com.hola360.pranksounds.ui.splash.SplashFragment"
-        android:label="SplashFragment"
-        tools:layout="@layout/fragment_splash" />
-
-    <fragment
-        android:id="@+id/policyFragment"
-        android:name="com.hola360.pranksounds.ui.policy.PolicyFragment"
-        android:label="Privacy Policy"
-        tools:layout="@layout/fragment_policy" />
-
-    <action
-        android:id="@+id/action_global_policyFragment"
-        app:destination="@id/policyFragment" />
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -70,10 +54,10 @@
             android:id="@+id/action_soundFunnyFragment_to_categoryFragment"
             app:destination="@id/categoryFragment">
             <argument
-                app:nullable="true"
                 android:name="categoryTitle"
                 android:defaultValue="@null"
-                app:argType="string" />
+                app:argType="string"
+                app:nullable="true" />
         </action>
     </fragment>
 
@@ -107,10 +91,10 @@
         android:label="fragment_category"
         tools:layout="@layout/fragment_category">
         <argument
-            app:nullable="true"
             android:name="categoryTitle"
             android:defaultValue="@null"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 
 

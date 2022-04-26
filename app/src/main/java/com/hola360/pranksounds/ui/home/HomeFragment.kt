@@ -1,47 +1,63 @@
 package com.hola360.pranksounds.ui.home
 
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentHomeBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
-import com.hola360.pranksounds.ui.home.adapter.PrankAdapter
-import com.hola360.pranksounds.ui.home.adapter.SlideAdapter
+import com.hola360.pranksounds.ui.home.section.PrankSection
+import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.GridSpacingItemDecoration
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>() {
-    private lateinit var prankAdapter: PrankAdapter
-    private lateinit var slideAdapter: SlideAdapter
+class HomeFragment : BaseFragment<FragmentHomeBinding>(), PrankSection.ClickListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var action: Any
+    var doubleBackToExitPressedOnce = false
 
     override fun getLayout(): Int {
         return R.layout.fragment_home
     }
 
     override fun initView() {
-        prankAdapter = PrankAdapter {
-            handleOnItemClick(it)
-        }
+        val sectionAdapter = SectionedRecyclerViewAdapter()
+        val sectionParameters = SectionParameters.builder()
+            .itemResourceId(R.layout.item_prank)
+            .headerResourceId(R.layout.section_home_prank)
+            .build()
 
-        slideAdapter = SlideAdapter(homeViewModel.images)
+        val prankSection =
+            PrankSection(sectionParameters, Constants.BANNER_IMAGE, Constants.PRANK_LIST, this)
+
+        sectionAdapter.addSection(prankSection)
 
         binding.apply {
-            rvPranks.layoutManager = GridLayoutManager(requireContext(), 2)
+            val glm = GridLayoutManager(requireContext(), 2)
+            glm.spanSizeLookup = object : SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (sectionAdapter.getSectionItemViewType(position) == SectionedRecyclerViewAdapter.VIEW_TYPE_HEADER) {
+                        2
+                    } else 1
+                }
+            }
+            rvPranks.layoutManager = glm
             rvPranks.setHasFixedSize(true)
             val spacing = resources.getDimensionPixelSize(R.dimen.home_prank_space)
             rvPranks.addItemDecoration(
                 GridSpacingItemDecoration(
                     2,
-                    spacing, false, 0
+                    spacing, false, 1
                 )
             )
-            rvPranks.adapter = prankAdapter
-            prankAdapter.setData(homeViewModel.mPrankList)
-            imageSlider.setSliderAdapter(slideAdapter)
-            imageSlider.startAutoCycle()
+            rvPranks.adapter = sectionAdapter
         }
 
     }
@@ -76,6 +92,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         findNavController().navigate(action as NavDirections)
     }
 
+    override fun onItemRootViewClicked(section: PrankSection, itemAdapterPosition: Int) {
+        handleOnItemClick(itemAdapterPosition)
+    }
 }
 
 

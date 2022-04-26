@@ -39,10 +39,42 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/PrankSounds/app/src/main/res/layout/item_slider.xml" value="0.371875" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/PrankSounds/app/src/main/res/layout/item_sound.xml" value="0.371875" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/PrankSounds/app/src/main/res/layout/item_sound_category.xml" value="0.2" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_broken_screen.xml" value="0.22" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_call_screen.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_hair_cutting.xml" value="0.22" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_prank_item.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_sound_category_item.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_sound_funny.xml" value="0.22" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_start_button.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_taser_prank.xml" value="0.236" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bt_favorite.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_a.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.1745" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_play_circle.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_broken_screen.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_call_screen.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_hair_cutting.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_logo.xml" value="0.236" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_setting.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_taser_prank.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/activity_main.xml" value="0.30512820512820515" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/activity_splash.xml" value="0.30512820512820515" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_category.xml" value="0.30512820512820515" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_home.xml" value="0.33903133903133903" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_policy.xml" value="0.30512820512820515" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_setting.xml" value="0.30512820512820515" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_splash.xml" value="0.33" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_prank.xml" value="0.324468085106383" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_slider.xml" value="0.30512820512820515" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound.xml" value="0.33" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound_category.xml" value="0.33" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/section_home_prank.xml" value="0.30512820512820515" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

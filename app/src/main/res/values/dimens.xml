@@ -14,7 +14,7 @@
 
     <!-- Home screen  -->
     <dimen name="home_banner_radius">12dp</dimen>
-    <dimen name="home_prank_item_radius">12dp</dimen>
+    <dimen name="home_prank_item_radius">60dp</dimen>
     <dimen name="home_prank_item_text_size">16sp</dimen>
     <dimen name="home_prank_list_margin">15dp</dimen>
     <dimen name="home_prank_space">30dp</dimen>

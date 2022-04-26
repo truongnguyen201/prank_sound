@@ -32,6 +32,7 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
         binding.unbind()
     }
 
+
     abstract fun getLayout(): Int
     abstract fun initView()
     abstract fun initViewModel()

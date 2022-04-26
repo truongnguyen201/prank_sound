@@ -12,8 +12,37 @@ task clean(type: Delete) {
 
 ext {
     nav_version = '2.4.2'
+    retrofit = '2.9.0'
+    okhttp = '5.0.0-alpha.2'
+    autoimageslider = '1.4.0'
+    section_recyclerview = '3.2.0'
+
     nav_component_lib = [
             "androidx.navigation:navigation-fragment:$nav_version",
             "androidx.navigation:navigation-ui-ktx:$nav_version"
+    ]
+
+    retrofit_lib = [
+            "com.squareup.retrofit2:retrofit:$retrofit",
+            "com.squareup.retrofit2:converter-gson:$retrofit",
+            "com.squareup.retrofit2:converter-simplexml:$retrofit",
+            "com.squareup.retrofit2:converter-scalars:$retrofit",
+            "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2",
+            "com.squareup.retrofit2:converter-moshi:$retrofit"
+    ]
+
+    okhttp_lib = [
+            "com.squareup.okhttp3:okhttp:$okhttp",
+            "com.squareup.okhttp3:logging-interceptor:$okhttp",
+            'com.google.code.gson:gson:2.8.6',
+            'org.jsoup:jsoup:1.13.1'
+    ]
+
+    autoimageslider_lib = [
+            "com.github.smarteist:autoimageslider:$autoimageslider"
+    ]
+
+    section_recyclerview_lib = [
+            "com.github.luizgrp:SectionedRecyclerViewAdapter:v$section_recyclerview"
     ]
 }

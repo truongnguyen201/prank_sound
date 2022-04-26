@@ -13,6 +13,10 @@
 
     <!--  Splash screen-->
     <color name="content_label_text_color">#BABABA</color>
+
     <!--  Policy Screen  -->
     <color name="policy_start_button">#FCA631</color>
+
+    <!--  Home Screen  -->
+    <color name="home_background_color">#FBFBFB</color>
 </resources>

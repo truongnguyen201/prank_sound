@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
-        app:cardCornerRadius="12dp"
-        app:cardElevation="5dp"
-        android:layout_margin="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clItem"
@@ -20,23 +20,37 @@
             android:padding="15dp">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cvItem"
+                android:id="@+id/cvBackground"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/black"
                 app:cardCornerRadius="60dp"
+                app:cardPreventCornerOverlap="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/ivItem"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_logo"
-                    app:layout_constraintDimensionRatio="1:1" />
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/bg_broken_screen" />
             </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:elevation="15dp"
+                app:layout_constraintBottom_toBottomOf="@id/cvBackground"
+                app:layout_constraintEnd_toEndOf="@id/cvBackground"
+                app:layout_constraintStart_toStartOf="@id/cvBackground"
+                app:layout_constraintTop_toTopOf="@id/cvBackground" />
 
             <TextView
                 android:id="@+id/tvItem"
@@ -48,10 +62,9 @@
                 android:textFontWeight="800"
                 android:textSize="@dimen/home_prank_item_text_size"
                 android:textStyle="bold"
-                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvItem"
+                app:layout_constraintTop_toBottomOf="@id/cvBackground"
                 tools:targetApi="p" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

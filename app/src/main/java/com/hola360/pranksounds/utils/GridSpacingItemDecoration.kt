@@ -32,11 +32,20 @@ class GridSpacingItemDecoration(
                 outRect.bottom = spacing // item bottom
             } else {
                 outRect.left =
-                    ((column * spacing / spanCount) * 1.2).toInt() // column * ((1f / spanCount) * spacing)
+                    ((column * spacing / spanCount) * 1.2).toInt()// column * ((1f / spanCount) * spacing)
                 outRect.right =
                     spacing - (column + 1) * spacing / spanCount // spacing - (column + 1) * ((1f /    spanCount) * spacing)
                 if (position >= spanCount) {
                     outRect.top = (spacing * 0.5).toInt() // item top
+                }
+
+                if(position == 0 || position == 1){
+                    outRect.top = outRect.top + 30
+                }
+                if(column == 0){
+                    outRect.left = outRect.left + 15
+                } else {
+                    outRect.right = outRect.right + 15
                 }
             }
         } else {

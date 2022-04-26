@@ -6,7 +6,7 @@
     <!-- Splash Screen   -->
     <string name="content_label">Enjoy a relaxing time \nwith your friends</string>
     <string name="content_detail">Lets start your joke. Some jokes create good laughs \naround others … the red face of the prankster\'s part!</string>
-
+    <string name="app_version">Version 1.0</string>
     <!-- Policy Screen   -->
     <string name="policy_start_button">Start</string>
     <string name="policy_detail">

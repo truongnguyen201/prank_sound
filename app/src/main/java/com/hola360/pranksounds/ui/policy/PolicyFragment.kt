@@ -1,8 +1,10 @@
 package com.hola360.pranksounds.ui.policy
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -20,9 +22,17 @@ class PolicyFragment : BaseFragment<FragmentPolicyBinding>() {
         //Set isAcceptPolicy as true when click on btStart
         binding.btStart.setOnClickListener {
             policyViewModel.setAcceptPolicy()
-            val action = PolicyFragmentDirections.actionGlobalHomeFragment()
-            findNavController().navigate(action)
+            requireActivity().startActivity(Intent(context, MainActivity::class.java))
+            requireActivity().finish()
         }
+
+        binding.wvPolicy.loadUrl("https://www.w3.org/Protocols/HTTP/Response.html")
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
     }
 
     override fun initViewModel() {
@@ -33,5 +43,4 @@ class PolicyFragment : BaseFragment<FragmentPolicyBinding>() {
     override fun getLayout(): Int {
         return R.layout.fragment_policy
     }
-
 }

@@ -26,4 +26,12 @@
     </style>
 
     <style name="Theme.PrankSounds.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MatButton" parent="Theme.MaterialComponents">
+        <item name="colorOnPrimary">@color/policy_start_button</item>
+        <item name="colorPrimary">@color/policy_start_button</item>
+        <item name="colorOnSurface">@android:color/holo_orange_light</item>
+    </style>
+
+
 </resources>

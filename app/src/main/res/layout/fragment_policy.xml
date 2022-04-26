@@ -29,20 +29,18 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.95" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <WebView
+            android:id="@+id/wvPolicy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/policy_detail"
-            android:textAlignment="inherit"
-            android:textColor="@color/black"
-            android:textSize="@dimen/policy_detail_text_size"
             app:layout_constraintEnd_toEndOf="@id/glVertical2"
             app:layout_constraintStart_toStartOf="@id/glVertical1"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btStart"
+            style="@style/Theme.AppCompat.DayNight.DarkActionBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_start_button"
@@ -52,6 +50,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/policy_button_start_text_size"
             android:textStyle="bold"
+            android:theme="@style/MatButton"
             app:layout_constraintBottom_toBottomOf="@id/glHorizontal2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

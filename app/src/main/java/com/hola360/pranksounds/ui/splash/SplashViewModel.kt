@@ -9,14 +9,14 @@ import com.hola360.pranksounds.utils.Constants
 
 @Suppress("UNCHECKED_CAST")
 class SplashViewModel(app: Application) : ViewModel() {
-    var action: Any
+    var action: Any?
     //use SharedPreferences to save state accept policy
     private var sharedPreferences: SharedPreferences =
         app.getSharedPreferences(Constants.PREFERENCE_NAME, Context.MODE_PRIVATE)
 
     init {
         action = if (sharedPreferences.getBoolean("isAcceptPolicy", false)) {
-            SplashFragmentDirections.actionGlobalHomeFragment()
+            null
         } else {
             SplashFragmentDirections.actionGlobalPolicyFragment()
         }
