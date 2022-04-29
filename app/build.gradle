@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -53,4 +54,11 @@ dependencies {
     implementation okhttp_lib
     implementation autoimageslider_lib
     implementation section_recyclerview_lib
+    implementation glide_lib
+    implementation room_lib
+
+    kapt  glide_annotation
+    kapt room_runtime
+
+    annotationProcessor room_annotation
 }

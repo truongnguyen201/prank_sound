@@ -3,16 +3,16 @@ package com.hola360.pranksounds.ui.sound_funny.category
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hola360.pranksounds.R
-import com.hola360.pranksounds.databinding.FragmentCategoryBinding
+import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.category.adapter.CategoryAdapter
 
-class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
+class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>() {
     private lateinit var categoryAdapter: CategoryAdapter
-    private val args: CategoryFragmentArgs by navArgs()
+    private val args: DetailCategoryFragmentArgs by navArgs()
 
     override fun getLayout(): Int {
-        return R.layout.fragment_category
+        return R.layout.fragment_detail_category
     }
 
     override fun initView() {
@@ -23,6 +23,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
             rvSound.setHasFixedSize(true)
             rvSound.adapter = categoryAdapter
         }
+
     }
 
     override fun initViewModel() {

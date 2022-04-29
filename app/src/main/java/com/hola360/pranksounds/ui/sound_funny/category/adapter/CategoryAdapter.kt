@@ -1,15 +1,18 @@
 package com.hola360.pranksounds.ui.sound_funny.category.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.hola360.pranksounds.data.model.SoundCategory
 import com.hola360.pranksounds.databinding.ItemSoundBinding
 
 class CategoryAdapter(private val onSelect: (String) -> Unit) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-       val binding = ItemSoundBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemSoundBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         return CategoryViewHolder(binding)
     }
 

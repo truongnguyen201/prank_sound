@@ -1,9 +1,5 @@
 package com.hola360.pranksounds.ui.home
 
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -14,7 +10,7 @@ import com.hola360.pranksounds.databinding.FragmentHomeBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.home.section.PrankSection
 import com.hola360.pranksounds.utils.Constants
-import com.hola360.pranksounds.utils.GridSpacingItemDecoration
+import com.hola360.pranksounds.utils.item_decoration.GridSpacingItemDecoration
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
@@ -79,7 +75,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PrankSection.ClickList
                 action = HomeFragmentDirections.actionGlobalCallScreenFragment()
             }
             4 -> {
-                action = HomeFragmentDirections.actionGlobalSoundFunnyFragment()
+                action = HomeFragmentDirections.actionHomeFragmentToSoundFunnyFragment()
             }
             5 -> {
                 action = HomeFragmentDirections.actionGlobalTaserPrankFragment()

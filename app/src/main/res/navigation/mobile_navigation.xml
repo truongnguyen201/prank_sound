@@ -9,7 +9,12 @@
         android:id="@+id/homeFragment"
         android:name="com.hola360.pranksounds.ui.home.HomeFragment"
         android:label="Home Fragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_homeFragment_to_soundFunnyFragment"
+            app:destination="@id/soundFunnyFragment" />
+    </fragment>
 
     <action
         android:id="@+id/action_global_homeFragment"
@@ -48,13 +53,18 @@
     <fragment
         android:id="@+id/soundFunnyFragment"
         android:name="com.hola360.pranksounds.ui.sound_funny.SoundFunnyFragment"
-        android:label="Sound Category"
+        android:label="Sound Funny"
         tools:layout="@layout/fragment_sound_funny">
         <action
             android:id="@+id/action_soundFunnyFragment_to_categoryFragment"
-            app:destination="@id/categoryFragment">
+            app:destination="@id/detailCategoryFragment">
             <argument
                 android:name="categoryTitle"
+                android:defaultValue="@null"
+                app:argType="string"
+                app:nullable="true" />
+            <argument
+                android:name="categoryId"
                 android:defaultValue="@null"
                 app:argType="string"
                 app:nullable="true" />
@@ -86,15 +96,25 @@
         app:destination="@id/settingFragment" />
 
     <fragment
-        android:id="@+id/categoryFragment"
-        android:name="com.hola360.pranksounds.ui.sound_funny.category.CategoryFragment"
+        android:id="@+id/detailCategoryFragment"
+        android:name="com.hola360.pranksounds.ui.sound_funny.category.DetailCategoryFragment"
         android:label="fragment_category"
-        tools:layout="@layout/fragment_category">
+        tools:layout="@layout/fragment_detail_category">
         <argument
             android:name="categoryTitle"
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="categoryId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_categoryFragment_to_soundFunnyFragment"
+            app:destination="@id/soundFunnyFragment"
+            app:popUpTo="@id/soundFunnyFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
 

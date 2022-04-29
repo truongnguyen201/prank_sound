@@ -21,4 +21,5 @@
 
     <!-- Sound Funny Screen   -->
     <dimen name="sound_category_item_radius">5dp</dimen>
+    <dimen name="sound_category_retry_radius">10dp</dimen>
 </resources>

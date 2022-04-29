@@ -5,5 +5,4 @@ sealed class DataResponse<T> constructor(val loadingStatus: LoadingStatus) {
     class DataIdle<T> : DataResponse<T>(LoadingStatus.Idle)
     class DataError<T> : DataResponse<T>(LoadingStatus.Error)
     data class DataSuccess<T>(val body: T) : DataResponse<T>(LoadingStatus.Success)
-
 }

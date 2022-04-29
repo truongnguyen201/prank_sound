@@ -1,4 +1,4 @@
-package com.hola360.pranksounds.utils
+package com.hola360.pranksounds.utils.item_decoration
 
 import android.graphics.Rect
 import android.view.View

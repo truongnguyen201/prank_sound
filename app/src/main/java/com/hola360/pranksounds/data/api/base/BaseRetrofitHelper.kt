@@ -6,15 +6,15 @@ import java.util.concurrent.TimeUnit
 
 open class BaseRetrofitHelper {
     protected var okHttpClient: OkHttpClient? = null
+
     protected open fun initRemoteService() {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val builder = OkHttpClient.Builder()
             .writeTimeout(6 * 1000.toLong(), TimeUnit.MILLISECONDS)
             .readTimeout(6 * 1000.toLong(), TimeUnit.MILLISECONDS)
-            .addInterceptor(interceptor)
-
+            .addInterceptor(httpLoggingInterceptor)
         okHttpClient = builder.build()
     }
 }

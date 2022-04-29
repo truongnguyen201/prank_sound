@@ -19,4 +19,6 @@
 
     <!--  Home Screen  -->
     <color name="home_background_color">#FBFBFB</color>
+
+    <color name="overlay_color">#2F2F2FB2</color>
 </resources>
