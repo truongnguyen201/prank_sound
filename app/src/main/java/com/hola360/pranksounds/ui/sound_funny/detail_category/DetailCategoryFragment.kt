@@ -250,7 +250,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
-
         sharedVM.seekBarProgress.observe(this) {
             val animator = ObjectAnimator.ofInt(binding.sbDuration, "progress", it!! - 10, it)
             it.let {
@@ -265,6 +264,11 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
+        sharedVM.isPlaying.observe(this){
+            it?.let{
+                detailCategoryAdapter.updatePlayingItem(sharedVM.currentPosition.value!!, it)
+            }
+        }
         detailCategoryViewModel.getSound(1, false)
     }
 
@@ -287,11 +291,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         detailCategoryViewModel.removeFavoriteSound(sound)
     }
 
-    //handle when click on sound item in recycler view:
-    //show control panel
-    //set image, title
-    //change icon pause to play
-    //play sound
+    //handle when click on sound item in recycler view
     override fun onItemClick(position: Int) {
         sharedVM.currentPosition.value = position
     }

@@ -114,6 +114,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
             } else {
                 start()
             }
+            sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
         }
     }
 

@@ -18,7 +18,7 @@ class DetailCategoryAdapter(private val context: Context) :
 
     val data = mutableListOf<Sound>()
     val favoriteData = mutableListOf<Sound>()
-    var currentPosition: Int? = null
+    private var currentPosition: Int? = null
     lateinit var listener: SoundListener
 
     fun updateData(isAddMore: Boolean, newData: List<Sound>?) {
@@ -35,6 +35,16 @@ class DetailCategoryAdapter(private val context: Context) :
                 notifyDataSetChanged()
             }
         }
+    }
+
+    fun updatePlayingItem(newPosition: Int, isPlaying: Boolean){
+        if(currentPosition != null){
+            data[currentPosition!!].isPlaying = false
+            notifyItemChanged(currentPosition!!)
+        }
+        data[newPosition].isPlaying = isPlaying
+        notifyItemChanged(newPosition)
+        currentPosition = newPosition
     }
 
     //update favorite data
