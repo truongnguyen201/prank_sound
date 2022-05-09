@@ -27,5 +27,10 @@
     </string>
 
     <string name="retry_button">Tap to retry</string>
+
+    <string name="pop_up_menu_notification">Notification</string>
+    <string name="pop_up_menu_ringtone">Ringtone</string>
+    <string name="pop_up_menu_alarm">Alarm</string>
+    <string name="pop_up_menu_header">Set As</string>
 </resources>
 

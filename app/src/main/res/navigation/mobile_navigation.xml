@@ -97,7 +97,7 @@
 
     <fragment
         android:id="@+id/detailCategoryFragment"
-        android:name="com.hola360.pranksounds.ui.sound_funny.category.DetailCategoryFragment"
+        android:name="com.hola360.pranksounds.ui.sound_funny.detail_category.DetailCategoryFragment"
         android:label="fragment_category"
         tools:layout="@layout/fragment_detail_category">
         <argument

@@ -1,17 +1,32 @@
 package com.hola360.pranksounds
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.navigation.ui.setupWithNavController
+import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ActivityMainBinding
+import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
+import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.listener.ControlPanelListener
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var mediaPlayer: MediaPlayer
+    private val sharedViewModel by viewModels<SharedViewModel>()
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        initHandler()
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.homeFragment -> {
@@ -22,6 +37,55 @@ class MainActivity : BaseActivity() {
                     binding.toolbar.navigationIcon = navIcon
                     binding.toolbar.visibility = View.VISIBLE
                 }
+            }
+        }
+        mediaPlayer = MediaPlayer()
+        mediaPlayer.setAudioAttributes(
+            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+        )
+
+        mediaPlayer.setOnCompletionListener {
+            sharedViewModel.isComplete.value = true
+            sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+        }
+
+        sharedViewModel.currentPosition.observe(this) {
+            it?.let {
+                if (sharedViewModel.soundList.value!!.size > 0) {
+                    val sound = sharedViewModel.soundList.value!![it]
+                    val uri = Uri.parse(Constants.SUB_URL + sound.soundUrl)
+                    mediaPlayer.apply {
+                        reset()
+                        setDataSource(applicationContext, uri)
+                        prepareAsync()
+                        setOnPreparedListener {
+                            sharedViewModel.soundDuration.value = mediaPlayer.duration / 1000
+                            handler.postDelayed(runnable, 0)
+                            start()
+                            sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+                        }
+                    }
+                }
+            }
+        }
+
+        sharedViewModel.seekBarProgress.observe(this) {
+            it?.let {
+                if (it == sharedViewModel.soundDuration.value!!) {
+                    handler.removeCallbacks(runnable)
+                }
+            }
+        }
+    }
+
+    private fun initHandler() {
+        handler = Handler(Looper.myLooper()!!)
+        runnable = object : Runnable {
+            override fun run() {
+                if(mediaPlayer.isPlaying){
+                    sharedViewModel.seekBarProgress.value = mediaPlayer.currentPosition / 1000
+                }
+                handler.postDelayed(this, 200)
             }
         }
     }
@@ -41,5 +105,38 @@ class MainActivity : BaseActivity() {
 
     override fun actionBarSetupWithNavController() {
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+    }
+
+    override fun onPlayPauseClick() {
+        mediaPlayer.apply {
+            if (isPlaying) {
+                pause()
+            } else {
+                start()
+            }
+        }
+    }
+
+    override fun onReset() {
+        mediaPlayer.reset()
+    }
+
+    override fun onPanelClick(sound: Sound) {}
+
+    override fun isPlaying(): Boolean {
+        return mediaPlayer.isPlaying
+    }
+
+    override fun onSeekBarChange(fromUser: Boolean, progress: Int) {
+        if (fromUser) {
+            mediaPlayer.seekTo(progress*1000)
+            mediaPlayer.start()
+            sharedViewModel.seekBarProgress.value = progress
+            sharedViewModel.isComplete.value = false
+        }
+    }
+
+    override fun onDetachFragment() {
+        mediaPlayer.reset()
     }
 }

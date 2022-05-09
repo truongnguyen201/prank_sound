@@ -7,5 +7,5 @@ data class DataApps(
     @SerializedName("lists")
     val listSoundCategory: MutableList<SoundCategory>,
     @SerializedName("sub_url")
-    val subUrl: String
+    val subUrl: String?,
 )

@@ -43,16 +43,18 @@ class SoundCategoryAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             val category = data[position]
-            binding.tvTitle.text = category.title
-            binding.ivThumbnail.let {
-                Glide.with(it)
-                    .load(Constants.SUB_URL + category.thumbUrl)
-                    .placeholder(R.drawable.smaller_loading)
-                    .error(R.drawable.default_thumbnail)
-                    .into(it)
-            }
-            binding.root.setOnClickListener {
-                onItemClick(category)
+            binding.apply {
+                tvTitle.text = category.title
+                ivThumbnail.let {
+                    Glide.with(it)
+                        .load(Constants.SUB_URL + category.thumbUrl)
+                        .placeholder(R.drawable.smaller_loading)
+                        .error(R.drawable.default_thumbnail)
+                        .into(it)
+                }
+                root.setOnClickListener {
+                    onItemClick(category)
+                }
             }
         }
     }

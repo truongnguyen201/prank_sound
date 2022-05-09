@@ -21,7 +21,7 @@ class SoundCategoryRepository(app: Application) {
             }
         }
 
-    suspend fun getQuantity(): Int? = withContext(Dispatchers.Default) {
+    suspend fun getQuantityOfFavoriteSound(): Int? = withContext(Dispatchers.Default) {
         try {
             db.getQuantity()
         } catch (ex: Exception) {

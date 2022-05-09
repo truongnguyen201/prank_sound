@@ -9,10 +9,10 @@ import com.hola360.pranksounds.data.model.Sound
 @Dao
 interface SoundDAO {
     @Query("select * from tblFavoriteSound")
-    suspend fun getAllFavoriteSong() : List<Sound>
+    suspend fun getAllFavoriteSong(): MutableList<Sound>
 
     @Query("select * from tblFavoriteSound where sound_id = (:id)")
-    suspend fun getSoundById(id: String) : Sound
+    suspend fun getSoundById(id: String): Sound
 
     @Insert
     suspend fun addToFavorite(sound: Sound)
@@ -21,5 +21,8 @@ interface SoundDAO {
     suspend fun removeFromFavorite(sound: Sound)
 
     @Query("select count(*) from tblFavoriteSound")
-    suspend fun getQuantity() : Int
+    suspend fun getQuantity(): Int
+
+    @Query("select count(*) from tblFavoriteSound where sound_id = (:id)")
+    suspend fun isExist(id: String): Int
 }

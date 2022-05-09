@@ -56,8 +56,11 @@ dependencies {
     implementation section_recyclerview_lib
     implementation glide_lib
     implementation room_lib
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.0-beta01'
 
-    kapt  glide_annotation
+    kapt glide_annotation
     kapt room_runtime
 
     annotationProcessor room_annotation

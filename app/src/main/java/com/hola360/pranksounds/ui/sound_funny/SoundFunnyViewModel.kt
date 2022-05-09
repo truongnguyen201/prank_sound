@@ -29,14 +29,14 @@ class SoundFunnyViewModel(app: Application) : ViewModel() {
 
     fun getCategory() {
         if (soundCategoryLiveData.value!!.loadingStatus != LoadingStatus.Loading) {
-            soundCategoryLiveData.value = DataResponse.DataLoading()
+            soundCategoryLiveData.value = DataResponse.DataLoading(LoadingStatus.Loading)
             viewModelScope.launch {
                 val soundCategoryResponseDeferred = viewModelScope.async {
                     repository.getSoundCategory(Constants.SOUND_CAT_PARAM)
                 }
 
                 val favoriteQuantityDeferred = viewModelScope.async {
-                    repository.getQuantity()
+                    repository.getQuantityOfFavoriteSound()
                 }
 
                 try {
@@ -50,12 +50,10 @@ class SoundFunnyViewModel(app: Application) : ViewModel() {
 
                     soundCategoryLiveData.value =
                         DataResponse.DataSuccess(categoryList)
-
                 } catch (ex: Exception) {
                     soundCategoryLiveData.value = DataResponse.DataError()
                 }
             }
-
         }
     }
 

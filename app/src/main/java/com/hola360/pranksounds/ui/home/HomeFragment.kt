@@ -1,10 +1,12 @@
 package com.hola360.pranksounds.ui.home
 
+import android.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import com.github.ybq.android.spinkit.style.Circle
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentHomeBinding
 import com.hola360.pranksounds.ui.base.BaseFragment

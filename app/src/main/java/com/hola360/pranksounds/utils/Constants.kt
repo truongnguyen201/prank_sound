@@ -3,6 +3,7 @@ package com.hola360.pranksounds.utils
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Prank
 import com.hola360.pranksounds.data.model.SoundCategory
+import kotlin.random.Random
 
 object Constants {
     const val PREFERENCE_NAME = "PRANK_SOUNDS"
@@ -25,6 +26,21 @@ object Constants {
         R.drawable.banner_4,
     )
 
+    val THUMB_RES = listOf(
+        R.drawable.thumb_1,
+        R.drawable.thumb_2,
+        R.drawable.thumb_3,
+        R.drawable.thumb_4,
+        R.drawable.thumb_5,
+        R.drawable.thumb_6,
+        R.drawable.thumb_7,
+        R.drawable.thumb_8,
+    )
+
+    fun randomThumbRes() : Int{
+        return THUMB_RES[Random.nextInt(0, 7)]
+    }
+
     //favorite category item
     val FAVORITE_CATEGORY = SoundCategory("Favorite Sound", "fav_sound", "thumb_cat/pro_7.webp")
 
@@ -39,6 +55,10 @@ object Constants {
 
     //sub url for images and sound
     const val SUB_URL = "https://files.newmobile.rocks/meme-sound/"
+    const val SOUND_FUNNY_PATH = "/soundFuny.php"
+
     //sound category parameter
     const val SOUND_CAT_PARAM = "list_category"
+    const val CAT_DETAIL_PARAM = "detail_category"
+    const val SOUND_ITEM_PER_PAGE = 10
 }
