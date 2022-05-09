@@ -59,7 +59,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                         setDataSource(applicationContext, uri)
                         prepareAsync()
                         setOnPreparedListener {
-                            sharedViewModel.soundDuration.value = mediaPlayer.duration / 1000
+                            sharedViewModel.soundDuration.value = mediaPlayer.duration
                             handler.postDelayed(runnable, 0)
                             start()
                             sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
@@ -83,9 +83,9 @@ class MainActivity : BaseActivity(), ControlPanelListener {
         runnable = object : Runnable {
             override fun run() {
                 if(mediaPlayer.isPlaying){
-                    sharedViewModel.seekBarProgress.value = mediaPlayer.currentPosition / 1000
+                    sharedViewModel.seekBarProgress.value = mediaPlayer.currentPosition
                 }
-                handler.postDelayed(this, 200)
+                handler.postDelayed(this, 60)
             }
         }
     }
@@ -129,7 +129,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
 
     override fun onSeekBarChange(fromUser: Boolean, progress: Int) {
         if (fromUser) {
-            mediaPlayer.seekTo(progress*1000)
+            mediaPlayer.seekTo(progress)
             mediaPlayer.start()
             sharedViewModel.seekBarProgress.value = progress
             sharedViewModel.isComplete.value = false

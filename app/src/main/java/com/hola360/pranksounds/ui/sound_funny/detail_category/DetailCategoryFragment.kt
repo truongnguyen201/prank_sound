@@ -7,6 +7,8 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -70,18 +72,22 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                 controlPanelListener.onReset()
             }
 
-            sbDuration.setPadding(70, 0, 70, 0)
-            sbDuration.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
+            sbDuration.apply {
+                drawThumb(this, 0, 0)
+                setPadding(70, 0, 70, 0)
+                setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
 
-                override fun onStartTrackingTouch(p0: SeekBar?) { isUserControl = true }
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                        isUserControl = true
+                    }
 
-                override fun onStopTrackingTouch(p0: SeekBar?) {
-                    isUserControl = false
-                    controlPanelListener.onSeekBarChange(true, p0!!.progress)
-                }
-            })
-
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+                        isUserControl = false
+                        controlPanelListener.onSeekBarChange(true, p0!!.progress)
+                    }
+                })
+            }
             ibPlayPause.setOnClickListener {
                 if (controlPanelListener.isPlaying()) {
                     ibPlayPause.setImageResource(R.drawable.ic_play_circle)
@@ -127,7 +133,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             ContextCompat.getDrawable(requireContext(), R.drawable.seek_bar_thumb)?.toBitmap()
         val bmp = bitmap!!.copy(Bitmap.Config.ARGB_8888, true)
         val c = Canvas(bmp)
-        val text = String.format("00:%02d/00:%02d", progress, duration)
+        val text = String.format("00:%02d/00:%02d", progress / 1000, duration / 1000)
         val p = Paint()
         p.typeface = Typeface.DEFAULT
         p.textSize = 20F
@@ -244,11 +250,15 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
+
         sharedVM.seekBarProgress.observe(this) {
-            it?.let {
+            val animator = ObjectAnimator.ofInt(binding.sbDuration, "progress", it!! - 10, it)
+            it.let {
                 if (!isUserControl) {
                     binding.sbDuration.apply {
-                        progress = it
+                        animator.duration = 60
+                        animator.interpolator = LinearInterpolator()
+                        animator.start()
                         drawThumb(this, it, sharedVM.soundDuration.value!!)
                     }
                 }
