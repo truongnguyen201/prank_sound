@@ -42,9 +42,11 @@ class DetailCategoryAdapter(private val context: Context) :
             data[currentPosition!!].isPlaying = false
             notifyItemChanged(currentPosition!!)
         }
-        data[newPosition].isPlaying = isPlaying
-        notifyItemChanged(newPosition)
-        currentPosition = newPosition
+        if(!data.isNullOrEmpty()){
+            data[newPosition].isPlaying = isPlaying
+            notifyItemChanged(newPosition)
+            currentPosition = newPosition
+        }
     }
 
     //update favorite data
