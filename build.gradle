@@ -16,6 +16,10 @@ ext {
     okhttp = '5.0.0-alpha.2'
     autoimageslider = '1.4.0'
     section_recyclerview = '3.2.0'
+    room_version = '2.4.2'
+    glide_version = '4.13.0'
+    room_version = '2.4.2'
+    dagger_version = '2.35.1'
 
     nav_component_lib = [
             "androidx.navigation:navigation-fragment:$nav_version",
@@ -44,5 +48,35 @@ ext {
 
     section_recyclerview_lib = [
             "com.github.luizgrp:SectionedRecyclerViewAdapter:v$section_recyclerview"
+    ]
+
+    glide_lib = [
+            "com.github.bumptech.glide:glide:$glide_version"
+    ]
+
+    glide_annotation = [
+            "com.github.bumptech.glide:compiler:$glide_version"
+    ]
+
+    room_lib = [
+            "androidx.room:room-ktx:$room_version"
+    ]
+
+    room_runtime = [
+            "androidx.room:room-compiler:$room_version"
+    ]
+    room_annotation = [
+            "androidx.room:room-compiler:$room_version"
+    ]
+
+    dagger2_lib = [
+            "com.google.dagger:dagger:$dagger_version",
+            "com.google.dagger:dagger-android:$dagger_version",
+            "com.google.dagger:dagger-android-support:$dagger_version"
+    ]
+
+    dagger2_processor = [
+            "com.google.dagger:dagger-compiler:$dagger_version",
+            "com.google.dagger:dagger-android-processor:$dagger_version"
     ]
 }

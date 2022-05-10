@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="photoModel"
+            type="com.hola360.pranksounds.data.model.PhotoModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/myLayoutRoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_4">
+
+
+        <com.joooonho.SelectableRoundedImageView
+            android:id="@+id/myImageViewIcon"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:bindThumbnailFile="@{photoModel}"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:sriv_border_color="@color/white"
+            app:sriv_border_width="0dp"
+            app:sriv_left_bottom_corner_radius="@dimen/dp_8"
+            app:sriv_left_top_corner_radius="@dimen/dp_8"
+            app:sriv_right_bottom_corner_radius="@dimen/dp_8"
+            app:sriv_right_top_corner_radius="@dimen/dp_8" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

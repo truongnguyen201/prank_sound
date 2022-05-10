@@ -26,5 +26,8 @@ object Constants {
     //timing duration between twice back pressed to quit app
     const val BACK_PRESSED_TIMING= 2000L
     //base URL of API
-    const val BASE_URL = ""
+    const val BASE_URL = "https://r22.newmobile.rocks"
+
+    //sub url for images and sound
+    const val SUB_URL = "https://files.newmobile.rocks/meme-sound/"
 }

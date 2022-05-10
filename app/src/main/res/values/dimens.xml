@@ -21,4 +21,11 @@
 
     <!-- Sound Funny Screen   -->
     <dimen name="sound_category_item_radius">5dp</dimen>
+
+    <!-- Screen call   -->
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_36">36dp</dimen>
+    <dimen name="dp_24">24dp</dimen>
+    <dimen name="album_icon_width">70dp</dimen>
 </resources>
