@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/callScreenFragment"
-        android:name="com.hola360.pranksounds.ui.call_screen.CallScreenFragment"
+        android:name="com.hola360.pranksounds.ui.callscreen.CallScreenFragment"
         android:label="Call Screen "
         tools:layout="@layout/fragment_call_screen" />
 
@@ -116,6 +116,11 @@
             app:popUpTo="@id/soundFunnyFragment"
             app:popUpToInclusive="true"/>
     </fragment>
+    <fragment
+        android:id="@+id/addCallScreenFragment"
+        android:name="com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment"
+        android:label="Add Call Screen" />
+    <action android:id="@+id/action_global_addCallScreenFragment" app:destination="@id/addCallScreenFragment" />
 
 
 </navigation>

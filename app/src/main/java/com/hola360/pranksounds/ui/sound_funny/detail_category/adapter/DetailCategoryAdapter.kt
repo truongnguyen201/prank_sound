@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Sound
@@ -37,12 +36,12 @@ class DetailCategoryAdapter(private val context: Context) :
         }
     }
 
-    fun updatePlayingItem(newPosition: Int, isPlaying: Boolean){
-        if(currentPosition != null){
+    fun updatePlayingItem(newPosition: Int, isPlaying: Boolean) {
+        if (currentPosition != null && currentPosition!! < data.size) {
             data[currentPosition!!].isPlaying = false
             notifyItemChanged(currentPosition!!)
         }
-        if(!data.isNullOrEmpty()){
+        if (!data.isNullOrEmpty()) {
             data[newPosition].isPlaying = isPlaying
             notifyItemChanged(newPosition)
             currentPosition = newPosition

@@ -77,6 +77,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             swipeRefreshLayout.setOnRefreshListener {
                 detailCategoryViewModel.getSound(1, false)
                 controlPanel.visibility = View.GONE
+                sharedVM.currentPosition.value = 0
                 controlPanelListener.onReset()
             }
 

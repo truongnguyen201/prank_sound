@@ -6,12 +6,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.navigation.ui.setupWithNavController
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ActivityMainBinding
+import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
@@ -34,7 +36,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                 else -> {
                     val navIcon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_arrow_back)
                     binding.toolbar.navigationIcon = navIcon
-                    binding.toolbar.visibility = View.VISIBLE
+                    binding.toolbar.visibility = View.GONE
                 }
             }
         }
@@ -81,7 +83,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
         handler = Handler(Looper.myLooper()!!)
         runnable = object : Runnable {
             override fun run() {
-                if(mediaPlayer.isPlaying){
+                if (mediaPlayer.isPlaying) {
                     sharedViewModel.seekBarProgress.value = mediaPlayer.currentPosition
                 }
                 handler.postDelayed(this, 60)
@@ -142,5 +144,19 @@ class MainActivity : BaseActivity(), ControlPanelListener {
 
     override fun onDetachFragment() {
         mediaPlayer.reset()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val manager = supportFragmentManager
+        val transaction = manager.beginTransaction()
+
+        when (item.itemId) {
+            R.id.add_new_call -> {
+
+                transaction.add(R.id.navHostFragmentContentMain, AddCallScreenFragment())
+                transaction.commit()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

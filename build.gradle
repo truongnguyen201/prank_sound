@@ -66,6 +66,7 @@ ext {
     room_runtime = [
             "androidx.room:room-compiler:$room_version"
     ]
+
     room_annotation = [
             "androidx.room:room-compiler:$room_version"
     ]

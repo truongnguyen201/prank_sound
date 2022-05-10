@@ -1,7 +1,5 @@
 package com.hola360.pranksounds.data.api
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.google.gson.GsonBuilder
 import com.hola360.pranksounds.data.api.base.BaseRetrofitHelper
 import com.hola360.pranksounds.utils.Constants

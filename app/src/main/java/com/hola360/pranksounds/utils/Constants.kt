@@ -37,7 +37,7 @@ object Constants {
         R.drawable.thumb_8,
     )
 
-    fun randomThumbRes() : Int{
+    fun randomThumbRes(): Int {
         return THUMB_RES[Random.nextInt(0, 7)]
     }
 

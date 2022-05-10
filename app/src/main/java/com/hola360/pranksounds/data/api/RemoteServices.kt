@@ -1,5 +1,6 @@
 package com.hola360.pranksounds.data.api
 
+import com.hola360.pranksounds.data.api.response.call_screen_response.PhoneBookResponse
 import com.hola360.pranksounds.data.api.response.detail_category_response.DetailCategoryResponse
 import com.hola360.pranksounds.data.api.response.sound_category_response.SoundCategoryResponse
 import com.hola360.pranksounds.utils.Constants
@@ -25,4 +26,10 @@ interface RemoteServices {
 
     @POST(Constants.SUB_URL)
     suspend fun downloadSound()
+
+    @FormUrlEncoded
+    @POST("/soundFuny.php")
+    suspend fun getPhoneBook(
+        @Field("type") params: String
+    ): PhoneBookResponse
 }
