@@ -27,6 +27,9 @@ class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
         }
         setUpProgressBar()
         binding.apply {
+            toolbar.setNavigationOnClickListener{
+                requireActivity().onBackPressed()
+            }
             rvCategory.layoutManager = LinearLayoutManager(requireContext())
             rvCategory.setHasFixedSize(true)
             rvCategory.adapter = soundCategoryAdapter

@@ -60,6 +60,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             rvSound.setHasFixedSize(true)
             rvSound.adapter = detailCategoryAdapter
 
+            toolbar.setNavigationOnClickListener{
+                requireActivity().onBackPressed()
+            }
+
             //load more data when scroll to the end of recyclerview
             rvSound.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
