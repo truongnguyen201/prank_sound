@@ -9,4 +9,5 @@ interface ControlPanelListener {
     fun isPlaying() : Boolean
     fun onSeekBarChange(fromUser: Boolean, progress: Int)
     fun onReset()
+    fun onStartTracking()
 }

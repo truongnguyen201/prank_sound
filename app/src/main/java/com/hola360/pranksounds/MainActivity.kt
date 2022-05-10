@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -120,6 +119,10 @@ class MainActivity : BaseActivity(), ControlPanelListener {
 
     override fun onReset() {
         mediaPlayer.reset()
+    }
+
+    override fun onStartTracking() {
+        mediaPlayer.pause()
     }
 
     override fun onPanelClick(sound: Sound) {}

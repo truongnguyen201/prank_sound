@@ -3,13 +3,15 @@ package com.hola360.pranksounds.ui.sound_funny.detail_category
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
+import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
-import android.view.animation.OvershootInterpolator
-import android.widget.SeekBar
+import android.widget.*
+import android.widget.Toast.LENGTH_LONG
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
@@ -23,8 +25,10 @@ import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
+import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
+import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
@@ -35,6 +39,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private val sharedVM by activityViewModels<SharedViewModel>()
     private val args: DetailCategoryFragmentArgs by navArgs()
     private lateinit var controlPanelListener: ControlPanelListener
+    private lateinit var popUpWindow: PopupWindow
+    private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
     var isUserControl = false
 
     override fun getLayout(): Int {
@@ -47,6 +53,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         detailCategoryAdapter = DetailCategoryAdapter(requireContext())
         detailCategoryAdapter.setListener(this)
         mLayoutManager = LinearLayoutManager(requireContext())
+        setupPopUpWindow()
+
         binding.apply {
             rvSound.layoutManager = mLayoutManager
             rvSound.setHasFixedSize(true)
@@ -80,6 +88,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
                     override fun onStartTrackingTouch(p0: SeekBar?) {
                         isUserControl = true
+                        controlPanelListener.onStartTracking()
                     }
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
@@ -264,8 +273,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
-        sharedVM.isPlaying.observe(this){
-            it?.let{
+        sharedVM.isPlaying.observe(this) {
+            it?.let {
                 detailCategoryAdapter.updatePlayingItem(sharedVM.currentPosition.value!!, it)
             }
         }
@@ -281,6 +290,59 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         binding.progressBar.indeterminateDrawable = circle2
     }
 
+    private fun setupPopUpWindow() {
+        val onClickListener = View.OnClickListener {
+            if (Utils.storagePermissionGrant(requireContext())) {
+                setupWhenStoragePermissionGranted()
+            } else {
+                requestStoragePermission()
+            }
+            val type = (it as TextView).text
+            Toast.makeText(context, type, LENGTH_LONG).show()
+            popUpWindow.dismiss()
+        }
+
+        val popUpInflater =
+            requireActivity().applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popUpBinding = PopUpWindowLayoutBinding.inflate(popUpInflater)
+
+        popUpBinding.apply {
+            tvNotification.setOnClickListener(onClickListener)
+            tvRingtone.setOnClickListener(onClickListener)
+            tvAlarm.setOnClickListener(onClickListener)
+        }
+
+        popUpWindow = PopupWindow(
+            popUpBinding.root,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            elevation = 20F
+            contentView.setOnClickListener { dismiss() }
+        }
+    }
+
+    private fun requestStoragePermission() {
+        resultLauncher.launch(
+            Utils.getStoragePermissions()
+        )
+    }
+
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            if (Utils.storagePermissionGrant(requireContext())
+            ) {
+                setupWhenStoragePermissionGranted()
+            } else {
+                Utils.showAlertPermissionNotGrant(binding.root, requireActivity())
+            }
+        }
+
+    private fun setupWhenStoragePermissionGranted() {
+
+    }
+
     //handle when favorite button checked: add sound to favorite
     override fun onCheckedButton(sound: Sound) {
         detailCategoryViewModel.addFavoriteSound(sound)
@@ -294,6 +356,13 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     //handle when click on sound item in recycler view
     override fun onItemClick(position: Int) {
         sharedVM.currentPosition.value = position
+    }
+
+    override fun onMoreIconClick(view: View, position: Int) {
+        popUpWindow.showAsDropDown(
+            view, (screenWidth * 0.68).toInt(),
+            ((-view.height) * 0.7).toInt()
+        )
     }
 
     //get controlPanelListener from activity

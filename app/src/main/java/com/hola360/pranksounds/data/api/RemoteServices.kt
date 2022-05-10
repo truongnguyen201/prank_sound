@@ -22,4 +22,7 @@ interface RemoteServices {
         @Field("page") pageNumber: Int,
         @Field("limit") itemPerPage: Int
     ): DetailCategoryResponse?
+
+    @POST(Constants.SUB_URL)
+    suspend fun downloadSound()
 }

@@ -1,6 +1,9 @@
 package com.hola360.pranksounds.ui.sound_funny.detail_category
 
 import android.app.Application
+import android.os.Build
+import android.os.Environment
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
@@ -9,6 +12,10 @@ import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.utils.Constants
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import okhttp3.OkHttp
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.File
 
 
 class DetailCategoryViewModel(app: Application, private val catId: String) : ViewModel() {
@@ -94,6 +101,22 @@ class DetailCategoryViewModel(app: Application, private val catId: String) : Vie
                 }
             }
         }
+    }
+
+    fun setAs(soundUrl: String, setAs: String){
+        val dir = Environment.getExternalStorageDirectory()
+        var file = File(dir.absolutePath + soundUrl.drop(6))
+
+        if(!file.exists()){
+            file.mkdir()
+            viewModelScope.launch {
+                file = repository.downloadFile(soundUrl, file)
+            }
+        }
+
+        val client = OkHttpClient()
+        val request = Request.Builder().url(Constants.SUB_URL + soundUrl).build()
+        val response = client.newCall(request).execute()
     }
 
     fun addFavoriteSound(sound: Sound) {

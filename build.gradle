@@ -39,7 +39,8 @@ ext {
             "com.squareup.okhttp3:okhttp:$okhttp",
             "com.squareup.okhttp3:logging-interceptor:$okhttp",
             'com.google.code.gson:gson:2.8.6',
-            'org.jsoup:jsoup:1.13.1'
+            'org.jsoup:jsoup:1.13.1',
+            'com.squareup.okio:okio:3.1.0'
     ]
 
     autoimageslider_lib = [

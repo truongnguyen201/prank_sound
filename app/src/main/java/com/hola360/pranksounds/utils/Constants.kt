@@ -26,7 +26,7 @@ object Constants {
         R.drawable.banner_4,
     )
 
-    val THUMB_RES = listOf(
+    private val THUMB_RES = listOf(
         R.drawable.thumb_1,
         R.drawable.thumb_2,
         R.drawable.thumb_3,

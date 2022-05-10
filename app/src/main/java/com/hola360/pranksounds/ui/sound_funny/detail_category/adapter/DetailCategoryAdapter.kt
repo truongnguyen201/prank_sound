@@ -110,9 +110,7 @@ class DetailCategoryAdapter(private val context: Context) :
                 tvTitle.text = sound.title
                 //show popup menu when click on icon more
                 ivMore.setOnClickListener {
-                    val popupMenu = PopupMenu(context, ivMore)
-                    popupMenu.inflate(R.menu.sound_item_pop_up_menu)
-                    popupMenu.show()
+                    listener.onMoreIconClick(this.root, position)
                 }
                 //check if the sound is exists in favorite data, set isChecked of the checkbox is true
                 //set listener when click on the checkbox
