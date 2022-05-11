@@ -1,9 +1,7 @@
 package com.hola360.pranksounds.data.repository
 
 import android.app.Application
-import android.os.Build
-import android.webkit.MimeTypeMap
-import androidx.annotation.RequiresApi
+import android.util.Log
 import com.hola360.pranksounds.data.api.RetrofitHelper
 import com.hola360.pranksounds.data.api.response.detail_category_response.DetailCategoryResponse
 import com.hola360.pranksounds.data.model.Sound
@@ -13,10 +11,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okio.Okio
-import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import okio.BufferedSink
+import okio.buffer
+import okio.sink
+import java.io.*
 
 class DetailCategoryRepository(app: Application) {
     private val retrofitHelper: RetrofitHelper = RetrofitHelper.instance!!
@@ -64,10 +62,20 @@ class DetailCategoryRepository(app: Application) {
     }
 
     suspend fun downloadFile(url: String, file: File): File {
-        val client = OkHttpClient()
-        val request = Request.Builder().url(Constants.SUB_URL + url).build()
-        val response = client.newCall(request).execute()
+        withContext(Dispatchers.IO){
+            val client = OkHttpClient()
+            val request = Request.Builder().url(Constants.SUB_URL + url).build()
+            val response = client.newCall(request).execute()
 
+            val sink: BufferedSink = file.sink().buffer()
+            sink.writeAll(response.body!!.source())
+            sink.close()
+
+            Log.e("FIle size", file.totalSpace.toString())
+        }
+
+        Log.e("FIle size", file.totalSpace.toString())
+        Log.e("File", file.totalSpace.toString())
         return file
     }
 }

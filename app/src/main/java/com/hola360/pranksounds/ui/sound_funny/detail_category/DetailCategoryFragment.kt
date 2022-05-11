@@ -1,16 +1,20 @@
 package com.hola360.pranksounds.ui.sound_funny.detail_category
 
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.*
 import android.widget.Toast.LENGTH_LONG
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -41,6 +45,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popUpWindow: PopupWindow
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
+    private var currentMorePosition = 0
     var isUserControl = false
 
     override fun getLayout(): Int {
@@ -60,7 +65,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             rvSound.setHasFixedSize(true)
             rvSound.adapter = detailCategoryAdapter
 
-            toolbar.setNavigationOnClickListener{
+            toolbar.setNavigationOnClickListener {
                 requireActivity().onBackPressed()
             }
 
@@ -159,7 +164,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         seekBar.thumb = (BitmapDrawable(resources, bmp))
     }
 
-    @SuppressLint("NotifyDataSetChanged", "Recycle")
     override fun initViewModel() {
         val factory =
             DetailCategoryViewModel.Factory(requireActivity().application, args.categoryId!!)
@@ -297,12 +301,18 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
     private fun setupPopUpWindow() {
         val onClickListener = View.OnClickListener {
+            val type = (it as TextView).text.toString()
             if (Utils.storagePermissionGrant(requireContext())) {
-                setupWhenStoragePermissionGranted()
+                if (Utils.writeSettingPermissionGrant(requireContext())) {
+                    setupWhenPermissionGranted(type, currentMorePosition)
+                } else {
+                    requestWriteSettingPermission()
+                }
             } else {
                 requestStoragePermission()
             }
-            val type = (it as TextView).text
+
+
             Toast.makeText(context, type, LENGTH_LONG).show()
             popUpWindow.dismiss()
         }
@@ -328,6 +338,20 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         }
     }
 
+    //open setting to request write setting permission
+    private fun requestWriteSettingPermission() {
+        val intent = Intent()
+        intent.action = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Settings.ACTION_MANAGE_WRITE_SETTINGS
+        } else {
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        }
+        val uri = Uri.fromParts("package", activity?.packageName, null)
+        intent.data = uri
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        activity?.startActivity(intent)
+    }
+
     private fun requestStoragePermission() {
         resultLauncher.launch(
             Utils.getStoragePermissions()
@@ -336,16 +360,19 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            if (Utils.storagePermissionGrant(requireContext())
-            ) {
-                setupWhenStoragePermissionGranted()
+            if (Utils.storagePermissionGrant(requireContext())) {
+                requestWriteSettingPermission()
             } else {
                 Utils.showAlertPermissionNotGrant(binding.root, requireActivity())
             }
         }
 
-    private fun setupWhenStoragePermissionGranted() {
-
+    private fun setupWhenPermissionGranted(type: String, position: Int) {
+        detailCategoryViewModel.setAs(
+            sharedVM.soundList.value!![position].soundUrl!!,
+            type,
+            sharedVM.soundList.value!![position].title!!
+        )
     }
 
     //handle when favorite button checked: add sound to favorite
@@ -364,6 +391,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     }
 
     override fun onMoreIconClick(view: View, position: Int) {
+        currentMorePosition = position
         popUpWindow.showAsDropDown(
             view, (screenWidth * 0.68).toInt(),
             ((-view.height) * 0.7).toInt()

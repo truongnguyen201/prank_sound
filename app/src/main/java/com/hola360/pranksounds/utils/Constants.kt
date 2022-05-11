@@ -61,4 +61,6 @@ object Constants {
     const val SOUND_CAT_PARAM = "list_category"
     const val CAT_DETAIL_PARAM = "detail_category"
     const val SOUND_ITEM_PER_PAGE = 10
+
+    const val DIR_PATH = "/PranSounds/"
 }

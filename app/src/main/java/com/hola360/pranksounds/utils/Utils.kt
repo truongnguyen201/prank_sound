@@ -18,11 +18,15 @@ import com.hola360.pranksounds.R
 object Utils {
     private var STORAGE_PERMISSION_UNDER_STORAGE_SCOPE = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    )
+
+    private var WRITE_SETTING_PERMISSION = arrayOf(
+        Manifest.permission.WRITE_SETTINGS
     )
 
     private var STORAGE_PERMISSION_STORAGE_SCOPE = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE
+        Manifest.permission.READ_EXTERNAL_STORAGE,
     )
 
     fun isAndroidQ(): Boolean {
@@ -39,6 +43,14 @@ object Utils {
 
     fun isAndroidR(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+    }
+
+    fun writeSettingPermissionGrant(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Settings.System.canWrite(context)
+        } else {
+            allPermissionGrant(context, getWritingPermission())
+        }
     }
 
     fun storagePermissionGrant(context: Context): Boolean {
@@ -61,7 +73,7 @@ object Utils {
         return isGranted
     }
 
-    //get permission mapping with APL Level
+    //get permission mapping with API Level
     fun getStoragePermissions(): Array<String> {
         return if (isAndroidR()) {
             STORAGE_PERMISSION_STORAGE_SCOPE
@@ -70,8 +82,12 @@ object Utils {
         }
     }
 
+    fun getWritingPermission(): Array<String> {
+        return WRITE_SETTING_PERMISSION
+    }
+
     //show request permission to user
-    fun hasShowRequestPermissionRationale(
+    private fun hasShowRequestPermissionRationale(
         context: Context?,
         vararg permissions: String?
     ): Boolean {

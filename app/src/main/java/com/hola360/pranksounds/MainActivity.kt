@@ -86,7 +86,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                 if (mediaPlayer.isPlaying) {
                     sharedViewModel.seekBarProgress.value = mediaPlayer.currentPosition
                 }
-                handler.postDelayed(this, 60)
+                handler.postDelayed(this, 200)
             }
         }
     }

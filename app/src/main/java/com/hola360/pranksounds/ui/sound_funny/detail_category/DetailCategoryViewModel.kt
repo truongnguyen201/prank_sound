@@ -1,9 +1,11 @@
 package com.hola360.pranksounds.ui.sound_funny.detail_category
 
 import android.app.Application
-import android.os.Build
+import android.content.ContentValues
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Environment
-import androidx.annotation.RequiresApi
+import android.provider.MediaStore
 import androidx.lifecycle.*
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
@@ -12,13 +14,16 @@ import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.utils.Constants
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import okhttp3.OkHttp
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
+import okio.IOException
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 
-class DetailCategoryViewModel(app: Application, private val catId: String) : ViewModel() {
+class DetailCategoryViewModel(private val app: Application, private val catId: String) :
+    ViewModel() {
 
     private val repository = DetailCategoryRepository(app)
     val soundLiveData = MutableLiveData<DataResponse<MutableList<Sound>>>()
@@ -103,20 +108,71 @@ class DetailCategoryViewModel(app: Application, private val catId: String) : Vie
         }
     }
 
-    fun setAs(soundUrl: String, setAs: String){
-        val dir = Environment.getExternalStorageDirectory()
-        var file = File(dir.absolutePath + soundUrl.drop(6))
-
-        if(!file.exists()){
-            file.mkdir()
-            viewModelScope.launch {
-                file = repository.downloadFile(soundUrl, file)
-            }
-        }
-
+    fun setAs(soundUrl: String, type: String, soundName: String) {
         val client = OkHttpClient()
         val request = Request.Builder().url(Constants.SUB_URL + soundUrl).build()
-        val response = client.newCall(request).execute()
+
+        val fileName: String =
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MUSIC
+            ).absolutePath +
+                    Constants.DIR_PATH +
+                    soundName +
+                    ".mp3"
+
+        if (!File(fileName).exists()) {
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    e.printStackTrace()
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        val inputStream: InputStream = response.body!!.byteStream()
+                        val outputStream: OutputStream = FileOutputStream(fileName)
+                        val buffer = ByteArray(1024)
+                        var length: Int
+                        while (inputStream.read(buffer).also { length = it } > 0) {
+                            outputStream.write(buffer, 0, length)
+                        }
+                        outputStream.flush()
+                        outputStream.close()
+                        inputStream.close()
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
+                    }
+                }
+            })
+        }
+
+        val values = ContentValues()
+        values.put(MediaStore.MediaColumns.DATA, fileName)
+        values.put(MediaStore.MediaColumns.TITLE, soundName)
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3")
+        when (type) {
+            "tvNotification" -> {
+                values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true)
+                values.put(MediaStore.Audio.Media.IS_ALARM, false)
+                values.put(MediaStore.Audio.Media.IS_RINGTONE, false)
+            }
+            "tvRingtone" -> {
+                values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false)
+                values.put(MediaStore.Audio.Media.IS_ALARM, false)
+                values.put(MediaStore.Audio.Media.IS_RINGTONE, true)
+            }
+            "tvAlarm" -> {
+                values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false)
+                values.put(MediaStore.Audio.Media.IS_ALARM, true)
+                values.put(MediaStore.Audio.Media.IS_RINGTONE, false)
+            }
+        }
+        val uri = MediaStore.Audio.Media.getContentUriForPath(fileName)
+        val newUri: Uri = app.contentResolver.insert(uri!!, values)!!
+        RingtoneManager.setActualDefaultRingtoneUri(
+            app,
+            RingtoneManager.TYPE_RINGTONE,
+            newUri
+        )
     }
 
     fun addFavoriteSound(sound: Sound) {
