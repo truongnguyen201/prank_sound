@@ -60,22 +60,4 @@ class DetailCategoryRepository(app: Application) {
             null
         }
     }
-
-    suspend fun downloadFile(url: String, file: File): File {
-        withContext(Dispatchers.IO){
-            val client = OkHttpClient()
-            val request = Request.Builder().url(Constants.SUB_URL + url).build()
-            val response = client.newCall(request).execute()
-
-            val sink: BufferedSink = file.sink().buffer()
-            sink.writeAll(response.body!!.source())
-            sink.close()
-
-            Log.e("FIle size", file.totalSpace.toString())
-        }
-
-        Log.e("FIle size", file.totalSpace.toString())
-        Log.e("File", file.totalSpace.toString())
-        return file
-    }
 }

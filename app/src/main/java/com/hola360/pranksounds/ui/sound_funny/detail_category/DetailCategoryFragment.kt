@@ -14,13 +14,14 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.*
 import android.widget.Toast.LENGTH_LONG
-import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.ybq.android.spinkit.style.Circle
@@ -46,6 +47,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private lateinit var popUpWindow: PopupWindow
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
     private var currentMorePosition = 0
+
     var isUserControl = false
 
     override fun getLayout(): Int {
@@ -107,6 +109,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                     }
                 })
             }
+
             ibPlayPause.setOnClickListener {
                 if (controlPanelListener.isPlaying()) {
                     ibPlayPause.setImageResource(R.drawable.ic_play_circle)
@@ -143,6 +146,12 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         }
                     }
                 }
+            }
+
+            controlPanel.setOnClickListener {
+                findNavController().navigate(
+                    DetailCategoryFragmentDirections.actionGlobalSoundDetailFragment()
+                )
             }
         }
     }
@@ -312,8 +321,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                 requestStoragePermission()
             }
 
-
-            Toast.makeText(context, type, LENGTH_LONG).show()
             popUpWindow.dismiss()
         }
 
@@ -340,6 +347,11 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
     //open setting to request write setting permission
     private fun requestWriteSettingPermission() {
+        Toast.makeText(
+            requireContext(),
+            activity?.resources?.getString(R.string.write_setting_permission),
+            LENGTH_LONG
+        ).show()
         val intent = Intent()
         intent.action = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Settings.ACTION_MANAGE_WRITE_SETTINGS
@@ -418,4 +430,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         sharedVM.soundList.value!!.clear()
         sharedVM.currentPosition.value = 0
     }
+
+
 }

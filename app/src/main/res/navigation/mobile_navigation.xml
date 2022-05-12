@@ -111,16 +111,27 @@
             app:argType="string"
             app:nullable="true" />
         <action
-            android:id="@+id/action_categoryFragment_to_soundFunnyFragment"
-            app:destination="@id/soundFunnyFragment"
-            app:popUpTo="@id/soundFunnyFragment"
-            app:popUpToInclusive="true"/>
+            android:id="@+id/action_detailCategoryFragment_to_soundDetailFragment"
+            app:destination="@id/soundDetailFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/addCallScreenFragment"
         android:name="com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment"
         android:label="Add Call Screen" />
-    <action android:id="@+id/action_global_addCallScreenFragment" app:destination="@id/addCallScreenFragment" />
 
+    <action
+        android:id="@+id/action_global_addCallScreenFragment"
+        app:destination="@id/addCallScreenFragment" />
+
+    <fragment
+        android:id="@+id/soundDetailFragment"
+        android:name="com.hola360.pranksounds.ui.sound_funny.sound_detail.SoundDetailFragment"
+        android:label="fragment_sound_detail"
+        tools:layout="@layout/fragment_sound_detail" />
+
+    <action
+        android:id="@+id/action_global_soundDetailFragment"
+        app:destination="@id/soundDetailFragment" />
 
 </navigation>
