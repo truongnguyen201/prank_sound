@@ -65,7 +65,7 @@ class PickPhotoDialogViewModel(val app: App): ViewModel() {
 
     fun loadData() {
         if (photoLiveData.value!!.loadingStatus != LoadingStatus.Loading) {
-            photoLiveData.value = DataResponse.DataLoading()
+            photoLiveData.value = DataResponse.DataLoading(LoadingStatus.Loading)
             viewModelScope.launch {
                 if (allPhoto.isEmpty()) {
                     val photos = repository.getAllImages()
@@ -94,7 +94,7 @@ class PickPhotoDialogViewModel(val app: App): ViewModel() {
 
     fun loadAlbumDetail(albumId: Long) {
         if (photoLiveData.value!!.loadingStatus != LoadingStatus.Loading) {
-            photoLiveData.value = DataResponse.DataLoading()
+            photoLiveData.value = DataResponse.DataLoading(LoadingStatus.Loading)
             viewModelScope.launch {
                 val albumDetail = repository.getAlbumDetail(allPhoto, albumId)
                 if (albumDetail.isNotEmpty()) {

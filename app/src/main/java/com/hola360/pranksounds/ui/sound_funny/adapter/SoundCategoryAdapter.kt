@@ -1,19 +1,29 @@
 package com.hola360.pranksounds.ui.sound_funny.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.hola360.pranksounds.R
+import com.hola360.pranksounds.data.model.SoundCategory
 import com.hola360.pranksounds.databinding.ItemSoundCategoryBinding
+import com.hola360.pranksounds.utils.Constants
 
-class SoundCategoryAdapter(private val onSelect: (String) -> Unit) : RecyclerView.Adapter<SoundCategoryAdapter.CategoryViewHolder>() {
+class SoundCategoryAdapter(
+    private val onItemClick: (soundCategory: SoundCategory) -> Unit
+) :
+    RecyclerView.Adapter<SoundCategoryAdapter.CategoryViewHolder>() {
+    val data = mutableListOf<SoundCategory>()
 
-    private val data = listOf<String>(
-        "Favorite Sound",
-        "Category 2",
-        "Category 3",
-        "Category 4",
-        "Category 5",
-    )
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newData: List<SoundCategory>?) {
+        data.clear()
+        if (!newData.isNullOrEmpty()) {
+            data.addAll(newData)
+        }
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding =
@@ -32,9 +42,19 @@ class SoundCategoryAdapter(private val onSelect: (String) -> Unit) : RecyclerVie
     inner class CategoryViewHolder(private val binding: ItemSoundCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            binding.tvTitle.text = data[position]
-            binding.root.setOnClickListener{
-                onSelect(data[position])
+            val category = data[position]
+            binding.apply {
+                tvTitle.text = category.title
+                ivThumbnail.let {
+                    Glide.with(it)
+                        .load(Constants.SUB_URL + category.thumbUrl)
+                        .placeholder(R.drawable.smaller_loading)
+                        .error(R.drawable.default_thumbnail)
+                        .into(it)
+                }
+                root.setOnClickListener {
+                    onItemClick(category)
+                }
             }
         }
     }

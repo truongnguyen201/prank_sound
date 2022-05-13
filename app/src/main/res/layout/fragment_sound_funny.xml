@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.hola360.pranksounds.ui.sound_funny.SoundFunnyViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/haha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/home_background_color"
         tools:context=".ui.sound_funny.SoundFunnyFragment">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -13,5 +25,21 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp" />
 
-    </FrameLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/design_color"
+            android:visibility="@{viewModel.isLoading() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
+            android:id="@+id/noInternetLayout"
+            layout="@layout/no_internet_layout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

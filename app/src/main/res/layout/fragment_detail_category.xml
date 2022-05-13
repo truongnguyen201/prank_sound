@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.hola360.pranksounds.ui.sound_funny.detail_category.DetailCategoryViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.sound_funny.detail_category.DetailCategoryFragment">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toTopOf="@id/loadMoreProgressBar"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSound"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/loadMoreProgressBar"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/design_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/loadMoreProgressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/design_color"
+            app:layout_constraintBottom_toTopOf="@id/controlPanel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/controlPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_control_panel"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <SeekBar
+                android:id="@+id/sbDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:indeterminateTint="@color/design_color"
+                android:paddingVertical="2dp"
+                android:progressDrawable="@drawable/seek_bar_style"
+                android:thumb="@drawable/seek_bar_thumb"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sbDuration">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvThumbnail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="15dp"
+                    app:cardCornerRadius="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ivThumbnail"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_sound" />
+
+                </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:id="@+id/ivPlayPause"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:contentDescription="@string/app_name"
+                    android:elevation="5dp"
+                    android:src="@drawable/ic_play_arrow"
+                    app:layout_constraintBottom_toBottomOf="@id/cvThumbnail"
+                    app:layout_constraintEnd_toEndOf="@id/cvThumbnail"
+                    app:layout_constraintStart_toStartOf="@id/cvThumbnail"
+                    app:layout_constraintTop_toTopOf="@id/cvThumbnail" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/app_name"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/cvThumbnail"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/ibNext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_next"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/ibPlayPause"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@null"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_pause_circle"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/ibNext"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/ibPrevious"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_previous"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/ibPlayPause"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

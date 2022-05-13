@@ -4,9 +4,9 @@ import androidx.annotation.DrawableRes
 
 data class Prank(
     val id: Int,
+    @DrawableRes
     val img: Int,
     @DrawableRes
     val background: Int,
-    @DrawableRes
     val text: String
 )

@@ -43,6 +43,7 @@
                         android:id="@+id/imgAvatar"
                         android:layout_width="130dp"
                         android:layout_height="130dp"
+                        android:layout_marginTop="@dimen/dp_32"
                         android:layout_gravity="center"
                         android:src="@drawable/img_avatar_default"
                         app:layout_constraintStart_toStartOf="parent"
@@ -61,6 +62,7 @@
                     android:textAppearance="?textAppearanceBody1" />
 
                 <EditText
+                    android:id="@+id/tvCallerName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
@@ -70,22 +72,25 @@
                     android:textAppearance="?textAppearanceBody1" />
 
                 <EditText
+                    android:id="@+id/tvPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
                     android:layout_marginTop="20dp"
                     android:hint="@string/phone_number"
+                    android:inputType="phone"
                     android:padding="20dp"
                     android:textAppearance="?textAppearanceBody1" />
 
                 <Button
+                    android:id="@+id/btnAdd"
                     style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
                     android:layout_width="200dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:backgroundTint="@color/retry_button"
-                    android:onClick="@{}"
+                    android:layout_marginTop="@dimen/dp_32"
+                    android:backgroundTint="@{viewModel.isEmpty()?@color/enable_button:@color/disable_button}"
+                    android:enabled="@{viewModel.isEmpty()}"
                     android:text="@string/add"
                     android:textAllCaps="false"
                     android:textAppearance="?textAppearanceBody1"

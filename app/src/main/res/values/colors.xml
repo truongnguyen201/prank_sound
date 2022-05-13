@@ -20,10 +20,17 @@
     <!--  Home Screen  -->
     <color name="home_background_color">#FBFBFB</color>
 
+    <color name="overlay_color">#2F2F2FB2</color>
+
+    <!-- Detail Category  -->
+    <color name="detail_category_background_color">#e5e5e5</color>
+
     <!--  Call screen  -->
     <color name="phone_number_color">#686868</color>
     <color name="fence">#E8E2E2</color>
     <color name="retry_button">#FCA631</color>
     <color name="background_view">#B32F2F2F</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="disable_button">#FFDDAF</color>
+    <color name="enable_button">#FCA631</color>
 </resources>

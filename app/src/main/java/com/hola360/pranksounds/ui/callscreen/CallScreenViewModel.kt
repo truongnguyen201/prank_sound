@@ -30,7 +30,7 @@ class CallScreenViewModel(app: Application) : ViewModel() {
 
     fun getPhoneBook() {
         if (phoneBookLiveData.value!!.loadingStatus != LoadingStatus.Loading) {
-            phoneBookLiveData.value = DataResponse.DataLoading()
+            phoneBookLiveData.value = DataResponse.DataLoading(LoadingStatus.Loading)
 
             viewModelScope.launch {
                 try {
@@ -57,6 +57,7 @@ class CallScreenViewModel(app: Application) : ViewModel() {
                         if (!listPhoneBookFromLocal.isNullOrEmpty()) {
                             listPhoneBook.addAll(listPhoneBookFromLocal)
                         }
+                        listPhoneBook.sortByDescending { it.isLocal }
                         phoneBookLiveData.value = DataResponse.DataSuccess(listPhoneBook)
                     }
                 } catch (e: Exception) {

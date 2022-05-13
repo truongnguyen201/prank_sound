@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp">
+    android:layout_marginVertical="5dp">
 
     <CheckBox
         android:id="@+id/cbFavorite"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:button="@drawable/bt_favorite"
+        android:checked="false"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cvAvatar"
+        android:id="@+id/cvThumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="15dp"
         android:layout_marginStart="15dp"
         app:cardCornerRadius="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,50 +30,54 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/ivAvatar"
+            android:id="@+id/ivThumbnail"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:src="@drawable/img_sound" />
 
     </androidx.cardview.widget.CardView>
 
     <ImageView
-        android:id="@+id/ivPlay"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:id="@+id/ivPlayPause"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:contentDescription="@string/app_name"
         android:elevation="5dp"
-        android:src="@drawable/img_play"
-        app:layout_constraintBottom_toBottomOf="@id/cvAvatar"
-        app:layout_constraintEnd_toEndOf="@id/cvAvatar"
-        app:layout_constraintStart_toStartOf="@id/cvAvatar"
-        app:layout_constraintTop_toTopOf="@id/cvAvatar" />
+        android:src="@drawable/ic_play_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/cvThumbnail"
+        app:layout_constraintEnd_toEndOf="@id/cvThumbnail"
+        app:layout_constraintStart_toStartOf="@id/cvThumbnail"
+        app:layout_constraintTop_toTopOf="@id/cvThumbnail" />
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="@string/app_name"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cvAvatar"
+        app:layout_constraintStart_toEndOf="@id/cvThumbnail"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/ivMore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:background="@null"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_baseline_more_vert_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <View
         android:layout_width="0dp"
@@ -79,5 +85,5 @@
         android:background="#E8E2E2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cvAvatar" />
+        app:layout_constraintStart_toEndOf="@id/cvThumbnail" />
 </androidx.constraintlayout.widget.ConstraintLayout>

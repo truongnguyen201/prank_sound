@@ -7,11 +7,12 @@ import androidx.room.RoomDatabase
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.data.room.dao.CallDao
+import com.hola360.pranksounds.data.room.dao.SoundDAO
 
-@Database(entities = [Call::class], version = 1, exportSchema = false)
+@Database(entities = [Sound::class, Call::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-//    abstract fun soundDAO() : SoundDAO
+    abstract fun soundDAO(): SoundDAO
     abstract fun callDao(): CallDao
 
     companion object {

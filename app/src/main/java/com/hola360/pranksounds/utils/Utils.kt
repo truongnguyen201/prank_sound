@@ -13,48 +13,64 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
-import com.hola360.pranksounds.BuildConfig.VERSION_CODE
 import com.hola360.pranksounds.R
 
 object Utils {
-    var STORAGE_PERMISSION_UNDER_STORAGE_SCOPE = arrayOf(
+    private var STORAGE_PERMISSION_UNDER_STORAGE_SCOPE = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
-    var STORAGE_PERMISSION_STORAGE_SCOPE = arrayOf(
+    private var STORAGE_PERMISSION_STORAGE_SCOPE = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-    fun isAndroidR() : Boolean {
+    fun isAndroidQ(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+    }
+
+    fun isAndroidP(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+    }
+
+    fun isAndroidO(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+    }
+
+    fun isAndroidR(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
     }
 
-    fun storagePermissionGrant(context: Context) : Boolean {
-        return allStoragePermissionGrant(context, getStoragePermissions())
+    fun storagePermissionGrant(context: Context): Boolean {
+        return allPermissionGrant(context, getStoragePermissions())
     }
 
-    fun allStoragePermissionGrant(context: Context, array: Array<String>) : Boolean {
-        var res = true
-        for (permission in array) {
-            if (ContextCompat.checkSelfPermission(context, permission)
-            != PackageManager.PERMISSION_GRANTED) {
-                res = false
+    //check all permission is granted
+    private fun allPermissionGrant(context: Context, intArray: Array<String>): Boolean {
+        var isGranted = true
+        for (permission in intArray) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                isGranted = false
                 break
             }
         }
-        return res
+        return isGranted
     }
 
-    fun getStoragePermissions() : Array<String> {
+    //get permission mapping with APL Level
+    fun getStoragePermissions(): Array<String> {
         return if (isAndroidR()) {
             STORAGE_PERMISSION_STORAGE_SCOPE
-        }
-        else {
+        } else {
             STORAGE_PERMISSION_UNDER_STORAGE_SCOPE
         }
     }
 
+    //show request permission to user
     fun hasShowRequestPermissionRationale(
         context: Context?,
         vararg permissions: String?
@@ -73,7 +89,9 @@ object Utils {
         return false
     }
 
+    //handle when user does not grant permission
     fun showAlertPermissionNotGrant(view: View, activity: Activity) {
+        //show seekbar: go to setting to grant permission
         if (!hasShowRequestPermissionRationale(activity, *getStoragePermissions())) {
             val snackBar = Snackbar.make(
                 view,
@@ -91,6 +109,7 @@ object Utils {
             }
             snackBar.show()
         } else {
+            //show toast
             Toast.makeText(
                 activity,
                 activity.resources.getString(R.string.grant_permission),
@@ -98,4 +117,5 @@ object Utils {
             ).show()
         }
     }
+
 }

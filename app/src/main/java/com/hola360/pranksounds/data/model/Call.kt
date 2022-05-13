@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "tblLocalCall")
 data class Call(
-    @PrimaryKey
-    val id: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
 
     @SerializedName("avatar")
     @ColumnInfo(name = "avatar_url")
@@ -20,5 +20,5 @@ data class Call(
     @ColumnInfo(name = "is_local")
     val isLocal: Boolean
 ) {
-    constructor(): this("", "", "", "", false)
+    constructor() : this(0, "", "", "", false)
 }

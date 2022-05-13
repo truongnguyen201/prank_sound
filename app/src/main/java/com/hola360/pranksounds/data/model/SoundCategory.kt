@@ -1,9 +1,11 @@
 package com.hola360.pranksounds.data.model
 
-import androidx.annotation.DrawableRes
+import com.google.gson.annotations.SerializedName
 
 data class SoundCategory(
     val title: String,
-    @DrawableRes
-    val imgUrl: Int
+    @SerializedName("cat_id")
+    val categoryId: String,
+    @SerializedName("thumb")
+    val thumbUrl: String,
 )

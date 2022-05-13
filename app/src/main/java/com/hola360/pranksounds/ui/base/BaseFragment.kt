@@ -24,6 +24,7 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
         binding.lifecycleOwner = this
         initView()
+
         return binding.root
     }
 
@@ -31,7 +32,6 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
         super.onDestroy()
         binding.unbind()
     }
-
 
     abstract fun getLayout(): Int
     abstract fun initView()
