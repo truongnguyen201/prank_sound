@@ -45,6 +45,8 @@
     <string name="goto_settings">You must approve this permission in Permissions in the app settings on your device to continue using the app.</string>
     <string name="settings">Settings</string>
     <string name="default_image">Default image</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 
 </resources>
 

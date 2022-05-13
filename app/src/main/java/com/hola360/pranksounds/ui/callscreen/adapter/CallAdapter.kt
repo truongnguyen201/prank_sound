@@ -4,23 +4,30 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.ItemCallBinding
+import com.hola360.pranksounds.ui.callscreen.CallItemListener
 import com.hola360.pranksounds.utils.Constants
 
 class CallAdapter(private val onSelected: (Int) -> Unit) :
     RecyclerView.Adapter<CallAdapter.CallViewHolder>() {
     private var listData = listOf<Call>()
+    lateinit var callItemListener: CallItemListener
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(list: List<Call>?) {
         if (!list.isNullOrEmpty())
             listData = list
         notifyDataSetChanged()
+    }
+
+    fun setListener(callItemListener: CallItemListener) {
+        this.callItemListener = callItemListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CallViewHolder {
@@ -64,11 +71,14 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
                             .into(imgView)
                     }
                 }
+                if (call.isLocal) {
+                    icIsLocal.visibility = View.VISIBLE
+                }
                 root.setOnClickListener {
-                    onSelected(position)
+                    callItemListener.onItemClick(position)
                 }
                 ivOptionMenu.setOnClickListener {
-                    Log.e("TAG", "bind: $position")
+                    callItemListener.onMoreClick(this.root, call)
                 }
             }
         }
