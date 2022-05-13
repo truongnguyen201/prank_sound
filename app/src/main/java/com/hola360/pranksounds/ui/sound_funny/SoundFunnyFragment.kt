@@ -14,7 +14,9 @@ import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.adapter.SoundCategoryAdapter
 
 class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
-    private lateinit var soundCategoryAdapter: SoundCategoryAdapter
+    private val soundCategoryAdapter = SoundCategoryAdapter {
+        handleOnItemClick(it)
+    }
     private lateinit var soundFunnyViewModel: SoundFunnyViewModel
 
     override fun getLayout(): Int {
@@ -22,12 +24,8 @@ class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
     }
 
     override fun initView() {
-        soundCategoryAdapter = SoundCategoryAdapter {
-            handleOnItemClick(it)
-        }
-        setUpProgressBar()
         binding.apply {
-            toolbar.setNavigationOnClickListener{
+            toolbar.setNavigationOnClickListener {
                 requireActivity().onBackPressed()
             }
             rvCategory.layoutManager = LinearLayoutManager(requireContext())
@@ -36,6 +34,7 @@ class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
             noInternetLayout.btRetry.setOnClickListener { soundFunnyViewModel.retry() }
         }
         binding.viewModel = soundFunnyViewModel
+        setUpProgressBar()
     }
 
     override fun initViewModel() {
@@ -69,8 +68,4 @@ class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
         binding.progressBar.indeterminateDrawable = circle
     }
 
-    override fun onResume() {
-        super.onResume()
-        soundFunnyViewModel.getCategory()
-    }
 }

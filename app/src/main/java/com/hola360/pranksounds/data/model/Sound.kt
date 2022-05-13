@@ -30,7 +30,6 @@ data class Sound(
     @ColumnInfo(name = "sound_url")
     @SerializedName("sound")
     val soundUrl: String? = null ,
-
 ) {
     @Ignore
     var isPlaying = false

@@ -5,14 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.widget.*
+import android.widget.PopupWindow
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -21,7 +23,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.ybq.android.spinkit.style.Circle
@@ -30,7 +31,6 @@ import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
-import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
 import com.hola360.pranksounds.utils.Utils
@@ -38,37 +38,43 @@ import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
 class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
-    private lateinit var detailCategoryAdapter: DetailCategoryAdapter
+    private val detailCategoryAdapter = DetailCategoryAdapter()
     private lateinit var detailCategoryViewModel: DetailCategoryViewModel
     private var mLayoutManager: LinearLayoutManager? = null
     private val sharedVM by activityViewModels<SharedViewModel>()
     private val args: DetailCategoryFragmentArgs by navArgs()
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popUpWindow: PopupWindow
-    private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
+    private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private var currentMorePosition = 0
-
     var isUserControl = false
+    private lateinit var bitmap: Bitmap
+    private lateinit var canvas: Canvas
+    private lateinit var paint: Paint
 
     override fun getLayout(): Int {
         return R.layout.fragment_detail_category
     }
 
     override fun initView() {
+        setupForSeekbar()
         requireActivity().title = args.categoryTitle
         setUpProgressBar()
-        detailCategoryAdapter = DetailCategoryAdapter(requireContext())
         detailCategoryAdapter.setListener(this)
         mLayoutManager = LinearLayoutManager(requireContext())
         setupPopUpWindow()
+        binding.viewModel = detailCategoryViewModel
 
         binding.apply {
             rvSound.layoutManager = mLayoutManager
             rvSound.setHasFixedSize(true)
             rvSound.adapter = detailCategoryAdapter
 
-            toolbar.setNavigationOnClickListener {
-                requireActivity().onBackPressed()
+            toolbar.apply {
+                setNavigationOnClickListener {
+                    requireActivity().onBackPressed()
+                }
+                title = args.categoryTitle
             }
 
             //load more data when scroll to the end of recyclerview
@@ -93,7 +99,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
 
             sbDuration.apply {
-                drawThumb(this, 0, 0)
                 setPadding(70, 0, 70, 0)
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
@@ -149,28 +154,20 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
 
             controlPanel.setOnClickListener {
-                findNavController().navigate(
-                    DetailCategoryFragmentDirections.actionGlobalSoundDetailFragment()
-                )
+                findNavController().navigate(DetailCategoryFragmentDirections.actionGlobalSoundDetailFragment())
             }
         }
     }
 
-    private fun drawThumb(seekBar: SeekBar, progress: Int, duration: Int) {
-        val bitmap =
-            ContextCompat.getDrawable(requireContext(), R.drawable.seek_bar_thumb)?.toBitmap()
-        val bmp = bitmap!!.copy(Bitmap.Config.ARGB_8888, true)
-        val c = Canvas(bmp)
-        val text = String.format("00:%02d/00:%02d", progress / 1000, duration / 1000)
-        val p = Paint()
-        p.typeface = Typeface.DEFAULT
-        p.textSize = 20F
-        p.color = (-0x1)
-        c.drawText(
-            text, (bmp.width - p.measureText(text)) / 2,
-            (c.height / 2 - (p.descent() + p.ascent()) / 2), p
-        )
-        seekBar.thumb = (BitmapDrawable(resources, bmp))
+    private fun setupForSeekbar() {
+        bitmap =
+            ContextCompat.getDrawable(requireContext(), R.drawable.seek_bar_thumb)?.toBitmap()!!
+                .copy(Bitmap.Config.ARGB_8888, true)
+        canvas = Canvas(bitmap)
+        paint = Paint()
+        paint.typeface = Typeface.DEFAULT
+        paint.textSize = 20F
+        paint.color = (-0x1)
     }
 
     override fun initViewModel() {
@@ -213,29 +210,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
-        detailCategoryViewModel.isLoading.observe(this) {
-            it?.let {
-                binding.progressBar.visibility = if (it) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-
-        detailCategoryViewModel.isLoadingMore.observe(this) {
-            it?.let {
-                binding.loadMoreProgressBar.visibility = if (it) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-
         detailCategoryViewModel.favoriteSoundLiveData.observe(this) {
             it?.let {
                 detailCategoryAdapter.updateFavoriteData(it)
+                sharedVM.favoriteList.value!!.addAll(it)
             }
         }
 
@@ -277,6 +255,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
+        val resource = resources
         sharedVM.seekBarProgress.observe(this) {
             val animator = ObjectAnimator.ofInt(binding.sbDuration, "progress", it!! - 10, it)
             it.let {
@@ -285,7 +264,15 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         animator.duration = 60
                         animator.interpolator = LinearInterpolator()
                         animator.start()
-                        drawThumb(this, it, sharedVM.soundDuration.value!!)
+                        Utils.drawThumb(
+                            this,
+                            it,
+                            sharedVM.soundDuration.value!!,
+                            resource,
+                            bitmap,
+                            canvas,
+                            paint
+                        )
                     }
                 }
             }
@@ -324,25 +311,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             popUpWindow.dismiss()
         }
 
-        val popUpInflater =
-            requireActivity().applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popUpBinding = PopUpWindowLayoutBinding.inflate(popUpInflater)
-
-        popUpBinding.apply {
-            tvNotification.setOnClickListener(onClickListener)
-            tvRingtone.setOnClickListener(onClickListener)
-            tvAlarm.setOnClickListener(onClickListener)
-        }
-
-        popUpWindow = PopupWindow(
-            popUpBinding.root,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            true
-        ).apply {
-            elevation = 20F
-            contentView.setOnClickListener { dismiss() }
-        }
+        popUpWindow = Utils.showPopUpSetAs(requireActivity(), onClickListener)
     }
 
     //open setting to request write setting permission
@@ -405,8 +374,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     override fun onMoreIconClick(view: View, position: Int) {
         currentMorePosition = position
         popUpWindow.showAsDropDown(
-            view, (screenWidth * 0.68).toInt(),
-            ((-view.height) * 0.7).toInt()
+            view, (screenWidth * 0.6).toInt(),
+            ((-view.height) * 1.2).toInt()
         )
     }
 
@@ -421,6 +390,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         + " must implement ControlPanelListener"
             )
         }
+        Log.i("I'm attach", "Attach Attach")
     }
 
     //release media player when detach fragment
@@ -430,6 +400,4 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         sharedVM.soundList.value!!.clear()
         sharedVM.currentPosition.value = 0
     }
-
-
 }

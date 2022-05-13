@@ -18,15 +18,45 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.8" />
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/design_color"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_baseline_arrow_back"
-            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            app:titleTextColor="@color/white" />
+            app:titleTextAppearance="@style/Theme.PrankSounds.ToolbarTextAppearance"
+            app:titleTextColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/cbFavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:button="@drawable/bt_favorite_toolbar"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+
+                <ImageButton
+                    android:id="@+id/ibSetAs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
+                    android:paddingHorizontal="10dp"
+                    android:background="@null"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_more_vert_24" />
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cvBanner"
@@ -53,13 +83,11 @@
             app:layout_constraintTop_toBottomOf="@id/cvBanner" />
 
         <SeekBar
-
             android:id="@+id/sbDuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:indeterminateTint="@color/design_color"
-            android:paddingVertical="2dp"
             android:progressDrawable="@drawable/seek_bar_style"
             android:thumb="@drawable/seek_bar_thumb"
             app:layout_constraintBottom_toBottomOf="@id/glHorizontal1"

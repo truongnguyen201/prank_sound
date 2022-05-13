@@ -1,6 +1,7 @@
 package com.hola360.pranksounds.ui.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,10 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         binding.unbind()
+    }
+
+    open fun onBackPressed() : Boolean{
+        return false
     }
 
     abstract fun getLayout(): Int

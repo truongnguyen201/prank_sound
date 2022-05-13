@@ -17,6 +17,9 @@ import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
@@ -61,8 +64,8 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                         prepareAsync()
                         setOnPreparedListener {
                             sharedViewModel.soundDuration.value = mediaPlayer.duration
-                            handler.postDelayed(runnable, 0)
                             start()
+                            handler.postDelayed(runnable, 0)
                             sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
                         }
                     }
@@ -77,6 +80,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                 }
             }
         }
+
     }
 
     private fun initHandler() {
@@ -88,6 +92,9 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                 }
                 handler.postDelayed(this, 200)
             }
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+
         }
     }
 

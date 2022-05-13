@@ -1,5 +1,7 @@
 package com.hola360.pranksounds.utils
 
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Prank
 import com.hola360.pranksounds.data.model.SoundCategory
@@ -63,4 +65,6 @@ object Constants {
     const val SOUND_ITEM_PER_PAGE = 10
 
     const val DIR_PATH = "/PranSounds/"
+
+
 }
