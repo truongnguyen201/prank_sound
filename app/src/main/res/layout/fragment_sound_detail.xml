@@ -18,6 +18,13 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.8" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/glHorizontal2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.52" />
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -50,9 +57,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
-                    android:paddingHorizontal="10dp"
                     android:background="@null"
                     android:contentDescription="@string/app_name"
+                    android:paddingHorizontal="10dp"
                     android:src="@drawable/ic_more_vert_24" />
 
             </LinearLayout>
@@ -80,7 +87,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/cvBanner" />
+            app:layout_constraintBottom_toBottomOf="@id/glHorizontal2"
+            app:layout_constraintTop_toBottomOf="@id/glHorizontal2" />
 
         <SeekBar
             android:id="@+id/sbDuration"
@@ -88,6 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:indeterminateTint="@color/design_color"
+            android:progress="0"
             android:progressDrawable="@drawable/seek_bar_style"
             android:thumb="@drawable/seek_bar_thumb"
             app:layout_constraintBottom_toBottomOf="@id/glHorizontal1"
@@ -107,6 +116,7 @@
                 app:cardCornerRadius="7dp">
 
                 <ImageView
+                    android:id="@+id/ivPrevious"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/app_name"
@@ -122,6 +132,7 @@
                 app:cardCornerRadius="50dp">
 
                 <ImageView
+                    android:id="@+id/ivPlayPause"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/app_name"
@@ -136,13 +147,13 @@
                 app:cardCornerRadius="7dp">
 
                 <ImageView
+                    android:id="@+id/ivNext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/ic_next_41dp" />
 
             </androidx.cardview.widget.CardView>
-
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

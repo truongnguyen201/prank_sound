@@ -86,6 +86,7 @@
                 android:layout_marginTop="5dp"
                 android:indeterminateTint="@color/design_color"
                 android:paddingVertical="2dp"
+                android:progress="0"
                 android:progressDrawable="@drawable/seek_bar_style"
                 android:thumb="@drawable/seek_bar_thumb"
                 app:layout_constraintTop_toTopOf="parent" />

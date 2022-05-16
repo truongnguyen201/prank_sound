@@ -17,9 +17,7 @@ import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
@@ -27,6 +25,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
     private val sharedViewModel by viewModels<SharedViewModel>()
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
+    private var taskJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,22 +64,55 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                         setOnPreparedListener {
                             sharedViewModel.soundDuration.value = mediaPlayer.duration
                             start()
-                            handler.postDelayed(runnable, 0)
+//                            handler.postDelayed(runnable, 0)
                             sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+//                            CoroutineScope(Dispatchers.Main).launch {
+//                                while (mediaPlayer.isPlaying) {
+//                                    delay(200)
+//                                    sharedViewModel.seekBarProgress.value =
+//                                        mediaPlayer.currentPosition
+//                                }
+//                            }
+//                            initialJob()
                         }
                     }
                 }
             }
         }
 
+        sharedViewModel.isPlaying.observe(this) {
+            it?.let {
+                if (it) {
+                    initialJob()
+                } else {
+                    cancelJob()
+                }
+            }
+        }
         sharedViewModel.seekBarProgress.observe(this) {
             it?.let {
                 if (it == sharedViewModel.soundDuration.value!!) {
                     handler.removeCallbacks(runnable)
+                    cancelJob()
                 }
             }
         }
 
+    }
+
+    private fun initialJob() {
+        cancelJob()
+        taskJob = CoroutineScope(Dispatchers.Main).launch {
+            while (mediaPlayer.isPlaying) {
+                delay(200)
+                sharedViewModel.seekBarProgress.value =
+                    mediaPlayer.currentPosition
+            }
+        }
+    }
+
+    private fun cancelJob() {
+        taskJob?.cancel()
     }
 
     private fun initHandler() {
@@ -92,9 +124,6 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                 }
                 handler.postDelayed(this, 200)
             }
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-
         }
     }
 
@@ -159,7 +188,6 @@ class MainActivity : BaseActivity(), ControlPanelListener {
 
         when (item.itemId) {
             R.id.add_new_call -> {
-
                 transaction.add(R.id.navHostFragmentContentMain, AddCallScreenFragment())
                 transaction.commit()
             }

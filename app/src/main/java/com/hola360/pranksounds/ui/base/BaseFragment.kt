@@ -9,8 +9,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
+@Suppress("SENSELESS_COMPARISON")
 abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
     protected lateinit var binding: V
+    private var mView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +24,16 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
-        binding.lifecycleOwner = this
-        initView()
+        return if(mView != null){
+            mView
+        } else {
+            binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
+            binding.lifecycleOwner = this
+            initView()
 
-        return binding.root
+            mView = binding.root
+            binding.root
+        }
     }
 
     override fun onDestroy() {

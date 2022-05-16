@@ -4,11 +4,12 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.*
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
@@ -17,8 +18,6 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -48,8 +47,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private var currentMorePosition = 0
     var isUserControl = false
-    private lateinit var bitmap: Bitmap
-    private lateinit var canvas: Canvas
     private lateinit var paint: Paint
 
     override fun getLayout(): Int {
@@ -154,16 +151,15 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
 
             controlPanel.setOnClickListener {
-                findNavController().navigate(DetailCategoryFragmentDirections.actionGlobalSoundDetailFragment())
+                findNavController().navigate(
+                    DetailCategoryFragmentDirections.actionDetailCategoryFragmentToSoundDetailFragment()
+                        .setPosition(sharedVM.currentPosition.value!!)
+                )
             }
         }
     }
 
     private fun setupForSeekbar() {
-        bitmap =
-            ContextCompat.getDrawable(requireContext(), R.drawable.seek_bar_thumb)?.toBitmap()!!
-                .copy(Bitmap.Config.ARGB_8888, true)
-        canvas = Canvas(bitmap)
         paint = Paint()
         paint.typeface = Typeface.DEFAULT
         paint.textSize = 20F
@@ -234,6 +230,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
+        //change information in panel map with sound
         sharedVM.currentPosition.observe(this) {
             it?.let {
                 if (sharedVM.soundList.value!!.size > 0) {
@@ -261,16 +258,15 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             it.let {
                 if (!isUserControl) {
                     binding.sbDuration.apply {
-                        animator.duration = 60
+                        animator.duration = 10
                         animator.interpolator = LinearInterpolator()
                         animator.start()
                         Utils.drawThumb(
+                            requireContext(),
                             this,
                             it,
                             sharedVM.soundDuration.value!!,
                             resource,
-                            bitmap,
-                            canvas,
                             paint
                         )
                     }
@@ -369,6 +365,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     //handle when click on sound item in recycler view
     override fun onItemClick(position: Int) {
         sharedVM.currentPosition.value = position
+        binding.sbDuration.progress = 0
     }
 
     override fun onMoreIconClick(view: View, position: Int) {
@@ -390,7 +387,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         + " must implement ControlPanelListener"
             )
         }
-        Log.i("I'm attach", "Attach Attach")
     }
 
     //release media player when detach fragment

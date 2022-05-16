@@ -21,6 +21,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.snackbar.Snackbar
@@ -175,15 +176,19 @@ object Utils {
 
     //draw thumb seekbar
     fun drawThumb(
+        context: Context,
         seekBar: SeekBar,
         progress: Int,
         duration: Int,
         resources: Resources,
-        bitmap: Bitmap,
-        canvas: Canvas,
         paint: Paint
     ) {
+        val bitmap =
+            ContextCompat.getDrawable(context, R.drawable.seek_bar_thumb)?.toBitmap()!!
+                .copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(bitmap)
         val text = String.format("00:%02d/00:%02d", progress / 1000, duration / 1000)
+
         canvas.drawText(
             text, (bitmap.width - paint.measureText(text)) / 2,
             (canvas.height / 2 - (paint.descent() + paint.ascent()) / 2), paint
@@ -196,7 +201,7 @@ object Utils {
         durationInMillis: Long,
         dispatcher: CoroutineDispatcher = Dispatchers.Main,
         block: () -> Unit
-    ) : Job? = findViewTreeLifecycleOwner()?.let { lifecycleOwner ->
+    ): Job? = findViewTreeLifecycleOwner()?.let { lifecycleOwner ->
         lifecycleOwner.lifecycle.coroutineScope.launch(dispatcher) {
             delay(durationInMillis)
             block()

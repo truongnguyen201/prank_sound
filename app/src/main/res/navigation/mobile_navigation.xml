@@ -112,7 +112,12 @@
             app:nullable="true" />
         <action
             android:id="@+id/action_detailCategoryFragment_to_soundDetailFragment"
-            app:destination="@id/soundDetailFragment" />
+            app:destination="@id/soundDetailFragment">
+            <argument
+                android:name="position"
+                android:defaultValue="1"
+                app:argType="integer" />
+        </action>
     </fragment>
 
     <action
@@ -135,6 +140,10 @@
         android:name="com.hola360.pranksounds.ui.sound_funny.sound_detail.SoundDetailFragment"
         android:label="fragment_sound_detail"
         tools:layout="@layout/fragment_sound_detail">
+        <argument
+            android:name="position"
+            android:defaultValue="1"
+            app:argType="integer" />
         <action
             android:id="@+id/action_soundDetailFragment_to_detailCategoryFragment"
             app:destination="@id/detailCategoryFragment"
