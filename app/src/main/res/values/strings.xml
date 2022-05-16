@@ -36,7 +36,9 @@
     <!--  Call screen  -->
     <string name="retry">Tap to retry</string>
     <string name="no_result_try_again">No result, please try again!</string>
+    <string name="no_result_add_new_caller">No result, please add new caller!</string>
     <string name="add">Add</string>
+    <string name="update">Update</string>
     <string name="caller_name">Caller name</string>
     <string name="phone_number">Phone number</string>
     <string name="empty_list">Empty list</string>
@@ -47,6 +49,10 @@
     <string name="default_image">Default image</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="confirm_delete">Are you sure you want to Delete?</string>
+    <string name="delete_complete">Delete complete</string>
+    <string name="trend_caller">Trend caller</string>
+    <string name="my_caller">My caller</string>
 
 </resources>
 

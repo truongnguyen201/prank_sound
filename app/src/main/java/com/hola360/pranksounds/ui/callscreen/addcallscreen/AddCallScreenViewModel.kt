@@ -15,6 +15,11 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
     val callerName = MutableLiveData<String>("")
     val callerPhoneNumber = MutableLiveData<String>("")
     val isEmpty = MutableLiveData(false)
+    val call = MutableLiveData<Call>(null)
+
+    val isUpdate: LiveData<Boolean> = Transformations.map(call) {
+        call.value != null
+    }
 
     fun setOnNameChange(name: String) {
         callerName.value = name
@@ -31,16 +36,47 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
                 || callerPhoneNumber.value == "")
     }
 
+    fun setCall(call: Call) {
+        this.call.value = call
+    }
+
     fun addCallToLocal() {
-        val call = if (imageUri.value != null) {
-            Call(0, imageUri.value!!.path.toString(), callerName.value!!, callerPhoneNumber.value!!, true)
+        var newCall: Call
+        newCall = if (imageUri.value != null) {
+            Log.e("", "addCallToLocal: ${imageUri.value}", )
+            Call(
+                -1,
+                imageUri.value!!.path.toString(),
+                callerName.value!!,
+                callerPhoneNumber.value!!,
+                true
+            )
+        } else {
+            Log.e("", "addCallToLocal: null", )
+            Call(-1, "", callerName.value!!, callerPhoneNumber.value!!, true)
         }
-        else {
-            Call(0, "", callerName.value!!, callerPhoneNumber.value!!, true)
-        }
+//        if (call.value != null) {
+//            newCall = call.value!!
+//            newCall.phone = callerPhoneNumber.toString()
+//            newCall.name = callerName.toString()
+//            newCall.isLocal = true
+//        } else {
+//            newCall = if (imageUri.value != null) {
+//                Call(
+//                    0,
+//                    imageUri.value!!.path.toString(),
+//                    callerName.value!!,
+//                    callerPhoneNumber.value!!,
+//                    true
+//                )
+//            } else {
+//                Call(0, "", callerName.value!!, callerPhoneNumber.value!!, true)
+//            }
+//        }
+//
 
         viewModelScope.launch {
-            repository.addNewCallToLocal(call)
+            repository.addNewCallToLocal(newCall)
         }
     }
 

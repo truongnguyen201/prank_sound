@@ -91,7 +91,7 @@
                     android:layout_marginTop="@dimen/dp_32"
                     android:backgroundTint="@{viewModel.isEmpty()?@color/enable_button:@color/disable_button}"
                     android:enabled="@{viewModel.isEmpty()}"
-                    android:text="@string/add"
+                    android:text="@{viewModel.isUpdate()?@string/update:@string/add}"
                     android:textAllCaps="false"
                     android:textAppearance="?textAppearanceBody1"
                     android:textColor="@color/white"

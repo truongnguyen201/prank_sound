@@ -1,6 +1,5 @@
 package com.hola360.pranksounds.ui.callscreen.addcallscreen
 
-import android.R.attr
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
@@ -8,21 +7,23 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.hola360.pranksounds.R
+import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.model.PhotoModel
 import com.hola360.pranksounds.databinding.FragmentAddCallScreenBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
 import com.hola360.pranksounds.ui.dialog.pickphoto.PickPhotoDialog
+import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.yalantis.ucrop.UCrop
 import java.io.File
 import java.util.*
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -30,24 +31,17 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     PickPhotoDialog.OnClickListener {
     private lateinit var addCallScreenViewModel: AddCallScreenViewModel
     private lateinit var action: Any
+    private var call: Call? = null
+    private val args : AddCallScreenFragmentArgs by navArgs();
 
     override fun getLayout(): Int {
         return R.layout.fragment_add_call_screen
     }
 
     override fun initView() {
+        //args.callModel null, #null id >0
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
-//            setOnMenuItemClickListener {
-//                when(it.itemId) {
-//                    R.id.add_new_call -> {
-//                        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment()
-//                        findNavController().navigate(action as NavDirections)
-//                        true
-//                    }
-//                    else -> false
-//                }
-//            }
 
             setNavigationOnClickListener {
                 requireActivity().onBackPressed()
@@ -73,9 +67,41 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
             btnAdd.setOnClickListener {
                 viewModel!!.addCallToLocal()
                 Toast.makeText(requireContext(), "Insert success!", Toast.LENGTH_LONG).show()
-                action = CallScreenFragmentDirections.actionGlobalCallScreenFragment()
-                findNavController().navigate(action as NavDirections)
+                requireActivity().onBackPressed()
+//                action = CallScreenFragmentDirections.actionGlobalCallScreenFragment()
+//                findNavController().navigate(action as NavDirections)
             }
+        }
+
+        call = args.callModel
+        if (call != null) {
+            addCallScreenViewModel.setCall(call!!)
+            if (call!!.id != 0) {
+                with(binding) {
+                    call?.let {
+                        imgAvatar.setImageURI(Uri.parse(it.avatarUrl))
+                        tvCallerName.setText(it.name)
+                        tvPhoneNumber.setText(it.phone)
+                    }
+                }
+            }
+            else {
+                with(binding) {
+                    call?.let {
+                        imgAvatar.let { imgView ->
+                            Glide.with(imgView)
+                                .load(Constants.SUB_URL + it.avatarUrl)
+                                .placeholder(R.drawable.smaller_loading)
+                                .error(R.drawable.img_avatar_default)
+                                .into(imgView)
+                        }
+                        imgAvatar.setImageURI(Uri.parse(it.avatarUrl))
+                        tvCallerName.setText(it.name)
+                        tvPhoneNumber.setText(it.phone)
+                    }
+                }
+            }
+
         }
     }
 
@@ -83,6 +109,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         val factory = AddCallScreenViewModel.Factory(requireActivity().application)
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
+
     }
 
     private fun requestStoragePermission() {
@@ -114,7 +141,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 binding.imgAvatar.setImageURI(imageUri)
                 binding.viewModel!!.imageUri.value = imageUri
             }
-            binding.viewModel!!.imageUri.value = imageUri
+//            binding.viewModel!!.imageUri.value = imageUri
         }
     }
 
@@ -144,12 +171,10 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         return options
     }
 
+
+
     override fun onPickPhoto(photoModel: PhotoModel) {
         Log.e("TAG", "on pick photo: ")
-//        startActivityForResult(Intent().setAction(
-//            Intent.ACTION_GET_CONTENT)
-//            .setType("image/*"), 1)/
-//        val uri = Uri.parse(photoModel.file)
         startCrop(photoModel.uri)
     }
 

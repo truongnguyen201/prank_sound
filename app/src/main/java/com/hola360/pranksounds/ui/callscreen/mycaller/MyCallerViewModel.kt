@@ -1,4 +1,4 @@
-package com.hola360.pranksounds.ui.callscreen.myviewmodel
+package com.hola360.pranksounds.ui.callscreen.mycaller
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

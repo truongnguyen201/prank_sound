@@ -1,17 +1,11 @@
-package com.hola360.pranksounds.ui.callscreen.myviewmodel
+package com.hola360.pranksounds.ui.callscreen.mycaller
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.databinding.FragmentMyCallerBinding
 import com.hola360.pranksounds.ui.callscreen.base.CallListBaseFragment
-import com.hola360.pranksounds.ui.callscreen.trendcaller.TrendCallerViewModel
 
 class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
     private lateinit var myCallerViewModel: MyCallerViewModel

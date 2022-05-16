@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.hola360.pranksounds.ui.callscreen.adapter.ViewPagerAdapter
 
 abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
     protected lateinit var binding: V

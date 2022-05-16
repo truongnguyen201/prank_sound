@@ -119,8 +119,17 @@
     <fragment
         android:id="@+id/addCallScreenFragment"
         android:name="com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment"
-        android:label="Add Call Screen" />
+        android:label="Add Call Screen" >
+        <argument android:name="callModel"
+            app:argType="com.hola360.pranksounds.data.model.Call"
+            app:nullable="true"/>
+    </fragment>
     <action android:id="@+id/action_global_addCallScreenFragment" app:destination="@id/addCallScreenFragment" />
+    <fragment
+        android:id="@+id/callerFragment"
+        android:name="com.hola360.pranksounds.ui.callscreen.CallerFragment"
+        android:label="CallerFragment" />
+    <action android:id="@+id/action_global_callerFragment" app:destination="@id/callerFragment" />
 
 
 </navigation>

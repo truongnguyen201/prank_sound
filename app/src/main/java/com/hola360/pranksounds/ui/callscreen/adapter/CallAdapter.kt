@@ -74,8 +74,11 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
                 if (call.isLocal) {
                     icIsLocal.visibility = View.VISIBLE
                 }
+                else {
+                    icIsLocal.visibility = View.GONE
+                }
                 root.setOnClickListener {
-                    callItemListener.onItemClick(position)
+                    callItemListener.onItemClick(call, position)
                 }
                 ivOptionMenu.setOnClickListener {
                     callItemListener.onMoreClick(this.root, call)

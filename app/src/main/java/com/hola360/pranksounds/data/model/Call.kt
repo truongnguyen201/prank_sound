@@ -1,12 +1,16 @@
 package com.hola360.pranksounds.data.model
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 
+@Parcelize
 @Entity(tableName = "tblLocalCall")
-data class Call(
+data class Call (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
 
@@ -14,11 +18,11 @@ data class Call(
     @ColumnInfo(name = "avatar_url")
     val avatarUrl: String,
 
-    val name: String,
-    val phone: String,
+    var name: String,
+    var phone: String,
 
     @ColumnInfo(name = "is_local")
-    val isLocal: Boolean
-) {
+    var isLocal: Boolean
+): Serializable, Parcelable {
     constructor() : this(0, "", "", "", false)
 }
