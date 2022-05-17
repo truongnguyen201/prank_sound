@@ -11,21 +11,9 @@ import com.hola360.pranksounds.data.repository.FileDownloadRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class SoundDetailViewModel(private val app: Application) : ViewModel() {
+class SoundDetailViewModel(app: Application) : ViewModel() {
 
-    private val fileDownloadRepository = FileDownloadRepository()
     private val detailCategoryRepository = DetailCategoryRepository(app)
-
-    fun downloadAndSet(url: String){
-        viewModelScope.launch {
-            val fileDeferred = viewModelScope.async {
-                fileDownloadRepository.downloadSoundFile(url)
-            }
-
-            val response = fileDeferred.await()!!.body()
-            Log.e("response", response.toString())
-        }
-    }
 
     fun addFavoriteSound(sound: Sound) {
         viewModelScope.launch {

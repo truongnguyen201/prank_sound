@@ -183,5 +183,10 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <include
+            android:id="@+id/noInternetLayout"
+            android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
+            layout="@layout/no_internet_layout"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

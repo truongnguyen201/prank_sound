@@ -157,6 +157,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         .setPosition(sharedVM.currentPosition.value!!)
                 )
             }
+
+            noInternetLayout.btRetry.setOnClickListener { detailCategoryViewModel.retry() }
         }
     }
 
@@ -299,7 +301,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                 if (Utils.writeSettingPermissionGrant(requireContext())) {
                     setupWhenPermissionGranted(type, currentMorePosition)
                 } else {
-                    requestWriteSettingPermission()
+                    Utils.requestWriteSettingPermission(requireActivity(), requireContext())
                 }
             } else {
                 requestStoragePermission()
@@ -311,25 +313,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         popUpWindow = Utils.showPopUpSetAs(requireActivity(), onClickListener)
     }
 
-    //open setting to request write setting permission
-    private fun requestWriteSettingPermission() {
-        Toast.makeText(
-            requireContext(),
-            activity?.resources?.getString(R.string.write_setting_permission),
-            LENGTH_LONG
-        ).show()
-        val intent = Intent()
-        intent.action = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Settings.ACTION_MANAGE_WRITE_SETTINGS
-        } else {
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        }
-        val uri = Uri.fromParts("package", activity?.packageName, null)
-        intent.data = uri
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        activity?.startActivity(intent)
-    }
-
     private fun requestStoragePermission() {
         resultLauncher.launch(
             Utils.getStoragePermissions()
@@ -339,14 +322,14 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             if (Utils.storagePermissionGrant(requireContext())) {
-                requestWriteSettingPermission()
+                Utils.requestWriteSettingPermission(requireActivity(), requireContext())
             } else {
                 Utils.showAlertPermissionNotGrant(binding.root, requireActivity())
             }
         }
 
     private fun setupWhenPermissionGranted(type: String, position: Int) {
-        detailCategoryViewModel.setAs(
+        sharedVM.downloadAndSet(
             sharedVM.soundList.value!![position].soundUrl!!,
             type,
             sharedVM.soundList.value!![position].title!!

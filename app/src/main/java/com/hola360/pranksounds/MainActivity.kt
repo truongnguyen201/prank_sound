@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.ui.setupWithNavController
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ActivityMainBinding
@@ -22,14 +23,14 @@ import kotlinx.coroutines.*
 class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mediaPlayer: MediaPlayer
-    private val sharedViewModel by viewModels<SharedViewModel>()
-    private lateinit var handler: Handler
-    private lateinit var runnable: Runnable
+    private lateinit var sharedViewModel : SharedViewModel
     private var taskJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initHandler()
+        val factory = SharedViewModel.Factory(application)
+        sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.homeFragment -> {
@@ -64,16 +65,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                         setOnPreparedListener {
                             sharedViewModel.soundDuration.value = mediaPlayer.duration
                             start()
-//                            handler.postDelayed(runnable, 0)
                             sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
-//                            CoroutineScope(Dispatchers.Main).launch {
-//                                while (mediaPlayer.isPlaying) {
-//                                    delay(200)
-//                                    sharedViewModel.seekBarProgress.value =
-//                                        mediaPlayer.currentPosition
-//                                }
-//                            }
-//                            initialJob()
                         }
                     }
                 }
@@ -89,15 +81,14 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                 }
             }
         }
+
         sharedViewModel.seekBarProgress.observe(this) {
             it?.let {
                 if (it == sharedViewModel.soundDuration.value!!) {
-                    handler.removeCallbacks(runnable)
                     cancelJob()
                 }
             }
         }
-
     }
 
     private fun initialJob() {
@@ -113,18 +104,6 @@ class MainActivity : BaseActivity(), ControlPanelListener {
 
     private fun cancelJob() {
         taskJob?.cancel()
-    }
-
-    private fun initHandler() {
-        handler = Handler(Looper.myLooper()!!)
-        runnable = object : Runnable {
-            override fun run() {
-                if (mediaPlayer.isPlaying) {
-                    sharedViewModel.seekBarProgress.value = mediaPlayer.currentPosition
-                }
-                handler.postDelayed(this, 200)
-            }
-        }
     }
 
     override fun getFragmentID(): Int {

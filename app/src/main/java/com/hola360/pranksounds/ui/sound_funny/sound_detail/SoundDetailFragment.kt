@@ -10,6 +10,8 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
 import android.widget.SeekBar
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +20,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentSoundDetailBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
-import com.hola360.pranksounds.ui.sound_funny.detail_category.DetailCategoryViewModel
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.ui.sound_funny.sound_detail.adapter.ViewPagerAdapter
 import com.hola360.pranksounds.utils.Utils
@@ -40,11 +41,6 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     }
 
     override fun initView() {
-        val setAsListener = View.OnClickListener {
-            popupWindow.dismiss()
-        }
-        popupWindow = Utils.showPopUpSetAs(requireActivity(), setAsListener)
-
         binding.apply {
             toolbar.apply {
                 setNavigationOnClickListener {
@@ -146,21 +142,39 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
             cbFavorite.apply {
                 setOnClickListener {
                     val position = vp2Sound.currentItem + vp2Sound.currentItem / 10 + 1
-                    if(isChecked){
+                    if (isChecked) {
                         soundDetailViewModel.addFavoriteSound(sharedVM.soundList.value!![position])
                     } else {
                         soundDetailViewModel.removeFavoriteSound(sharedVM.soundList.value!![position])
                     }
                 }
             }
+
+            val setAsListener = View.OnClickListener {
+                val type = (it as TextView).text.toString()
+                if (Utils.storagePermissionGrant(requireContext())) {
+                    if (Utils.writeSettingPermissionGrant(requireContext())) {
+                        setupWhenPermissionGranted(
+                            type,
+                            vp2Sound.currentItem + vp2Sound.currentItem / 10 + 1
+                        )
+                    } else {
+                        Utils.requestWriteSettingPermission(requireActivity(), requireContext())
+                    }
+                } else {
+                    requestStoragePermission()
+                }
+
+                popupWindow.dismiss()
+            }
+            popupWindow = Utils.showPopUpSetAs(requireActivity(), setAsListener)
+
         }
     }
 
     override fun initViewModel() {
         val factory = SoundDetailViewModel.Factory(requireActivity().application)
         soundDetailViewModel = ViewModelProvider(this, factory)[SoundDetailViewModel::class.java]
-
-        soundDetailViewModel.downloadAndSet("sound/140_f2a6d18fc852ae2fe83edcef9217df27.mp3")
 
         sharedVM.soundList.observe(this) {
             it?.let {
@@ -242,6 +256,29 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
         return HorizontalMarginItemDecoration(
             requireContext(),
             R.dimen.viewpager_current_item_horizontal_margin
+        )
+    }
+
+    private fun requestStoragePermission() {
+        resultLauncher.launch(
+            Utils.getStoragePermissions()
+        )
+    }
+
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            if (Utils.storagePermissionGrant(requireContext())) {
+                Utils.requestWriteSettingPermission(requireActivity(), requireContext())
+            } else {
+                Utils.showAlertPermissionNotGrant(binding.root, requireActivity())
+            }
+        }
+
+    private fun setupWhenPermissionGranted(type: String, position: Int) {
+        sharedVM.downloadAndSet(
+            sharedVM.soundList.value!![position].soundUrl!!,
+            type,
+            sharedVM.soundList.value!![position].title!!
         )
     }
 

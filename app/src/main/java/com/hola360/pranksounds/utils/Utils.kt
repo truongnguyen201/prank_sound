@@ -12,6 +12,7 @@ import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -22,12 +23,10 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.coroutineScope
-import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
-import kotlinx.coroutines.*
 
 object Utils {
     private var STORAGE_PERMISSION_UNDER_STORAGE_SCOPE = arrayOf(
@@ -197,14 +196,30 @@ object Utils {
         seekBar.thumb = (BitmapDrawable(resources, bitmap))
     }
 
-    fun View.delayOnLifeCycle(
-        durationInMillis: Long,
-        dispatcher: CoroutineDispatcher = Dispatchers.Main,
-        block: () -> Unit
-    ): Job? = findViewTreeLifecycleOwner()?.let { lifecycleOwner ->
-        lifecycleOwner.lifecycle.coroutineScope.launch(dispatcher) {
-            delay(durationInMillis)
-            block()
+    fun getBasePath(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
+        } else {
+            Environment.getExternalStorageDirectory().absolutePath
         }
+    }
+
+    fun requestWriteSettingPermission(activity: FragmentActivity, context: Context) {
+        Toast.makeText(
+            context,
+            activity.resources?.getString(R.string.write_setting_permission),
+            Toast.LENGTH_LONG
+        ).show()
+
+        val intent = Intent()
+        intent.action = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Settings.ACTION_MANAGE_WRITE_SETTINGS
+        } else {
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        }
+        val uri = Uri.fromParts("package", activity.packageName, null)
+        intent.data = uri
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        activity.startActivity(intent)
     }
 }
