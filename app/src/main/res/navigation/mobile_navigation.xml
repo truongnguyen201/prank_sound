@@ -111,11 +111,21 @@
             app:argType="string"
             app:nullable="true" />
         <action
-            android:id="@+id/action_categoryFragment_to_soundFunnyFragment"
-            app:destination="@id/soundFunnyFragment"
-            app:popUpTo="@id/soundFunnyFragment"
-            app:popUpToInclusive="true"/>
+            android:id="@+id/action_detailCategoryFragment_to_soundDetailFragment"
+            app:destination="@id/soundDetailFragment">
+            <argument
+                android:name="position"
+                android:defaultValue="1"
+                app:argType="integer" />
+        </action>
     </fragment>
+
+    <action
+        android:id="@+id/action_global_detailCategoryFragment"
+        app:destination="@id/detailCategoryFragment"
+        app:popUpTo="@id/soundDetailFragment"
+        app:popUpToSaveState="true" />
+
     <fragment
         android:id="@+id/addCallScreenFragment"
         android:name="com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment"
@@ -130,6 +140,29 @@
         android:name="com.hola360.pranksounds.ui.callscreen.CallerFragment"
         android:label="CallerFragment" />
     <action android:id="@+id/action_global_callerFragment" app:destination="@id/callerFragment" />
+        android:label="Add Call Screen" />
 
+    <fragment
+        android:id="@+id/soundDetailFragment"
+        android:name="com.hola360.pranksounds.ui.sound_funny.sound_detail.SoundDetailFragment"
+        android:label="fragment_sound_detail"
+        tools:layout="@layout/fragment_sound_detail">
+        <argument
+            android:name="position"
+            android:defaultValue="1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_soundDetailFragment_to_detailCategoryFragment"
+            app:destination="@id/detailCategoryFragment"
+            app:popUpTo="@id/detailCategoryFragment"
+            app:popUpToInclusive="true"
+            app:popUpToSaveState="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_soundDetailFragment"
+        app:destination="@id/soundDetailFragment"
+        app:popUpTo="@id/soundDetailFragment"
+        app:popUpToSaveState="true" />
 
 </navigation>

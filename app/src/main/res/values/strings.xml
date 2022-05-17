@@ -49,10 +49,11 @@
     <string name="default_image">Default image</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="confirm_delete">Are you sure you want to Delete?</string>
+    <string name="confirm_delete">Are you sure you want to Delete</string>
     <string name="delete_complete">Delete complete</string>
     <string name="trend_caller">Trend caller</string>
     <string name="my_caller">My caller</string>
-
+    <string name="edit_call_screen">Edit call screen</string>
+    <string name="write_setting_permission">Please allow the app to modify system settings to use this feature</string>
 </resources>
 

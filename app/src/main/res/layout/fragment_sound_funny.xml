@@ -19,11 +19,25 @@
         android:background="@color/home_background_color"
         tools:context=".ui.sound_funny.SoundFunnyFragment">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back"
+            app:title="Sound Funny"
+            app:titleTextAppearance="@style/Theme.PrankSounds.ToolbarTextAppearance"
+            app:titleTextColor="@color/white" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCategory"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp" />
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -37,9 +51,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
-            android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
             android:id="@+id/noInternetLayout"
-            layout="@layout/no_internet_layout" />
+            layout="@layout/no_internet_layout"
+            android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -54,7 +54,8 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.add_new_call -> {
-                        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(null)
+                        action =
+                            CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(null)
                         findNavController().navigate(action as NavDirections)
                         true
                     }
@@ -105,7 +106,7 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
             llEdit.setOnClickListener {
                 passCallToUpDate(call)
             }
-            llDelete.setOnClickListener{
+            llDelete.setOnClickListener {
                 setUpAlertDialog(call)
             }
         }
@@ -126,7 +127,7 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
         callScreenViewModel.getPhoneBook()
     }
 
-    override fun onItemClick(call: Call,position: Int) {
+    override fun onItemClick(call: Call, position: Int) {
         action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(call)
         findNavController().navigate(action as NavDirections)
     }
@@ -141,14 +142,18 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
 
     private fun setUpAlertDialog(call: Call) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setMessage(requireActivity().resources.getString(R.string.confirm_delete))
+        builder.setMessage(requireActivity().resources.getString(R.string.confirm_delete) + " " + call.name + "?")
             .setCancelable(false)
             .setPositiveButton("Yes") { dialog, id ->
                 lifecycleScope.launch {
                     repository.deleteCall(call)
                     callScreenViewModel.getPhoneBook()
                 }
-                Toast.makeText(requireContext(), requireActivity().resources.getString(R.string.delete_complete), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    requireActivity().resources.getString(R.string.delete_complete),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             .setNegativeButton("No") { dialog, id ->
                 // Dismiss the dialog
@@ -158,6 +163,7 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
         alert.show()
         popUpWindow.dismiss()
     }
+
     private fun passCallToUpDate(call: Call) {
         val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

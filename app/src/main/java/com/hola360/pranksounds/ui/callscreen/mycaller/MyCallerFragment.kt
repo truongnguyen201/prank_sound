@@ -1,6 +1,8 @@
 package com.hola360.pranksounds.ui.callscreen.mycaller
 
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.github.ybq.android.spinkit.style.Circle
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
@@ -14,6 +16,7 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
     }
 
     override fun initView() {
+        setUpProgressBar()
         binding.apply {
             rcvCall.adapter = callAdapter
             rcvCall.setHasFixedSize(true)
@@ -41,6 +44,12 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
 
     override fun getPhoneBook() {
         myCallerViewModel.getPhoneBook()
+    }
+
+    private fun setUpProgressBar() {
+        val circle = Circle()
+        circle.color = ContextCompat.getColor(requireActivity(), R.color.design_color)
+        binding.contentLoadingProgressBar.indeterminateDrawable = circle
     }
 
     override fun onResume() {

@@ -18,7 +18,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapt
 class HomeFragment : BaseFragment<FragmentHomeBinding>(), PrankSection.ClickListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var action: Any
-    var doubleBackToExitPressedOnce = false
+
 
     override fun getLayout(): Int {
         return R.layout.fragment_home

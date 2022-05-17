@@ -40,11 +40,10 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
     fun addCallToLocal() {
         var newCall: Call = curCallModel!!
 
-        if (!newCall.isLocal) {
-            newCall.isLocal = true
+        if (!newCall.isLocal && call != null) {
             newCall.avatarUrl = Constants.SUB_URL + newCall.avatarUrl
         }
-
+        newCall.isLocal = true
         viewModelScope.launch {
             repository.addNewCallToLocal(newCall)
         }

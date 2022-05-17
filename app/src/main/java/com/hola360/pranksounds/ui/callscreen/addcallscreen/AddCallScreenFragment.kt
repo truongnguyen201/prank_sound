@@ -9,8 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.hola360.pranksounds.R
@@ -18,7 +16,6 @@ import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.model.PhotoModel
 import com.hola360.pranksounds.databinding.FragmentAddCallScreenBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
-import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
 import com.hola360.pranksounds.ui.dialog.pickphoto.PickPhotoDialog
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
@@ -76,23 +73,20 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
 
         call = args.callModel
         if (call != null) {
+            binding.tbAddCallScreen.title = requireActivity().getString(R.string.edit_call_screen)
             addCallScreenViewModel.setCall(call!!)
             with(binding) {
-                call?.let {
-                    val path =
-                        if (call!!.isLocal) call!!.avatarUrl else Constants.SUB_URL + it.avatarUrl
-                    imgAvatar.setImageURI(null)
-                    imgAvatar.let { imgView ->
-                        Glide.with(imgView)
-                            .load(path)
-                            .placeholder(R.drawable.smaller_loading)
-                            .error(R.drawable.img_avatar_default)
-                            .into(imgView)
-                    }
-                    imgAvatar.setImageURI(Uri.parse(it.avatarUrl))
-                    tvCallerName.setText(it.name)
-                    tvPhoneNumber.setText(it.phone)
+                val path =
+                    if (call!!.isLocal) call!!.avatarUrl else Constants.SUB_URL + call!!.avatarUrl
+                imgAvatar.let { imgView ->
+                    Glide.with(imgView)
+                        .load(path)
+                        .placeholder(R.drawable.smaller_loading)
+                        .error(R.drawable.img_avatar_default)
+                        .into(imgView)
                 }
+                tvCallerName.setText(call!!.name)
+                tvPhoneNumber.setText(call!!.phone)
             }
 
         }
@@ -157,9 +151,9 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
 
         options.setHideBottomControls(false)
         options.setFreeStyleCropEnabled(true)
-        options.setStatusBarColor( ContextCompat.getColor(requireActivity(),R.color.design_color))
-        options.setToolbarColor(requireActivity().resources.getColor(R.color.design_color))
-        options.setToolbarWidgetColor(requireActivity().resources.getColor(R.color.white))
+        options.setStatusBarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
+        options.setToolbarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
+        options.setToolbarWidgetColor(ContextCompat.getColor(requireActivity(), R.color.white))
         options.setToolbarTitle("Crop image")
         return options
     }

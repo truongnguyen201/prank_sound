@@ -12,7 +12,7 @@ import com.hola360.pranksounds.databinding.ItemSoundBinding
 import com.hola360.pranksounds.utils.listener.SoundListener
 
 @SuppressLint("NotifyDataSetChanged")
-class DetailCategoryAdapter(private val context: Context) :
+class DetailCategoryAdapter :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val data = mutableListOf<Sound>()

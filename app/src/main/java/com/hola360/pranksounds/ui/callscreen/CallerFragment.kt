@@ -22,6 +22,7 @@ class CallerFragment : BaseFragment<FragmentCallerBinding>() {
 
     override fun initView() {
         val adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
+        binding.vpCaller.isSaveEnabled = false
         binding.vpCaller.adapter = adapter
 
         TabLayoutMediator(binding.tabLayout, binding.vpCaller) { tab, position ->
