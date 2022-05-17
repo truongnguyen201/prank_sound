@@ -16,7 +16,7 @@ data class Call (
 
     @SerializedName("avatar")
     @ColumnInfo(name = "avatar_url")
-    val avatarUrl: String,
+    var avatarUrl: String,
 
     var name: String,
     var phone: String,

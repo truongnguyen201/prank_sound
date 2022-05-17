@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
@@ -32,7 +33,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     private lateinit var addCallScreenViewModel: AddCallScreenViewModel
     private lateinit var action: Any
     private var call: Call? = null
-    private val args : AddCallScreenFragmentArgs by navArgs();
+    private val args: AddCallScreenFragmentArgs by navArgs();
 
     override fun getLayout(): Int {
         return R.layout.fragment_add_call_screen
@@ -76,29 +77,21 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         call = args.callModel
         if (call != null) {
             addCallScreenViewModel.setCall(call!!)
-            if (call!!.id != 0) {
-                with(binding) {
-                    call?.let {
-                        imgAvatar.setImageURI(Uri.parse(it.avatarUrl))
-                        tvCallerName.setText(it.name)
-                        tvPhoneNumber.setText(it.phone)
+            with(binding) {
+                call?.let {
+                    val path =
+                        if (call!!.isLocal) call!!.avatarUrl else Constants.SUB_URL + it.avatarUrl
+                    imgAvatar.setImageURI(null)
+                    imgAvatar.let { imgView ->
+                        Glide.with(imgView)
+                            .load(path)
+                            .placeholder(R.drawable.smaller_loading)
+                            .error(R.drawable.img_avatar_default)
+                            .into(imgView)
                     }
-                }
-            }
-            else {
-                with(binding) {
-                    call?.let {
-                        imgAvatar.let { imgView ->
-                            Glide.with(imgView)
-                                .load(Constants.SUB_URL + it.avatarUrl)
-                                .placeholder(R.drawable.smaller_loading)
-                                .error(R.drawable.img_avatar_default)
-                                .into(imgView)
-                        }
-                        imgAvatar.setImageURI(Uri.parse(it.avatarUrl))
-                        tvCallerName.setText(it.name)
-                        tvPhoneNumber.setText(it.phone)
-                    }
+                    imgAvatar.setImageURI(Uri.parse(it.avatarUrl))
+                    tvCallerName.setText(it.name)
+                    tvPhoneNumber.setText(it.phone)
                 }
             }
 
@@ -106,7 +99,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     }
 
     override fun initViewModel() {
-        val factory = AddCallScreenViewModel.Factory(requireActivity().application)
+        val factory = AddCallScreenViewModel.Factory(requireActivity().application,args.callModel)
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
 
@@ -139,7 +132,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
             val imageUri = data?.let { UCrop.getOutput(it) }
             if (imageUri != null) {
                 binding.imgAvatar.setImageURI(imageUri)
-                binding.viewModel!!.imageUri.value = imageUri
+                binding.viewModel!!.curCallModel!!.avatarUrl = imageUri.path.toString()
             }
 //            binding.viewModel!!.imageUri.value = imageUri
         }
@@ -164,13 +157,12 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
 
         options.setHideBottomControls(false)
         options.setFreeStyleCropEnabled(true)
-        options.setStatusBarColor(requireActivity().resources.getColor(R.color.design_color))
+        options.setStatusBarColor( ContextCompat.getColor(requireActivity(),R.color.design_color))
         options.setToolbarColor(requireActivity().resources.getColor(R.color.design_color))
         options.setToolbarWidgetColor(requireActivity().resources.getColor(R.color.white))
         options.setToolbarTitle("Crop image")
         return options
     }
-
 
 
     override fun onPickPhoto(photoModel: PhotoModel) {

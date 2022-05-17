@@ -52,14 +52,12 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
                 tvContactPersonName.text = call.name
                 tvPhoneNumber.text = call.phone
                 if (call.isLocal) {
-                    if (call.avatarUrl != "") {
-                        ivAvatarCall.setImageURI(Uri.parse(call.avatarUrl))
-                    } else {
-                        ivAvatarCall.setImageDrawable(
-                            binding.root.context.resources.getDrawable(
-                                R.drawable.img_avatar_default
-                            )
-                        )
+                    ivAvatarCall.let { imgView ->
+                        Glide.with(imgView)
+                            .load(call.avatarUrl)
+                            .placeholder(R.drawable.smaller_loading)
+                            .error(R.drawable.img_avatar_default)
+                            .into(imgView)
                     }
                 }
                 else {
