@@ -125,7 +125,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     }
 
     override fun onItemClick(call: Call,position: Int) {
-        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(call)
+        action = CallScreenFragmentDirections.actionGlobalSetupCallFragment(call)
         findNavController().navigate(action as NavDirections)
     }
 

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.hola360.pranksounds.ui.callscreen.setcall.SetupCallViewModel" />
+        <import type="android.view.View"/>
+        <import type="com.hola360.pranksounds.ui.callscreen.setcall.WaitCallPeriod"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.callscreen.addcallscreen.AddCallScreenFragment">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbSetupCallScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/setup_call_menu"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back"
+            app:title="@string/set_call"
+            app:titleTextColor="@color/white" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tbSetupCallScreen">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_marginTop="@dimen/dp_32"
+                    android:layout_gravity="center"
+                    android:src="@drawable/img_avatar_default"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvCallerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:text="@string/default_text"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="24sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textAppearance="?textAppearanceBody1" />
+                <TextView
+                    android:id="@+id/tvPhoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:text="@string/default_text"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="20sp"
+                    android:textColor="@color/phone_number_color"
+                    android:textAppearance="?textAppearanceBody1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="@dimen/dp_24"
+                    android:layout_marginTop="@dimen/dp_32"
+                    android:weightSum="2">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="@string/when_to_call"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="@dimen/text_secondary"
+                        android:textColor="@color/when_to_call"
+                        android:textAppearance="?textAppearanceBody1" />
+                    <TextView
+                        android:id="@+id/tvPeriod"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="@string/now"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="@dimen/text_secondary"
+                        android:textColor="@color/when_to_call"
+                        android:textAppearance="?textAppearanceBody1" />
+
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:layout_marginHorizontal="@dimen/dp_8"
+                    android:background="@color/fence"
+
+                    android:src="@color/black"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkedButton="@id/btnOneMinute"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginHorizontal="@dimen/dp_8"
+                    android:orientation="horizontal"
+                    android:weightSum="4">
+                    <Button
+                        android:id="@+id/btnNow"
+                        style="@style/OutlinedButton"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="@dimen/dp_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="0dp"
+                        android:text="@string/now"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_secondary"
+                        android:textAllCaps="false"/>
+                    <Button
+                        android:id="@+id/btnFiveSeconds"
+                        style="@style/OutlinedButton"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="@dimen/dp_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="0dp"
+                        android:text="@string/five_seconds"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_secondary"
+                        android:textAllCaps="false"/>
+                    <Button
+                        android:id="@+id/btnThirtySeconds"
+                        style="@style/OutlinedButton"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="@dimen/dp_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="0dp"
+                        android:text="@string/thirty_seconds"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_secondary"
+                        android:textAllCaps="false"/>
+                    <Button
+                        android:id="@+id/btnOneMinute"
+                        style="@style/OutlinedButton"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="@dimen/dp_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="0dp"
+                        android:text="@string/one_minute"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_secondary"
+                        android:textAllCaps="false"/>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnSetCall"
+                    style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dp_32"
+                    android:paddingVertical="@dimen/dp_8"
+                    android:text="@string/set_call"
+                    android:textAllCaps="false"
+                    android:textAppearance="?textAppearanceBody1"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/homeFragment"
+    tools:ignore="ExtraText">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -164,5 +165,15 @@
         app:destination="@id/soundDetailFragment"
         app:popUpTo="@id/soundDetailFragment"
         app:popUpToSaveState="true" />
+    <fragment
+        android:id="@+id/setupCallFragment"
+        android:name="com.hola360.pranksounds.ui.callscreen.setcall.SetupCallFragment"
+        android:label="SetupCallFragment" >
+        <argument
+            android:name="callModel"
+            app:argType="com.hola360.pranksounds.data.model.Call"
+            app:nullable="false"/>
+    </fragment>
+    <action android:id="@+id/action_global_setupCallFragment" app:destination="@id/setupCallFragment" />
 
 </navigation>

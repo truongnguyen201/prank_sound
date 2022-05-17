@@ -30,7 +30,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     private lateinit var addCallScreenViewModel: AddCallScreenViewModel
     private lateinit var action: Any
     private var call: Call? = null
-    private val args: AddCallScreenFragmentArgs by navArgs();
+    private val args: AddCallScreenFragmentArgs by navArgs()
 
     override fun getLayout(): Int {
         return R.layout.fragment_add_call_screen
