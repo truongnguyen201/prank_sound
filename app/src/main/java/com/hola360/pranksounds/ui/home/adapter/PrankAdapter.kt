@@ -24,7 +24,6 @@ class PrankAdapter(private val onSelect: (Int) -> Unit) :
 
     override fun onBindViewHolder(holder: PrankViewHolder, position: Int) {
         holder.bind(position)
-
     }
 
     override fun getItemCount(): Int {

@@ -38,17 +38,6 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     override fun initView() {
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
-//            setOnMenuItemClickListener {
-//                when(it.itemId) {
-//                    R.id.add_new_call -> {
-//                        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment()
-//                        findNavController().navigate(action as NavDirections)
-//                        true
-//                    }
-//                    else -> false
-//                }
-//            }
-
             setNavigationOnClickListener {
                 requireActivity().onBackPressed()
             }

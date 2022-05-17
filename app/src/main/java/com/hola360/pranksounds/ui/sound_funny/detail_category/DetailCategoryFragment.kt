@@ -1,21 +1,26 @@
 package com.hola360.pranksounds.ui.sound_funny.detail_category
 
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
-import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
-import android.view.LayoutInflater
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.widget.*
+import android.widget.PopupWindow
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +30,6 @@ import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
-import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
 import com.hola360.pranksounds.utils.Utils
@@ -33,32 +37,42 @@ import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
 class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
-    private lateinit var detailCategoryAdapter: DetailCategoryAdapter
+    private val detailCategoryAdapter = DetailCategoryAdapter()
     private lateinit var detailCategoryViewModel: DetailCategoryViewModel
     private var mLayoutManager: LinearLayoutManager? = null
     private val sharedVM by activityViewModels<SharedViewModel>()
     private val args: DetailCategoryFragmentArgs by navArgs()
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popUpWindow: PopupWindow
-    private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
+    private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+    private var currentMorePosition = 0
     var isUserControl = false
+    private lateinit var paint: Paint
 
     override fun getLayout(): Int {
         return R.layout.fragment_detail_category
     }
 
     override fun initView() {
+        setupForSeekbar()
         requireActivity().title = args.categoryTitle
         setUpProgressBar()
-        detailCategoryAdapter = DetailCategoryAdapter(requireContext())
         detailCategoryAdapter.setListener(this)
         mLayoutManager = LinearLayoutManager(requireContext())
         setupPopUpWindow()
+        binding.viewModel = detailCategoryViewModel
 
         binding.apply {
             rvSound.layoutManager = mLayoutManager
             rvSound.setHasFixedSize(true)
             rvSound.adapter = detailCategoryAdapter
+
+            toolbar.apply {
+                setNavigationOnClickListener {
+                    requireActivity().onBackPressed()
+                }
+                title = args.categoryTitle
+            }
 
             //load more data when scroll to the end of recyclerview
             rvSound.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -82,7 +96,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
 
             sbDuration.apply {
-                drawThumb(this, 0, 0)
                 setPadding(70, 0, 70, 0)
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
@@ -98,6 +111,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                     }
                 })
             }
+
             ibPlayPause.setOnClickListener {
                 if (controlPanelListener.isPlaying()) {
                     ibPlayPause.setImageResource(R.drawable.ic_play_circle)
@@ -135,27 +149,23 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                     }
                 }
             }
+
+            controlPanel.setOnClickListener {
+                findNavController().navigate(
+                    DetailCategoryFragmentDirections.actionDetailCategoryFragmentToSoundDetailFragment()
+                        .setPosition(sharedVM.currentPosition.value!!)
+                )
+            }
         }
     }
 
-    private fun drawThumb(seekBar: SeekBar, progress: Int, duration: Int) {
-        val bitmap =
-            ContextCompat.getDrawable(requireContext(), R.drawable.seek_bar_thumb)?.toBitmap()
-        val bmp = bitmap!!.copy(Bitmap.Config.ARGB_8888, true)
-        val c = Canvas(bmp)
-        val text = String.format("00:%02d/00:%02d", progress / 1000, duration / 1000)
-        val p = Paint()
-        p.typeface = Typeface.DEFAULT
-        p.textSize = 20F
-        p.color = (-0x1)
-        c.drawText(
-            text, (bmp.width - p.measureText(text)) / 2,
-            (c.height / 2 - (p.descent() + p.ascent()) / 2), p
-        )
-        seekBar.thumb = (BitmapDrawable(resources, bmp))
+    private fun setupForSeekbar() {
+        paint = Paint()
+        paint.typeface = Typeface.DEFAULT
+        paint.textSize = 20F
+        paint.color = (-0x1)
     }
 
-    @SuppressLint("NotifyDataSetChanged", "Recycle")
     override fun initViewModel() {
         val factory =
             DetailCategoryViewModel.Factory(requireActivity().application, args.categoryId!!)
@@ -196,29 +206,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
-        detailCategoryViewModel.isLoading.observe(this) {
-            it?.let {
-                binding.progressBar.visibility = if (it) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-
-        detailCategoryViewModel.isLoadingMore.observe(this) {
-            it?.let {
-                binding.loadMoreProgressBar.visibility = if (it) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-
         detailCategoryViewModel.favoriteSoundLiveData.observe(this) {
             it?.let {
                 detailCategoryAdapter.updateFavoriteData(it)
+                sharedVM.favoriteList.value!!.addAll(it)
             }
         }
 
@@ -239,6 +230,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
+        //change information in panel map with sound
         sharedVM.currentPosition.observe(this) {
             it?.let {
                 if (sharedVM.soundList.value!!.size > 0) {
@@ -260,15 +252,23 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
+        val resource = resources
         sharedVM.seekBarProgress.observe(this) {
             val animator = ObjectAnimator.ofInt(binding.sbDuration, "progress", it!! - 10, it)
             it.let {
                 if (!isUserControl) {
                     binding.sbDuration.apply {
-                        animator.duration = 60
+                        animator.duration = 10
                         animator.interpolator = LinearInterpolator()
                         animator.start()
-                        drawThumb(this, it, sharedVM.soundDuration.value!!)
+                        Utils.drawThumb(
+                            requireContext(),
+                            this,
+                            it,
+                            sharedVM.soundDuration.value!!,
+                            resource,
+                            paint
+                        )
                     }
                 }
             }
@@ -293,35 +293,40 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
     private fun setupPopUpWindow() {
         val onClickListener = View.OnClickListener {
+            val type = (it as TextView).text.toString()
             if (Utils.storagePermissionGrant(requireContext())) {
-                setupWhenStoragePermissionGranted()
+                if (Utils.writeSettingPermissionGrant(requireContext())) {
+                    setupWhenPermissionGranted(type, currentMorePosition)
+                } else {
+                    requestWriteSettingPermission()
+                }
             } else {
                 requestStoragePermission()
             }
-            val type = (it as TextView).text
-            Toast.makeText(context, type, LENGTH_LONG).show()
+
             popUpWindow.dismiss()
         }
 
-        val popUpInflater =
-            requireActivity().applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popUpBinding = PopUpWindowLayoutBinding.inflate(popUpInflater)
+        popUpWindow = Utils.showPopUpSetAs(requireActivity(), onClickListener)
+    }
 
-        popUpBinding.apply {
-            tvNotification.setOnClickListener(onClickListener)
-            tvRingtone.setOnClickListener(onClickListener)
-            tvAlarm.setOnClickListener(onClickListener)
+    //open setting to request write setting permission
+    private fun requestWriteSettingPermission() {
+        Toast.makeText(
+            requireContext(),
+            activity?.resources?.getString(R.string.write_setting_permission),
+            LENGTH_LONG
+        ).show()
+        val intent = Intent()
+        intent.action = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Settings.ACTION_MANAGE_WRITE_SETTINGS
+        } else {
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         }
-
-        popUpWindow = PopupWindow(
-            popUpBinding.root,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            true
-        ).apply {
-            elevation = 20F
-            contentView.setOnClickListener { dismiss() }
-        }
+        val uri = Uri.fromParts("package", activity?.packageName, null)
+        intent.data = uri
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        activity?.startActivity(intent)
     }
 
     private fun requestStoragePermission() {
@@ -332,16 +337,19 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            if (Utils.storagePermissionGrant(requireContext())
-            ) {
-                setupWhenStoragePermissionGranted()
+            if (Utils.storagePermissionGrant(requireContext())) {
+                requestWriteSettingPermission()
             } else {
                 Utils.showAlertPermissionNotGrant(binding.root, requireActivity())
             }
         }
 
-    private fun setupWhenStoragePermissionGranted() {
-
+    private fun setupWhenPermissionGranted(type: String, position: Int) {
+        detailCategoryViewModel.setAs(
+            sharedVM.soundList.value!![position].soundUrl!!,
+            type,
+            sharedVM.soundList.value!![position].title!!
+        )
     }
 
     //handle when favorite button checked: add sound to favorite
@@ -357,12 +365,14 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     //handle when click on sound item in recycler view
     override fun onItemClick(position: Int) {
         sharedVM.currentPosition.value = position
+        binding.sbDuration.progress = 0
     }
 
     override fun onMoreIconClick(view: View, position: Int) {
+        currentMorePosition = position
         popUpWindow.showAsDropDown(
-            view, (screenWidth * 0.68).toInt(),
-            ((-view.height) * 0.7).toInt()
+            view, (screenWidth * 0.6).toInt(),
+            ((-view.height) * 1.2).toInt()
         )
     }
 
