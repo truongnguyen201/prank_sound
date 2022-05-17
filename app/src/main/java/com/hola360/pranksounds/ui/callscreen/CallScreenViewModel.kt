@@ -57,6 +57,7 @@ class CallScreenViewModel(app: Application) : ViewModel() {
                         if (!listPhoneBookFromLocal.isNullOrEmpty()) {
                             listPhoneBook.addAll(listPhoneBookFromLocal)
                         }
+                        listPhoneBook.sortByDescending { it.isLocal }
                         phoneBookLiveData.value = DataResponse.DataSuccess(listPhoneBook)
                     }
                 } catch (e: Exception) {

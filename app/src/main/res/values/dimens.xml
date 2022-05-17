@@ -25,10 +25,15 @@
 
     <!-- Screen call   -->
     <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_2">2dp</dimen>
     <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_32">32dp</dimen>
     <dimen name="dp_36">36dp</dimen>
     <dimen name="dp_24">24dp</dimen>
     <dimen name="album_icon_width">70dp</dimen>
     <dimen name="viewpager_next_item_visible">26dp</dimen>
     <dimen name="viewpager_current_item_horizontal_margin">42dp</dimen>
+    <dimen name="text_primary">20sp</dimen>
+    <dimen name="text_secondary">13sp</dimen>
 </resources>

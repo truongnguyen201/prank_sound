@@ -31,4 +31,10 @@
     <color name="retry_button">#FCA631</color>
     <color name="background_view">#B32F2F2F</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="disable_button">#FFDDAF</color>
+    <color name="enable_button">#FCA631</color>
+    <!--  setup call screen-->
+    <color name="when_to_call">#555555</color>
+    <color name="fenc">#E8E2E2</color>
+    <color name="none">#00FFFFFF</color>
 </resources>

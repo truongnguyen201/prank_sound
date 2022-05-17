@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -71,4 +72,5 @@ dependencies {
     // crop image
     implementation 'com.github.yalantis:ucrop:2.2.6'
     implementation 'com.github.yalantis:ucrop:2.2.6'
+
 }
