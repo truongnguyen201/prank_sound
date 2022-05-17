@@ -11,8 +11,10 @@ class FileDownloadHelper : BaseRetrofitHelper() {
     var fileDownloadService: FileDownloadService
 
     init {
+        initRemoteService()
         GsonBuilder().setLenient().create()
-        val retrofit = Retrofit.Builder().baseUrl(Constants.SUB_URL)
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constants.SUB_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(okHttpClient!!).build()

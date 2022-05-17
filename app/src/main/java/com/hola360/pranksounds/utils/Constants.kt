@@ -65,6 +65,4 @@ object Constants {
     const val SOUND_ITEM_PER_PAGE = 10
 
     const val DIR_PATH = "/PranSounds/"
-
-
 }

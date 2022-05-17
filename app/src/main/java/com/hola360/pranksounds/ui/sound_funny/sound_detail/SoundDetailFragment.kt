@@ -12,6 +12,7 @@ import android.widget.PopupWindow
 import android.widget.SeekBar
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.hola360.pranksounds.R
@@ -27,7 +28,7 @@ import com.hola360.pranksounds.utils.listener.ControlPanelListener
 class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     private val viewPagerAdapter = ViewPagerAdapter()
     private val sharedVM by activityViewModels<SharedViewModel>()
-    private lateinit var soundDetailViewModel : DetailCategoryViewModel
+    private lateinit var soundDetailViewModel: SoundDetailViewModel
     private val args: SoundDetailFragmentArgs by navArgs()
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popupWindow: PopupWindow
@@ -57,8 +58,6 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                     -(toolbar.height * 0.8).toInt()
                 )
             }
-
-
 
             vp2Sound.apply {
                 adapter = viewPagerAdapter
@@ -143,10 +142,26 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                 }
                 controlPanelListener.onPlayPauseClick()
             }
+
+            cbFavorite.apply {
+                setOnClickListener {
+                    val position = vp2Sound.currentItem + vp2Sound.currentItem / 10 + 1
+                    if(isChecked){
+                        soundDetailViewModel.addFavoriteSound(sharedVM.soundList.value!![position])
+                    } else {
+                        soundDetailViewModel.removeFavoriteSound(sharedVM.soundList.value!![position])
+                    }
+                }
+            }
         }
     }
 
     override fun initViewModel() {
+        val factory = SoundDetailViewModel.Factory(requireActivity().application)
+        soundDetailViewModel = ViewModelProvider(this, factory)[SoundDetailViewModel::class.java]
+
+        soundDetailViewModel.downloadAndSet("sound/140_f2a6d18fc852ae2fe83edcef9217df27.mp3")
+
         sharedVM.soundList.observe(this) {
             it?.let {
                 if (it.size > 0) {

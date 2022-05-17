@@ -173,6 +173,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
         if (fromUser) {
             mediaPlayer.seekTo(progress)
             mediaPlayer.start()
+            sharedViewModel.isPlaying.value = true
             sharedViewModel.seekBarProgress.value = progress
             sharedViewModel.isComplete.value = false
         }

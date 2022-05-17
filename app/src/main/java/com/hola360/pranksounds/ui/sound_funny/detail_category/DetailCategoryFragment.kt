@@ -152,7 +152,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
             controlPanel.setOnClickListener {
                 findNavController().navigate(
-                    DetailCategoryFragmentDirections.actionDetailCategoryFragmentToSoundDetailFragment()
+                    DetailCategoryFragmentDirections
+                        .actionDetailCategoryFragmentToSoundDetailFragment()
                         .setPosition(sharedVM.currentPosition.value!!)
                 )
             }
