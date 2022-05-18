@@ -21,7 +21,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.NullPointerException
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -55,7 +54,7 @@ class SharedViewModel(private val app: Application) : ViewModel() {
         viewModelScope.launch {
             // check if the file is exists
             if (!File(fileName).exists()) {
-                Log.e("File is not exists", "!")
+                Log.e("File $soundName is not exists", "1")
                 //check the directory is not exists -> create the dir
                 if (!File(dirName).exists()) {
                     File(dirName).mkdir()
@@ -67,6 +66,7 @@ class SharedViewModel(private val app: Application) : ViewModel() {
 
                 try {
                     //download the file from url
+                    Log.e("Downloading the file $soundName", " 1")
                     val response = fileDeferred.await()!!.body()
                     val input = response!!.byteStream()
                     val fos = FileOutputStream(fileName)
@@ -89,17 +89,16 @@ class SharedViewModel(private val app: Application) : ViewModel() {
                     ).show()
                     return@launch
                 }
-            } else {
-                Log.e("File is exists", "!")
-                try {
-                    app.contentResolver.delete(
-                        uri!!,
-                        MediaStore.MediaColumns.DATA + "=\"" + File(fileName).absolutePath + "\"",
-                        null
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            }
+
+            try {
+                app.contentResolver.delete(
+                    uri!!,
+                    MediaStore.MediaColumns.DATA + "=\"" + File(fileName).absolutePath + "\"",
+                    null
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
             setAs(type, uri!!, fileName, soundName)
