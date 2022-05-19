@@ -56,7 +56,7 @@
     <string name="edit_call_screen">Edit call screen</string>
     <string name="write_setting_permission">Please allow the app to modify system settings to use this feature</string>
 
-    // setup call screen
+    <!--    // setup call screen-->
     <string name="default_text">Default text</string>
     <string name="when_to_call">When to call</string>
     <string name="seconds">seconds</string>
@@ -68,5 +68,11 @@
     <string name="five_seconds">5 seconds</string>
     <string name="thirty_seconds">30 seconds</string>
     <string name="one_minute">1 minute</string>
+
+
+    <!--  Calling screen  -->
+    <string name="incoming_call">Incoming Call</string>
+    <string name="phone_number_">036-875-2432</string>
+
 </resources>
 

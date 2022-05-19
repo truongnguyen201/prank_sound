@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@id/answerState"
+        motion:constraintSetStart="@id/baseState"
+        motion:duration="1000">
+
+        <OnSwipe
+            motion:autoCompleteMode="spring"
+            motion:dragDirection="dragRight"
+            motion:touchAnchorId="@+id/ivAnswer"
+            motion:touchAnchorSide="right" />
+
+    </Transition>
+
+    <ConstraintSet android:id="@+id/baseState">
+        <Constraint android:id="@id/ivAvatar">
+            <Layout
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="10dp"
+                motion:layout_constraintEnd_toEndOf="parent"
+                motion:layout_constraintStart_toStartOf="parent"
+                motion:layout_constraintTop_toBottomOf="@id/tvPhoneNumber" />
+        </Constraint>
+
+        <Constraint android:id="@id/vAnswer">
+            <Layout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp"
+                motion:layout_constraintBottom_toBottomOf="parent"
+                motion:layout_constraintStart_toStartOf="parent" />
+        </Constraint>
+
+        <Constraint android:id="@id/ivAnswer">
+            <Layout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                motion:layout_constraintBottom_toBottomOf="@id/vAnswer"
+                motion:layout_constraintEnd_toEndOf="@id/vAnswer"
+                motion:layout_constraintStart_toStartOf="@id/vAnswer"
+                motion:layout_constraintTop_toTopOf="@id/vAnswer" />
+        </Constraint>
+
+        <Constraint android:id="@id/vDismiss">
+            <Layout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                motion:layout_constraintBottom_toBottomOf="parent"
+                motion:layout_constraintEnd_toEndOf="parent" />
+        </Constraint>
+
+        <Constraint android:id="@id/ivDismiss">
+            <Layout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                motion:layout_constraintBottom_toBottomOf="@id/vDismiss"
+                motion:layout_constraintEnd_toEndOf="@id/vDismiss"
+                motion:layout_constraintStart_toStartOf="@id/vDismiss"
+                motion:layout_constraintTop_toTopOf="@id/vDismiss" />
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/answerState">
+        <Constraint
+            android:id="@id/vAnswer"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="20dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+
+        <Constraint android:id="@id/ivAnswer">
+            <Layout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginBottom="20dp"
+                motion:layout_constraintBottom_toBottomOf="parent"
+                motion:layout_constraintEnd_toEndOf="parent"
+                motion:layout_constraintStart_toStartOf="parent" />
+        </Constraint>
+
+    </ConstraintSet>
+</MotionScene>

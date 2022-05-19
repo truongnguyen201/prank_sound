@@ -10,7 +10,7 @@ import java.io.Serializable
 
 @Parcelize
 @Entity(tableName = "tblLocalCall")
-data class Call (
+data class Call(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
 
@@ -23,6 +23,6 @@ data class Call (
 
     @ColumnInfo(name = "is_local")
     var isLocal: Boolean
-): Serializable, Parcelable {
+) : Serializable, Parcelable {
     constructor() : this(0, "", "", "", false)
 }

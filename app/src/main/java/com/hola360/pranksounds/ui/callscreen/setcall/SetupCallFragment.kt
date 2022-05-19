@@ -1,14 +1,12 @@
 package com.hola360.pranksounds.ui.callscreen.setcall
 
-
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -21,11 +19,10 @@ import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingRecei
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.Converter
 import java.util.*
-import kotlin.system.exitProcess
 
 
 class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
-    lateinit var setupCallViewModel: SetupCallViewModel
+    private lateinit var setupCallViewModel: SetupCallViewModel
     private var call: Call? = null
     private val args: SetupCallFragmentArgs by navArgs()
 
@@ -61,21 +58,21 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
             btnNow.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.Now
 
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}", )
+                Log.e("TAG", "init: ${setupCallViewModel.period.value}")
             }
 
             btnFiveSeconds.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.FiveSeconds
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}", )
+                Log.e("TAG", "init: ${setupCallViewModel.period.value}")
             }
             btnThirtySeconds.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.ThirtySeconds
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}", )
+                Log.e("TAG", "init: ${setupCallViewModel.period.value}")
             }
 
             btnOneMinute.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.OneMinute
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}", )
+                Log.e("TAG", "init: ${setupCallViewModel.period.value}")
             }
             btnSetCall.setOnClickListener {
                 setCalling(Converter.convertTime(setupCallViewModel.period.value!!))
@@ -94,17 +91,57 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
     private fun observe() {
         setupCallViewModel.period.observe(requireActivity(), Observer {
             if (it == WaitCallPeriod.Now)
-                binding.btnNow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_color))
-            else binding.btnNow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.none))
+                binding.btnNow.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.secondary_color
+                    )
+                )
+            else binding.btnNow.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.none
+                )
+            )
             if (it == WaitCallPeriod.FiveSeconds)
-                binding.btnFiveSeconds.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_color))
-            else binding.btnFiveSeconds.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.none))
+                binding.btnFiveSeconds.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.secondary_color
+                    )
+                )
+            else binding.btnFiveSeconds.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.none
+                )
+            )
             if (it == WaitCallPeriod.ThirtySeconds)
-                binding.btnThirtySeconds.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_color))
-            else binding.btnThirtySeconds.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.none))
+                binding.btnThirtySeconds.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.secondary_color
+                    )
+                )
+            else binding.btnThirtySeconds.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.none
+                )
+            )
             if (it == WaitCallPeriod.OneMinute)
-                binding.btnOneMinute.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_color))
-            else binding.btnOneMinute.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.none))
+                binding.btnOneMinute.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.secondary_color
+                    )
+                )
+            else binding.btnOneMinute.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.none
+                )
+            )
         })
 
         setupCallViewModel.periodOfTime.observe(requireActivity(), Observer {
@@ -123,10 +160,5 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
             pendingIntent
         )
     }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
 }
 
