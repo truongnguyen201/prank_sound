@@ -24,9 +24,6 @@ interface RemoteServices {
         @Field("limit") itemPerPage: Int
     ): DetailCategoryResponse?
 
-    @POST(Constants.SUB_URL)
-    suspend fun downloadSound()
-
     @FormUrlEncoded
     @POST("/soundFuny.php")
     suspend fun getPhoneBook(

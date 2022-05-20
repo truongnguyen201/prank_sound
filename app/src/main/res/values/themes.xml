@@ -21,9 +21,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.PrankSounds.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
-        <item name="fontWeight">600</item>
-        <item name="fontStyle">italic</item>
+    <style name="Theme.PrankSounds.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    </style>
+
+    <style name="Theme.PrankSounds.ToolbarTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="Theme.PrankSounds.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -33,8 +38,8 @@
         <item name="colorPrimary">@color/policy_start_button</item>
         <item name="colorOnSurface">@android:color/holo_orange_light</item>
     </style>
-    <!--  Bottom sheet dialog  -->
 
+    <!--  Bottom sheet dialog  -->
     <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
     </style>
@@ -50,7 +55,6 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
-
 
     <!--    Set parent theme as app theme-->
     <style name="DialogTheme" parent="Theme.PrankSounds">
