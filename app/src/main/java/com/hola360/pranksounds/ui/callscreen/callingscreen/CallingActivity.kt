@@ -7,6 +7,9 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
@@ -28,8 +31,6 @@ import kotlinx.coroutines.*
 
 class CallingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCallingBinding
-    private val url =
-        "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2021/10/9/961804/Ca-Si-Lisa-Blackpink.jpg"
     private lateinit var gradient: GradientDrawable
     private lateinit var evaluator: ArgbEvaluator
     private lateinit var gradientAnimator: ValueAnimator
@@ -39,11 +40,12 @@ class CallingActivity : AppCompatActivity() {
     private val panelAdapter = PanelAdapter()
     private var isAnswer = false
     private var swatch: Palette? = null
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCallingBinding.inflate(layoutInflater)
-
+        setupRingtone()
         val intent = intent
         var call = Call()
         val args = intent?.getParcelableExtra<Call>("call")
@@ -87,7 +89,6 @@ class CallingActivity : AppCompatActivity() {
                         endId: Int,
                         progress: Float
                     ) {
-
                     }
 
                     override fun onTransitionCompleted(
@@ -95,8 +96,9 @@ class CallingActivity : AppCompatActivity() {
                         currentId: Int
                     ) {
                         gradientAnimator.cancel()
-                        binding.root.setBackgroundColor(swatch!!.getVibrantColor(Color.MAGENTA))
-
+                        binding.root.setBackgroundColor(swatch!!.getLightVibrantColor(Color.MAGENTA))
+                        motionLayout!!.getTransition(R.id.transition1).isEnabled = false
+                        mediaPlayer.release()
                         if (currentId == R.id.answerState) {
                             isAnswer = true
                             startCountTime()
@@ -199,5 +201,22 @@ class CallingActivity : AppCompatActivity() {
 
     private fun stopCountTime() {
         countTime?.cancel()
+    }
+
+    private fun setupRingtone() {
+        mediaPlayer = MediaPlayer()
+        mediaPlayer.apply {
+            setAudioAttributes(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            )
+            setDataSource(
+                applicationContext,
+                Uri.parse("https://nf1f8200-a.akamaihd.net/downloads/ringtones/files/mp3/7120-download-iphone-6-original-ringtone-42676.mp3")
+            )
+            prepareAsync()
+            setOnPreparedListener {
+                start()
+            }
+        }
     }
 }

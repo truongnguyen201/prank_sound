@@ -4,11 +4,8 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.ui.setupWithNavController
@@ -23,7 +20,7 @@ import kotlinx.coroutines.*
 class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var sharedViewModel : SharedViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     private var taskJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,13 +41,14 @@ class MainActivity : BaseActivity(), ControlPanelListener {
             }
         }
         mediaPlayer = MediaPlayer()
-        mediaPlayer.setAudioAttributes(
-            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
-        )
-
-        mediaPlayer.setOnCompletionListener {
-            sharedViewModel.isComplete.value = true
-            sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+        mediaPlayer.apply {
+            setAudioAttributes(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            )
+            setOnCompletionListener {
+                sharedViewModel.isComplete.value = true
+                sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+            }
         }
 
         sharedViewModel.currentPosition.observe(this) {

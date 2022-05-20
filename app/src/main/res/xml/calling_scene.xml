@@ -9,15 +9,15 @@
         motion:duration="2000">
 
         <OnSwipe
+            motion:touchRegionId="@id/ivAnswer"
             motion:dragDirection="dragRight"
-            motion:maxVelocity="20"
             motion:touchAnchorId="@id/ivAnswer"
             motion:touchAnchorSide="right" />
 
         <KeyFrameSet>
             <KeyAttribute
-                android:scaleX="4"
-                android:scaleY="4"
+                android:scaleX="5"
+                android:scaleY="5"
                 motion:framePosition="100"
                 motion:motionTarget="@id/vAnswerScale" />
 
@@ -66,14 +66,15 @@
         motion:duration="2000">
 
         <OnSwipe
+            motion:touchRegionId="@id/ivDismiss"
             motion:dragDirection="dragLeft"
             motion:touchAnchorId="@id/ivDismiss"
             motion:touchAnchorSide="left" />
 
         <KeyFrameSet>
             <KeyAttribute
-                android:scaleX="4"
-                android:scaleY="4"
+                android:scaleX="5"
+                android:scaleY="5"
                 motion:framePosition="100"
                 motion:motionTarget="@id/vDismissScale" />
 

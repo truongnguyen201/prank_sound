@@ -10,7 +10,6 @@ import com.hola360.pranksounds.databinding.ItemPanelBinding
 
 class PanelAdapter() : RecyclerView.Adapter<PanelAdapter.PanelViewHolder>() {
 
-    var isClicked = false
     val titles = arrayListOf(
         "Add call", "Hold call", "Bluetooth", "Speaker", "Mute", "Keypad"
     )
@@ -22,6 +21,7 @@ class PanelAdapter() : RecyclerView.Adapter<PanelAdapter.PanelViewHolder>() {
         R.drawable.ic_baseline_mute_24,
         R.drawable.ic_baseline_keypad
     )
+    val isClicked = arrayOf(false, false, false, false, false, false)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PanelViewHolder {
         val binding = ItemPanelBinding
@@ -44,15 +44,15 @@ class PanelAdapter() : RecyclerView.Adapter<PanelAdapter.PanelViewHolder>() {
             binding.apply {
                 tvText.text = titles[position]
                 ivIcon.setImageResource(icons[position])
-                if (isClicked) {
+                if (isClicked[position]) {
                     ivIcon.setColorFilter(Color.parseColor("#84E361"))
                 } else {
                     ivIcon.setColorFilter(Color.parseColor("#FFFFFF"))
                 }
 
                 root.setOnClickListener {
-                    isClicked = !isClicked
-                    notifyDataSetChanged()
+                    isClicked[position] = !isClicked[position]
+                    notifyItemChanged(position)
                 }
             }
         }

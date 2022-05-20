@@ -216,23 +216,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
-        //when the media player played complete, set icon in the panel to pause icon
-        sharedVM.isComplete.observe(this) {
-            it?.let {
-                if (it) {
-                    binding.apply {
-                        ibPlayPause.setImageResource(R.drawable.ic_play_circle)
-                        ivPlayPause.setImageResource(R.drawable.ic_play_arrow)
-                    }
-                } else {
-                    binding.apply {
-                        ibPlayPause.setImageResource(R.drawable.ic_pause_circle)
-                        ivPlayPause.setImageResource(R.drawable.ic_pause_arrow)
-                    }
-                }
-            }
-        }
-
         //change information in panel map with sound
         sharedVM.currentPosition.observe(this) {
             it?.let {
@@ -280,6 +263,17 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         sharedVM.isPlaying.observe(this) {
             it?.let {
                 detailCategoryAdapter.updatePlayingItem(sharedVM.currentPosition.value!!, it)
+                if (!it) {
+                    binding.apply {
+                        ibPlayPause.setImageResource(R.drawable.ic_play_circle)
+                        ivPlayPause.setImageResource(R.drawable.ic_play_arrow)
+                    }
+                } else {
+                    binding.apply {
+                        ibPlayPause.setImageResource(R.drawable.ic_pause_circle)
+                        ivPlayPause.setImageResource(R.drawable.ic_pause_arrow)
+                    }
+                }
             }
         }
         detailCategoryViewModel.getSound(1, false)
