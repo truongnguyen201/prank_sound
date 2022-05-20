@@ -1,14 +1,15 @@
 package com.hola360.pranksounds.ui.callscreen.setcall
 
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import android.content.IntentFilter
+import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -21,17 +22,17 @@ import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingRecei
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.Converter
 import java.util.*
-import kotlin.system.exitProcess
 
 
 class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
     lateinit var setupCallViewModel: SetupCallViewModel
     private var call: Call? = null
     private val args: SetupCallFragmentArgs by navArgs()
-
+    lateinit var receiver: CallingReceiver
     override fun getLayout(): Int {
         return R.layout.fragment_setup_call
     }
+
 
     override fun initView() {
         call = args.callModel
@@ -60,30 +61,28 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         with(binding) {
             btnNow.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.Now
-
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}", )
             }
 
             btnFiveSeconds.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.FiveSeconds
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}", )
             }
             btnThirtySeconds.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.ThirtySeconds
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}", )
             }
 
             btnOneMinute.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.OneMinute
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}", )
             }
             btnSetCall.setOnClickListener {
-                setCalling(Converter.convertTime(setupCallViewModel.period.value!!))
-//                exitProcess(0)
-                onStop()
+                setCalling(Converter.convertTime(setupCallViewModel.period.value!!), call!!)
+                backToHome()
             }
         }
         observe()
+
+        receiver = CallingReceiver()
+        val intentFilter = IntentFilter("com.hola360.pranksounds")
+        requireActivity().registerReceiver(receiver, intentFilter)
     }
 
     override fun initViewModel() {
@@ -94,17 +93,57 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
     private fun observe() {
         setupCallViewModel.period.observe(requireActivity(), Observer {
             if (it == WaitCallPeriod.Now)
-                binding.btnNow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_color))
-            else binding.btnNow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.none))
+                binding.btnNow.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.design_color
+                    )
+                )
+            else binding.btnNow.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.none
+                )
+            )
             if (it == WaitCallPeriod.FiveSeconds)
-                binding.btnFiveSeconds.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_color))
-            else binding.btnFiveSeconds.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.none))
+                binding.btnFiveSeconds.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.design_color
+                    )
+                )
+            else binding.btnFiveSeconds.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.none
+                )
+            )
             if (it == WaitCallPeriod.ThirtySeconds)
-                binding.btnThirtySeconds.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_color))
-            else binding.btnThirtySeconds.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.none))
+                binding.btnThirtySeconds.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.design_color
+                    )
+                )
+            else binding.btnThirtySeconds.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.none
+                )
+            )
             if (it == WaitCallPeriod.OneMinute)
-                binding.btnOneMinute.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_color))
-            else binding.btnOneMinute.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.none))
+                binding.btnOneMinute.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.design_color
+                    )
+                )
+            else binding.btnOneMinute.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.none
+                )
+            )
         })
 
         setupCallViewModel.periodOfTime.observe(requireActivity(), Observer {
@@ -113,10 +152,28 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
 
     }
 
-    private fun setCalling(timeInMillis: Long) {
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun setCalling(timeInMillis: Long, callIntent: Call) {
         val alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(requireContext(), CallingReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, 0)
+        val intent = Intent(
+            "com.hola360.pranksounds",
+            null,
+            requireActivity(),
+            CallingReceiver::class.java
+        ).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING)
+//requireActivity().sendBroadcast(intent)
+        val bundle = Bundle()
+        bundle.putParcelable("call", callIntent)
+        bundle.putString("TEST", "uyuyuyiuy")
+        intent.putExtras(bundle)
+//        requireActivity().sendBroadcast(intent)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireActivity(),
+            1,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
         alarmManager.setExact(
             AlarmManager.RTC,
             Calendar.getInstance().timeInMillis + timeInMillis,
@@ -124,8 +181,16 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         )
     }
 
-    override fun onStop() {
-        super.onStop()
+    private fun backToHome() {
+        val intent = Intent()
+        intent.action = Intent.ACTION_MAIN
+        intent.addCategory(Intent.CATEGORY_HOME)
+        startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        requireContext().unregisterReceiver(receiver)
     }
 
 }
