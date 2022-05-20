@@ -2,14 +2,18 @@ package com.hola360.pranksounds.ui.callscreen.mycaller
 
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import com.github.ybq.android.spinkit.style.Circle
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.databinding.FragmentMyCallerBinding
+import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.base.CallListBaseFragment
 
 class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
+    private lateinit var action: Any
     private lateinit var myCallerViewModel: MyCallerViewModel
     override fun getLayout(): Int {
         return R.layout.fragment_my_caller
@@ -22,6 +26,10 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
             rcvCall.setHasFixedSize(true)
         }
         binding.viewModel = myCallerViewModel
+        binding.btnAdd.setOnClickListener {
+            action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(null)
+            findNavController().navigate(action as NavDirections)
+        }
     }
 
     override fun initViewModel() {

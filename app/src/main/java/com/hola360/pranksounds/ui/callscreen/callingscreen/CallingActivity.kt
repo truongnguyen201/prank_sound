@@ -20,8 +20,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hola360.pranksounds.R
+import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.ActivityCallingBinding
 import com.hola360.pranksounds.ui.callscreen.callingscreen.adapter.PanelAdapter
+import com.hola360.pranksounds.utils.Constants
 import kotlinx.coroutines.*
 
 class CallingActivity : AppCompatActivity() {
@@ -36,14 +38,20 @@ class CallingActivity : AppCompatActivity() {
     private var timing = 0
     private val panelAdapter = PanelAdapter()
     private var isAnswer = false
-
     private var swatch: Palette? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCallingBinding.inflate(layoutInflater)
+
+        val intent = intent
+        var call = Call()
+        val args = intent?.getParcelableExtra<Call>("call")
+        if (args != null)
+            call = args
+
         setContentView(binding.motionLayout)
-        setupBackground()
+        setupBackground(call)
         setupWaveAnimation(binding.vAnswer, binding.vDismiss)
         val gridLayoutManager = GridLayoutManager(applicationContext, 3)
 
@@ -51,6 +59,18 @@ class CallingActivity : AppCompatActivity() {
             rvPanel.adapter = panelAdapter
             rvPanel.layoutManager = gridLayoutManager
             rvPanel.setHasFixedSize(true)
+
+            tvCallerName.text = call.name
+            tvPhoneNumber.text = call.phone
+
+            Glide.with(baseContext).load(
+                if (call.isLocal) {
+                    call.avatarUrl
+                } else {
+                    Constants.SUB_URL + call.avatarUrl
+                }
+            ).into(binding.ivAvatar)
+
             motionLayout.apply {
                 setTransitionListener(object : MotionLayout.TransitionListener {
                     override fun onTransitionStarted(
@@ -75,8 +95,7 @@ class CallingActivity : AppCompatActivity() {
                         currentId: Int
                     ) {
                         gradientAnimator.cancel()
-                        binding.root.setBackgroundColor(swatch!!.getLightVibrantColor(Color.MAGENTA))
-
+                        binding.root.setBackgroundColor(swatch!!.getVibrantColor(Color.MAGENTA))
 
                         if (currentId == R.id.answerState) {
                             isAnswer = true
@@ -94,7 +113,8 @@ class CallingActivity : AppCompatActivity() {
                         triggerId: Int,
                         positive: Boolean,
                         progress: Float
-                    ) {}
+                    ) {
+                    }
                 })
             }
         }
@@ -128,7 +148,7 @@ class CallingActivity : AppCompatActivity() {
             .generate()
     }
 
-    private fun setupBackground() {
+    private fun setupBackground(call: Call) {
         gradient = binding.root.background as GradientDrawable
         evaluator = ArgbEvaluator()
         gradientAnimator = TimeAnimator.ofFloat(0.0f, 1.0f)
@@ -138,7 +158,13 @@ class CallingActivity : AppCompatActivity() {
 
         Glide.with(applicationContext)
             .asBitmap()
-            .load(url)
+            .load(
+                if (call.isLocal) {
+                    call.avatarUrl
+                } else {
+                    Constants.SUB_URL + call.avatarUrl
+                }
+            )
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     swatch = createPaletteSync(resource)

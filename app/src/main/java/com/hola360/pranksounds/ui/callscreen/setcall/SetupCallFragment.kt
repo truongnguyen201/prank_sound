@@ -1,11 +1,15 @@
 package com.hola360.pranksounds.ui.callscreen.setcall
 
+
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,14 +26,16 @@ import java.util.*
 
 
 class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
-    private lateinit var setupCallViewModel: SetupCallViewModel
+    lateinit var setupCallViewModel: SetupCallViewModel
     private var call: Call? = null
     private val args: SetupCallFragmentArgs by navArgs()
-
+    lateinit var receiver: CallingReceiver
     override fun getLayout(): Int {
         return R.layout.fragment_setup_call
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun initView() {
         call = args.callModel
         if (call != null) {
@@ -57,30 +63,30 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         with(binding) {
             btnNow.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.Now
-
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}")
             }
 
             btnFiveSeconds.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.FiveSeconds
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}")
             }
             btnThirtySeconds.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.ThirtySeconds
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}")
             }
 
             btnOneMinute.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.OneMinute
-                Log.e("TAG", "init: ${setupCallViewModel.period.value}")
             }
+
             btnSetCall.setOnClickListener {
-                setCalling(Converter.convertTime(setupCallViewModel.period.value!!))
-//                exitProcess(0)
-                onStop()
+                setCalling(Converter.convertTime(setupCallViewModel.period.value!!), call!!)
+                backToHome()
             }
         }
+
         observe()
+
+        receiver = CallingReceiver()
+        val intentFilter = IntentFilter("com.hola360.pranksounds")
+        requireActivity().registerReceiver(receiver, intentFilter)
     }
 
     override fun initViewModel() {
@@ -94,7 +100,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                 binding.btnNow.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.secondary_color
+                        R.color.design_color
                     )
                 )
             else binding.btnNow.setBackgroundColor(
@@ -107,7 +113,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                 binding.btnFiveSeconds.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.secondary_color
+                        R.color.design_color
                     )
                 )
             else binding.btnFiveSeconds.setBackgroundColor(
@@ -120,7 +126,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                 binding.btnThirtySeconds.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.secondary_color
+                        R.color.design_color
                     )
                 )
             else binding.btnThirtySeconds.setBackgroundColor(
@@ -133,7 +139,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                 binding.btnOneMinute.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.secondary_color
+                        R.color.design_color
                     )
                 )
             else binding.btnOneMinute.setBackgroundColor(
@@ -150,15 +156,51 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
 
     }
 
-    private fun setCalling(timeInMillis: Long) {
+    @RequiresApi(Build.VERSION_CODES.M)
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun setCalling(timeInMillis: Long, callIntent: Call) {
         val alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(requireContext(), CallingReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, 0)
-        alarmManager.setExact(
-            AlarmManager.RTC,
-            Calendar.getInstance().timeInMillis + timeInMillis,
-            pendingIntent
-        )
+        val intent = Intent(
+            "com.hola360.pranksounds",
+            null,
+            requireActivity(),
+            CallingReceiver::class.java
+        ).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING)
+
+        val bundle = Bundle()
+        bundle.putParcelable("call", callIntent)
+        intent.putExtras(bundle)
+
+        if (setupCallViewModel.period.value == WaitCallPeriod.Now) {
+            requireActivity().sendBroadcast(intent)
+        }
+        else {
+            val pendingIntent = PendingIntent.getBroadcast(
+                requireActivity(),
+                1,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            alarmManager.setExact(
+                AlarmManager.RTC,
+                Calendar.getInstance().timeInMillis + timeInMillis,
+                pendingIntent
+            )
+        }
     }
+
+    private fun backToHome() {
+        val intent = Intent()
+        intent.action = Intent.ACTION_MAIN
+        intent.addCategory(Intent.CATEGORY_HOME)
+        startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        requireContext().unregisterReceiver(receiver)
+    }
+
 }
 
