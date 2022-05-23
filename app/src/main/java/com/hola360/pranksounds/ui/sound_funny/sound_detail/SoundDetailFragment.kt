@@ -34,7 +34,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popupWindow: PopupWindow
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
-    var isUserControl = false
+    private var isUserControl = false
 
     override fun getLayout(): Int {
         return R.layout.fragment_sound_detail
@@ -57,9 +57,9 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
 
             vp2Sound.apply {
                 adapter = viewPagerAdapter
-
                 doOnLayout {
-                    val pos = args.position - (args.position / 10)
+                    var pos = args.position
+                    pos -= (pos / 10 + 1)
                     Log.e("Position", pos.toString())
                     Log.e("Old Position", args.position.toString())
                     vp2Sound.setCurrentItem(pos, false)

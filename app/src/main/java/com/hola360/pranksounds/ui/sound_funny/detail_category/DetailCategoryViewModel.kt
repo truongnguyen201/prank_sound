@@ -6,6 +6,8 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.*
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
@@ -26,7 +28,7 @@ import java.io.OutputStream
 
 @Suppress("DEPRECATION")
 class DetailCategoryViewModel(
-    app: Application,
+    private val app: Application,
     private val catId: String
     ) : ViewModel() {
 
@@ -120,12 +122,14 @@ class DetailCategoryViewModel(
     fun addFavoriteSound(sound: Sound) {
         viewModelScope.launch {
             repository.addFavoriteSound(sound)
+            Toast.makeText(app.applicationContext, "Added ${sound.title} to favorite list", LENGTH_SHORT).show()
         }
     }
 
     fun removeFavoriteSound(sound: Sound) {
         viewModelScope.launch {
             repository.removeFavoriteSound(sound)
+            Toast.makeText(app.applicationContext, "Removed ${sound.title} to favorite list", LENGTH_SHORT).show()
         }
     }
 

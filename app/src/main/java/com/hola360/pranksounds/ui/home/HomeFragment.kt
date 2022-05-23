@@ -1,6 +1,7 @@
 package com.hola360.pranksounds.ui.home
 
 import android.graphics.Color
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -18,7 +19,6 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapt
 class HomeFragment : BaseFragment<FragmentHomeBinding>(), PrankSection.ClickListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var action: Any
-
 
     override fun getLayout(): Int {
         return R.layout.fragment_home
@@ -66,23 +66,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PrankSection.ClickList
 
     private fun handleOnItemClick(id: Int) {
         when (id) {
-            1 -> {
-                action = HomeFragmentDirections.actionGlobalHairCuttingFragment()
-            }
-            2 -> {
-                action = HomeFragmentDirections.actionGlobalBrokenScreenFragment()
-            }
+//            1 -> {
+//                action = HomeFragmentDirections.actionGlobalHairCuttingFragment()
+//            }
+//            2 -> {
+//                action = HomeFragmentDirections.actionGlobalBrokenScreenFragment()
+//            }
             3 -> {
                 action = HomeFragmentDirections.actionGlobalCallerFragment()
             }
             4 -> {
                 action = HomeFragmentDirections.actionHomeFragmentToSoundFunnyFragment()
             }
-            5 -> {
-                action = HomeFragmentDirections.actionGlobalTaserPrankFragment()
-            }
-            6 -> {
-                action = HomeFragmentDirections.actionGlobalSettingFragment()
+//            5 -> {
+//                action = HomeFragmentDirections.actionGlobalTaserPrankFragment()
+//            }
+//            6 -> {
+//                action = HomeFragmentDirections.actionGlobalSettingFragment()
+//            }
+            else -> {
+                Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
+                return
             }
         }
 
