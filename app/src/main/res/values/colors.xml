@@ -21,7 +21,7 @@
     <!--  Home Screen  -->
     <color name="home_background_color">#FBFBFB</color>
 
-    <color name="overlay_color">#2F2F2FB2</color>
+    <color name="overlay_color">#992C2A2A</color>
 
     <!-- Detail Category  -->
     <color name="detail_category_background_color">#e5e5e5</color>

@@ -35,6 +35,7 @@ import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCate
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
+import java.lang.reflect.Type
 
 class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
     private val detailCategoryAdapter = DetailCategoryAdapter()
@@ -164,7 +165,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
     private fun setupForSeekbar() {
         paint = Paint()
-        paint.typeface = Typeface.DEFAULT
+        paint.typeface = Typeface.SANS_SERIF
         paint.textSize = 20F
         paint.color = (-0x1)
     }
@@ -350,7 +351,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         currentMorePosition = position
         popUpWindow.showAsDropDown(
             view, (screenWidth * 0.6).toInt(),
-            ((-view.height) * 1.2).toInt()
+            ((-view.height) * 2.0).toInt()
         )
     }
 

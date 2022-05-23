@@ -45,12 +45,16 @@ class SoundCategoryAdapter(
             val category = data[position]
             binding.apply {
                 tvTitle.text = category.title
-                ivThumbnail.let {
-                    Glide.with(it)
-                        .load(Constants.SUB_URL + category.thumbUrl)
-                        .placeholder(R.drawable.smaller_loading)
-                        .error(R.drawable.default_thumbnail)
-                        .into(it)
+                if (category.title == "Favorite Sound") {
+                    ivThumbnail.setImageResource(R.drawable.favorite_banner)
+                } else {
+                    ivThumbnail.let {
+                        Glide.with(it)
+                            .load(Constants.SUB_URL + category.thumbUrl)
+                            .placeholder(R.drawable.smaller_loading)
+                            .error(R.drawable.default_thumbnail)
+                            .into(it)
+                    }
                 }
                 root.setOnClickListener {
                     onItemClick(category)

@@ -59,9 +59,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                 adapter = viewPagerAdapter
                 doOnLayout {
                     var pos = args.position
-                    pos -= (pos / 10 + 1)
-                    Log.e("Position", pos.toString())
-                    Log.e("Old Position", args.position.toString())
+                    pos -= ((pos) / 11 + 1)
                     vp2Sound.setCurrentItem(pos, false)
                 }
 

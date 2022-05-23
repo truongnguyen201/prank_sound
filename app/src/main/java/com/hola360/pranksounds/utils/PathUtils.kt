@@ -1,19 +1,14 @@
 package com.hola360.pranksounds.utils
 
-import android.provider.MediaStore
-
-import android.provider.DocumentsContract
-
-import android.content.ContentUris
-
-import android.os.Environment
-
-import android.os.Build
-
 import android.annotation.TargetApi
+import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 
 
 object PathUtils {
@@ -97,7 +92,7 @@ object PathUtils {
                 val columnIndex: Int = cursor.getColumnIndexOrThrow(column)
                 return cursor.getString(columnIndex)
             }
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             return null
         } finally {
             cursor?.close()
