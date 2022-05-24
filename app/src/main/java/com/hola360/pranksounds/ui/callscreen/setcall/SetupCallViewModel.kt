@@ -31,17 +31,13 @@ class SetupCallViewModel(val app: Application, val call: Call?) : ViewModel() {
         callLiveData.value = curCallModel
     }
 
-
-//    fun updateCallFromLocal() {
-//        viewModelScope.launch {
-//            curCallModel = repository.getLocalCallById(curCallModel!!)
-//            callLiveData.value = curCallModel
-//        }
-//    }
-
     fun setCall(call: Call?) {
         curCallModel = call
         callLiveData.value = curCallModel
+    }
+
+    fun setPeriod(waitCallPeriod: WaitCallPeriod) {
+        period.value = waitCallPeriod
     }
 
     fun startCalling() {

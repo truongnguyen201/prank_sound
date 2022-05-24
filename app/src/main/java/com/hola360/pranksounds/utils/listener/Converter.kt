@@ -6,7 +6,7 @@ object Converter {
 
     fun convertTime(wait:WaitCallPeriod) : Long {
         return when (wait) {
-             WaitCallPeriod.Now -> 0
+            WaitCallPeriod.Now -> 0
             WaitCallPeriod.FiveSeconds -> 5*1000
             WaitCallPeriod.ThirtySeconds -> 30*1000
             WaitCallPeriod.OneMinute -> 60*1000

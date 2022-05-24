@@ -100,6 +100,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     }
 
     private fun setDataByViewModel() {
+        sharedViewModel.setCall(args.callModel)
         sharedViewModel.myCall.observe(this) {
             addCallScreenViewModel.setCall(it)
         }

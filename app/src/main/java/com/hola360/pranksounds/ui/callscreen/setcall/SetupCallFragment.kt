@@ -51,17 +51,21 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
 
         with(binding) {
             btnNow.setOnClickListener {
+//                setupCallViewModel.setPeriod(WaitCallPeriod.Now)
                 setupCallViewModel.period.value = WaitCallPeriod.Now
             }
 
             btnFiveSeconds.setOnClickListener {
+//                setupCallViewModel.setPeriod(WaitCallPeriod.FiveSeconds)
                 setupCallViewModel.period.value = WaitCallPeriod.FiveSeconds
             }
             btnThirtySeconds.setOnClickListener {
+//                setupCallViewModel.setPeriod(WaitCallPeriod.ThirtySeconds)
                 setupCallViewModel.period.value = WaitCallPeriod.ThirtySeconds
             }
 
             btnOneMinute.setOnClickListener {
+//                setupCallViewModel.setPeriod(WaitCallPeriod.OneMinute)
                 setupCallViewModel.period.value = WaitCallPeriod.OneMinute
             }
 
@@ -74,7 +78,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.edit_call -> {
-                        Log.e("-------------------", "setOnMenuItemClickListener", )
                         action =
                             CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
                         findNavController().navigate(action as NavDirections)
@@ -97,8 +100,8 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
     override fun initViewModel() {
         val factory = SetupCallViewModel.Factory(requireActivity().application, args.callModel)
         setupCallViewModel = ViewModelProvider(this, factory)[SetupCallViewModel::class.java]
-        setDataByViewModel()
         sharedViewModel.setCall(args.callModel)
+        setDataByViewModel()
     }
 
 
@@ -130,7 +133,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                     null,
                     requireActivity(),
                     CallingReceiver::class.java
-                ).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING)
+                )
                 val bundle = Bundle()
                 bundle.putParcelable("call", it)
                 intent.putExtras(bundle)
@@ -144,13 +147,13 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                         Utils.getPendingIntentFlags()
                     )
                     alarmManager.setExact(
-                        AlarmManager.RTC,
+                        AlarmManager.RTC_WAKEUP,
                         Calendar.getInstance().timeInMillis + Converter.convertTime(
                             setupCallViewModel.period.value!!
                         ),
                         pendingIntent
                     )
-                    backToHome()
+//                    backToHome()
                 }
             }
         }
@@ -229,22 +232,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         requireContext().unregisterReceiver(receiver)
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (data?.action == "DataFix") {
-//            val fixCall: Call? = data.getParcelableExtra<Call>("CallAfterFix")
-//            if (fixCall != null) {
-//                setupCallViewModel.setCall(fixCall)
-//                Log.e("/////", "on activity reult: update call", )
-//            }
-//        }
-//    }
-
 
     override fun onResume() {
         super.onResume()
-//        if (setupCallViewModel.curCallModel?.id != 0) {
-//            setupCallViewModel.updateCallFromLocal()
-//        }
     }
 
 
