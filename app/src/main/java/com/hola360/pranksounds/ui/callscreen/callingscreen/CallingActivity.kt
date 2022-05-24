@@ -41,11 +41,11 @@ class CallingActivity : AppCompatActivity() {
     private var isAnswer = false
     private var swatch: Palette? = null
     private lateinit var mediaPlayer: MediaPlayer
+    private var backgroundColor = -3491739
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCallingBinding.inflate(layoutInflater)
-        setupRingtone()
         val intent = intent
         var call = Call()
         val args = intent?.getParcelableExtra<Call>("call")
@@ -65,13 +65,15 @@ class CallingActivity : AppCompatActivity() {
             tvCallerName.text = call.name
             tvPhoneNumber.text = call.phone
 
-            Glide.with(baseContext).load(
-                if (call.isLocal) {
-                    call.avatarUrl
-                } else {
-                    Constants.SUB_URL + call.avatarUrl
-                }
-            ).into(binding.ivAvatar)
+            if (call.avatarUrl.isNotEmpty()) {
+                Glide.with(baseContext).load(
+                    if (call.isLocal) {
+                        call.avatarUrl
+                    } else {
+                        Constants.SUB_URL + call.avatarUrl
+                    }
+                ).into(binding.ivAvatar)
+            }
 
             motionLayout.apply {
                 setTransitionListener(object : MotionLayout.TransitionListener {
@@ -95,18 +97,20 @@ class CallingActivity : AppCompatActivity() {
                         motionLayout: MotionLayout?,
                         currentId: Int
                     ) {
-                        gradientAnimator.cancel()
-                        binding.root.setBackgroundColor(swatch!!.getLightVibrantColor(Color.MAGENTA))
-                        motionLayout!!.getTransition(R.id.transition1).isEnabled = false
-                        mediaPlayer.release()
-                        if (currentId == R.id.answerState) {
-                            isAnswer = true
-                            startCountTime()
-                            ivDismiss.setOnClickListener {
+                        if (motionLayout?.currentState == R.id.dismissState || motionLayout?.currentState == R.id.answerState) {
+                            gradientAnimator.cancel()
+                            binding.root.setBackgroundColor(backgroundColor)
+                            motionLayout.getTransition(R.id.transition1).isEnabled = false
+                            mediaPlayer.release()
+                            if (currentId == R.id.answerState) {
+                                isAnswer = true
+                                startCountTime()
+                                ivDismiss.setOnClickListener {
+                                    finish()
+                                }
+                            } else {
                                 finish()
                             }
-                        } else {
-                            finish()
                         }
                     }
 
@@ -158,34 +162,46 @@ class CallingActivity : AppCompatActivity() {
         gradientAnimator.repeatCount = ValueAnimator.INFINITE
         gradientAnimator.repeatMode = ValueAnimator.REVERSE
 
-        Glide.with(applicationContext)
-            .asBitmap()
-            .load(
-                if (call.isLocal) {
-                    call.avatarUrl
-                } else {
-                    Constants.SUB_URL + call.avatarUrl
-                }
-            )
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    swatch = createPaletteSync(resource)
-                    val start = swatch!!.getVibrantColor(Color.DKGRAY)
-                    val mid = swatch!!.getLightVibrantColor(Color.RED)
-                    val end = swatch!!.getLightMutedColor(Color.MAGENTA)
-                    gradientAnimator.addUpdateListener {
-                        val fraction = it.animatedFraction
-                        val newStart = evaluator.evaluate(fraction, start, end) as Int
-                        val newMid = evaluator.evaluate(fraction, mid, start) as Int
-                        val newEnd = evaluator.evaluate(fraction, end, mid) as Int
-                        gradient.colors = intArrayOf(newStart, newMid, newEnd)
+        if (call.avatarUrl.isEmpty()) {
+            setupGradient(-1603804, -4934297, -1603545)
+        } else {
+            Glide.with(applicationContext)
+                .asBitmap()
+                .load(
+                    if (call.isLocal) {
+                        call.avatarUrl
+                    } else {
+                        Constants.SUB_URL + call.avatarUrl
+                    }
+                )
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        swatch = createPaletteSync(resource)
+                        val start = swatch!!.getVibrantColor(Color.DKGRAY)
+                        val mid = swatch!!.getLightVibrantColor(Color.RED)
+                        val end = swatch!!.getLightMutedColor(Color.MAGENTA)
+                        backgroundColor = swatch!!.getLightVibrantColor(Color.MAGENTA)
+                        setupGradient(start, mid, end)
                     }
 
-                    gradientAnimator.start()
-                }
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
+        }
+    }
 
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
+    private fun setupGradient(start: Int, mid: Int, end: Int) {
+        gradientAnimator.addUpdateListener {
+            val fraction = it.animatedFraction
+            val newStart = evaluator.evaluate(fraction, start, end) as Int
+            val newMid = evaluator.evaluate(fraction, mid, start) as Int
+            val newEnd = evaluator.evaluate(fraction, end, mid) as Int
+            gradient.colors = intArrayOf(newStart, newMid, newEnd)
+        }
+
+        gradientAnimator.start()
     }
 
     private fun startCountTime() {
@@ -218,5 +234,20 @@ class CallingActivity : AppCompatActivity() {
                 start()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setupRingtone()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mediaPlayer.release()
+    }
+
+    override fun onBackPressed() {
+//        super.onBackPressed()
+        binding.motionLayout.transitionToState(R.id.dismissState)
     }
 }

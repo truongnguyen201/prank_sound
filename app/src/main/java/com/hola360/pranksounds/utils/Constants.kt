@@ -9,6 +9,8 @@ import kotlin.random.Random
 
 object Constants {
     const val PREFERENCE_NAME = "PRANK_SOUNDS"
+    const val AUDIO_EXTENSION = "mp3"
+    const val FOLDER_PATH = "PranSounds"
 
     //list of recycler view in home screen
     val PRANK_LIST = listOf(

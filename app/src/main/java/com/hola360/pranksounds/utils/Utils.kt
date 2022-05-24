@@ -2,6 +2,7 @@ package com.hola360.pranksounds.utils
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,16 +11,20 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -27,6 +32,11 @@ import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.util.*
 
 object Utils {
     private var STORAGE_PERMISSION_UNDER_STORAGE_SCOPE = arrayOf(
@@ -221,5 +231,115 @@ object Utils {
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         activity.startActivity(intent)
+    }
+
+    fun setRingtone(context: Context?, duration: Long, file: File, uri: Uri, type: Int): Boolean {
+        return if (isAndroidQ()) {
+            setAsRingtone(context!!, duration, file)
+        } else {
+            RingtoneManager.setActualDefaultRingtoneUri(context, type, uri)
+            true
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun setAsRingtone(context: Context, duration: Long, file: File): Boolean {
+        val name = file.name
+        val newUri = createFile(
+            context,
+            name,
+            duration,
+            Environment.DIRECTORY_RINGTONES,
+            null
+        )
+        try {
+            context.contentResolver.openOutputStream(newUri!!).use { os ->
+                val size = file.length().toInt()
+                val bytes = ByteArray(size)
+                try {
+                    val buf =
+                        BufferedInputStream(FileInputStream(file))
+                    buf.read(bytes, 0, bytes.size)
+                    buf.close()
+                    os!!.write(bytes)
+                    os.close()
+                    os.flush()
+                } catch (e: IOException) {
+                    return false
+                }
+            }
+        } catch (ignored: Exception) {
+            return false
+        }
+        RingtoneManager.setActualDefaultRingtoneUri(
+            context, RingtoneManager.TYPE_RINGTONE,
+            newUri
+        )
+        return true
+    }
+
+
+    private fun createFile(
+        context: Context,
+        fileName: String,
+        duration: Long,
+        publicFolder: String,
+        subFolder: String?
+    ): Uri? {
+        val now = Date()
+        val mimeType =
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(Constants.AUDIO_EXTENSION)
+        val fileCollection: Uri = if (isAndroidQ()) {
+            MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        } else {
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        }
+        val fullName = fileName + "." + Constants.AUDIO_EXTENSION
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fullName)
+        contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, mimeType)
+        contentValues.put(MediaStore.Files.FileColumns.DATE_ADDED, now.time / 1000)
+        contentValues.put(MediaStore.Files.FileColumns.DATE_MODIFIED, now.time / 1000)
+        if (!isAndroidQ()) {
+            contentValues.put(MediaStore.Audio.Media.ARTIST, context.getString(R.string.app_name))
+        }
+        contentValues.put(MediaStore.Audio.Media.DURATION, duration)
+        contentValues.put(MediaStore.Audio.Media.IS_MUSIC, true)
+        contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, true)
+        if (isAndroidQ()) {
+            val parentFolder: String = if (subFolder != null && subFolder.isNotEmpty()) {
+                publicFolder + File.separator + Constants.FOLDER_PATH
+            } else {
+                publicFolder
+            }
+            contentValues.put(
+                MediaStore.Files.FileColumns.RELATIVE_PATH,
+                parentFolder
+            )
+        } else {
+            val parentFolderFile: File = if (subFolder != null && subFolder.isNotEmpty()) {
+                File(
+                    Environment.getExternalStoragePublicDirectory(
+                        publicFolder
+                    ), Constants.FOLDER_PATH
+                )
+            } else {
+                Environment.getExternalStoragePublicDirectory(
+                    publicFolder
+                )
+            }
+            if (!parentFolderFile.exists()) {
+                parentFolderFile.mkdirs()
+            }
+            val outputFile = File(
+                parentFolderFile,
+                fullName
+            )
+            contentValues.put(
+                MediaStore.Files.FileColumns.DATA,
+                outputFile.absolutePath
+            )
+        }
+        return context.contentResolver.insert(fileCollection, contentValues)
     }
 }

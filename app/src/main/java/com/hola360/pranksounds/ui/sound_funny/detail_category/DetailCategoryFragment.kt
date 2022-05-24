@@ -2,21 +2,16 @@ package com.hola360.pranksounds.ui.sound_funny.detail_category
 
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -35,7 +30,6 @@ import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCate
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
-import java.lang.reflect.Type
 
 class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
     private val detailCategoryAdapter = DetailCategoryAdapter()
@@ -46,6 +40,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popUpWindow: PopupWindow
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+    private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
     private var currentMorePosition = 0
     var isUserControl = false
     private lateinit var paint: Paint
@@ -349,10 +344,16 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
     override fun onMoreIconClick(view: View, position: Int) {
         currentMorePosition = position
+        val yPosition = if (view.y > screenHeight - 400) {
+            ((-view.height) * 2.5).toInt()
+        } else {
+            ((-view.height) * 2)
+        }
         popUpWindow.showAsDropDown(
             view, (screenWidth * 0.6).toInt(),
-            ((-view.height) * 2.0).toInt()
+            yPosition
         )
+
     }
 
     //get controlPanelListener from activity
