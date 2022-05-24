@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.util.Log
+import android.media.RingtoneManager
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
@@ -149,7 +149,11 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
             }
 
             val setAsListener = View.OnClickListener {
-                val type = (it as TextView).text.toString()
+                val type = when ((it as TextView).text.toString()) {
+                    "Ringtone" -> RingtoneManager.TYPE_RINGTONE
+                    "Notification" -> RingtoneManager.TYPE_NOTIFICATION
+                    else -> RingtoneManager.TYPE_ALARM
+                }
                 if (Utils.storagePermissionGrant(requireContext())) {
                     if (Utils.writeSettingPermissionGrant(requireContext())) {
                         setupWhenPermissionGranted(
@@ -272,7 +276,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
             }
         }
 
-    private fun setupWhenPermissionGranted(type: String, position: Int) {
+    private fun setupWhenPermissionGranted(type: Int, position: Int) {
         sharedVM.downloadAndSet(
             sharedVM.soundList.value!![position].soundUrl!!,
             type,

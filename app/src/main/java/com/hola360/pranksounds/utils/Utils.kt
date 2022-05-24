@@ -52,7 +52,7 @@ object Utils {
         Manifest.permission.READ_EXTERNAL_STORAGE,
     )
 
-    fun isAndroidQ(): Boolean {
+    private fun isAndroidQ(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }
 
@@ -244,10 +244,9 @@ object Utils {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun setAsRingtone(context: Context, duration: Long, file: File): Boolean {
-        val name = file.name
         val newUri = createFile(
             context,
-            name,
+            file.name,
             duration,
             Environment.DIRECTORY_RINGTONES,
             null
