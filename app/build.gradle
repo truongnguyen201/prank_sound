@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'org.jetbrains.kotlin.plugin.parcelize'
 }
 
 android {
@@ -43,11 +45,12 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'androidx.palette:palette:1.0.0'
 
     // round image
     implementation 'com.joooonho:selectableroundedimageview:1.0.1'
@@ -64,6 +67,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.0-beta01'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
 
+    //circle image view
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
     kapt glide_annotation
     kapt room_runtime
     annotationProcessor room_annotation
@@ -71,4 +77,5 @@ dependencies {
     // crop image
     implementation 'com.github.yalantis:ucrop:2.2.6'
     implementation 'com.github.yalantis:ucrop:2.2.6'
+
 }

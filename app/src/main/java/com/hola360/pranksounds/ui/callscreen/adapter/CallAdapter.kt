@@ -20,9 +20,10 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
     lateinit var callItemListener: CallItemListener
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(list: List<Call>?) {
+    fun updateData(list: List<Call>?, status: Int) {
         if (!list.isNullOrEmpty())
             listData = list
+        if (status == 1) listData = listOf<Call>()
         notifyDataSetChanged()
     }
 
@@ -52,14 +53,12 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
                 tvContactPersonName.text = call.name
                 tvPhoneNumber.text = call.phone
                 if (call.isLocal) {
-                    if (call.avatarUrl != "") {
-                        ivAvatarCall.setImageURI(Uri.parse(call.avatarUrl))
-                    } else {
-                        ivAvatarCall.setImageDrawable(
-                            binding.root.context.resources.getDrawable(
-                                R.drawable.img_avatar_default
-                            )
-                        )
+                    ivAvatarCall.let { imgView ->
+                        Glide.with(imgView)
+                            .load(call.avatarUrl)
+                            .placeholder(R.drawable.smaller_loading)
+                            .error(R.drawable.img_avatar_default)
+                            .into(imgView)
                     }
                 }
                 else {
@@ -78,7 +77,7 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
                     icIsLocal.visibility = View.GONE
                 }
                 root.setOnClickListener {
-                    callItemListener.onItemClick(position)
+                    callItemListener.onItemClick(call, position)
                 }
                 ivOptionMenu.setOnClickListener {
                     callItemListener.onMoreClick(this.root, call)

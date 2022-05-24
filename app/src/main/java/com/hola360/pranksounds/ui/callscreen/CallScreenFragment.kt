@@ -1,28 +1,34 @@
 package com.hola360.pranksounds.ui.callscreen
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
+import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Call
+import com.hola360.pranksounds.data.repository.PhoneBookRepository
 import com.hola360.pranksounds.databinding.FragmentCallScreenBinding
 import com.hola360.pranksounds.databinding.PopUpCallMoreBinding
-import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.callscreen.adapter.CallAdapter
-import com.hola360.pranksounds.utils.Utils
+import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
+import kotlinx.coroutines.launch
+
 
 class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemListener {
     private lateinit var callScreenViewModel: CallScreenViewModel
+    private lateinit var repository: PhoneBookRepository
     private lateinit var callAdapter: CallAdapter
     private lateinit var action: Any
     private lateinit var popUpWindow: PopupWindow
@@ -36,6 +42,7 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
             handleOnclickItem(it)
         }
         callAdapter.setListener(this)
+        repository = PhoneBookRepository(requireActivity().application)
         binding.apply {
             rcvCall.adapter = callAdapter
             rcvCall.setHasFixedSize(true)
@@ -47,7 +54,8 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.add_new_call -> {
-                        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment()
+                        action =
+                            CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(null)
                         findNavController().navigate(action as NavDirections)
                         true
                     }
@@ -67,9 +75,9 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
         callScreenViewModel.phoneBookLiveData.observe(this) {
             if (it.loadingStatus == LoadingStatus.Success) {
                 val phoneBook = (it as DataResponse.DataSuccess).body
-                callAdapter.updateData(phoneBook)
+                callAdapter.updateData(phoneBook, 0)
             } else if (it.loadingStatus == LoadingStatus.Error) {
-                callAdapter.updateData(null)
+                callAdapter.updateData(null, 0)
             }
         }
         try {
@@ -84,23 +92,22 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
     }
 
     // set popup window when click more icon
-    private fun setupPopUpWindow(isLocal: Boolean) {
+    private fun setupPopUpWindow(call: Call) {
         val popUpInflater =
             requireActivity().applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popUpBinding = PopUpCallMoreBinding.inflate(popUpInflater)
 
-        if (!isLocal) {
+        if (!call.isLocal) {
             popUpBinding.llDelete.visibility = View.GONE
         }
 
 
         popUpBinding.apply {
             llEdit.setOnClickListener {
-                Toast.makeText(requireContext(), "edit", Toast.LENGTH_LONG).show()
+                passCallToUpDate(call)
             }
-
-            llDelete.setOnClickListener{
-                Toast.makeText(requireContext(), "delete", Toast.LENGTH_LONG).show()
+            llDelete.setOnClickListener {
+                setUpAlertDialog(call)
             }
         }
 
@@ -120,17 +127,54 @@ class CallScreenFragment : BaseFragment<FragmentCallScreenBinding>(), CallItemLi
         callScreenViewModel.getPhoneBook()
     }
 
-    override fun onItemClick(position: Int) {
-        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment()
+    override fun onItemClick(call: Call, position: Int) {
+        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(call)
         findNavController().navigate(action as NavDirections)
     }
 
     override fun onMoreClick(view: View, call: Call) {
-        setupPopUpWindow(call.isLocal)
+        setupPopUpWindow(call)
         popUpWindow.showAsDropDown(
             view, (screenWidth * 0.68).toInt(),
             ((-view.height) * 0.7).toInt()
         )
+    }
+
+    private fun setUpAlertDialog(call: Call) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(requireActivity().resources.getString(R.string.confirm_delete) + " " + call.name + "?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, id ->
+                lifecycleScope.launch {
+                    repository.deleteCall(call)
+                    callScreenViewModel.getPhoneBook()
+                }
+                Toast.makeText(
+                    requireContext(),
+                    requireActivity().resources.getString(R.string.delete_complete),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .setNegativeButton("No") { dialog, id ->
+                // Dismiss the dialog
+                dialog.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
+        popUpWindow.dismiss()
+    }
+
+    private fun passCallToUpDate(call: Call) {
+        val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        val addCallFragment = AddCallScreenFragment()
+
+        val bundle = Bundle()
+        bundle.putSerializable("call", call)
+        addCallFragment.arguments = bundle
+        ft.replace(android.R.id.content, addCallFragment)
+        ft.addToBackStack(null)
+        ft.commit()
     }
 
 }

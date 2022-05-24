@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="design_color">#F18924</color>
+    <color name="secondary_color">#FEB850</color>
     <color name="mockup_color">#C4C4C4</color>
     <color name="text_shadow">#00000040</color>
 
@@ -33,4 +34,12 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="disable_button">#FFDDAF</color>
     <color name="enable_button">#FCA631</color>
+    <!--  setup call screen-->
+    <color name="when_to_call">#555555</color>
+    <color name="fenc">#E8E2E2</color>
+    <color name="none">#00FFFFFF</color>
+
+    <!--  calling screen   -->
+    <color name="wave_color_first">#48FFFFFF</color>
+    <color name="wave_color_second">#16FFFFFF</color>
 </resources>

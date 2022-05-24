@@ -29,8 +29,7 @@
                 android:layout_centerVertical="true"
                 android:background="?selectableItemBackground"
                 android:onClick="@{()->viewModel.onClose()}"
-                android:src="@{viewModel.isDetailMode?@drawable/ic_arrow_left_white:@drawable/ic_close_white}"
-                />
+                android:src="@{viewModel.isDetailMode?@drawable/ic_arrow_left_white:@drawable/ic_close_white}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -72,10 +71,12 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.core.widget.ContentLoadingProgressBar
+                android:id="@+id/progressBarLoadImg"
                 style="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
+                android:indeterminateTint="@color/design_color"
                 android:visibility="@{viewModel.isLoading()?View.VISIBLE:View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

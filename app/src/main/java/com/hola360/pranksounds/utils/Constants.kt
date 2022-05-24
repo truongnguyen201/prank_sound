@@ -9,6 +9,7 @@ import kotlin.random.Random
 
 object Constants {
     const val PREFERENCE_NAME = "PRANK_SOUNDS"
+    const val ALARM_SERVICE_ACTION = "com.hola360.pranksounds.ACTION_CALL"
 
     //list of recycler view in home screen
     val PRANK_LIST = listOf(
@@ -65,6 +66,4 @@ object Constants {
     const val SOUND_ITEM_PER_PAGE = 10
 
     const val DIR_PATH = "/PranSounds/"
-
-
 }

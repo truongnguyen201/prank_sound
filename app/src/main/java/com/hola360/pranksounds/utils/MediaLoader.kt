@@ -94,7 +94,7 @@ object MediaLoader {
                         ContentUris.withAppendedId(
                             uri,
                             id
-                        ), file, name, albumId, albumName
+                        ), file, name ?: "", albumId, albumName ?: ""
                     )
                     list.add(photoModel)
                 }

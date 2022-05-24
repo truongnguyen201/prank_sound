@@ -7,9 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.ybq.android.spinkit.style.Circle
 import com.hola360.pranksounds.App
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
@@ -26,7 +28,6 @@ class PickPhotoDialog(
     ) : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.ListenClickItem{
     lateinit var viewModel: PickPhotoDialogViewModel
     lateinit var adapter: PhotoAdapter
-//    var
     lateinit var layoutManager: GridLayoutManager
     var albumState: Parcelable? = null
 
@@ -72,6 +73,7 @@ class PickPhotoDialog(
     }
 
     override fun initView() {
+        setUpProgressBar()
         binding.apply {
             recycleView.layoutManager = LinearLayoutManager(requireContext())
             recycleView.setHasFixedSize(true)
@@ -102,6 +104,13 @@ class PickPhotoDialog(
             onClickListener.onPickPhoto(photoModel)
         }
     }
+
+    private fun setUpProgressBar() {
+        val circle = Circle()
+        circle.color = ContextCompat.getColor(requireActivity(), R.color.design_color)
+        binding.progressBarLoadImg.indeterminateDrawable = circle
+    }
+
     companion object {
         const val COLUMNS = 3
         fun create(listener: PickPhotoDialog.OnClickListener): PickPhotoDialog {
