@@ -28,8 +28,6 @@ import kotlinx.coroutines.*
 
 class CallingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCallingBinding
-    private val url =
-        "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2021/10/9/961804/Ca-Si-Lisa-Blackpink.jpg"
     private lateinit var gradient: GradientDrawable
     private lateinit var evaluator: ArgbEvaluator
     private lateinit var gradientAnimator: ValueAnimator

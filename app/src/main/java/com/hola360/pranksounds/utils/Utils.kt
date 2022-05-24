@@ -2,6 +2,7 @@ package com.hola360.pranksounds.utils
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -65,9 +66,29 @@ object Utils {
 
     fun getPendingIntentFlags(): Int {
         return if (isAndroidM()) {
-            PendingIntent.FLAG_IMMUTABLE
+            if (isAndroidQ()) {
+                PendingIntent.FLAG_IMMUTABLE
+            }
+            else {
+                PendingIntent.FLAG_IMMUTABLE
+            }
+
         } else {
-            PendingIntent.FLAG_CANCEL_CURRENT
+            PendingIntent.FLAG_ONE_SHOT
+        }
+    }
+
+    fun getAlarmManagerFlags(): Int {
+        return if (isAndroidM()) {
+            if (isAndroidQ()) {
+                AlarmManager.RTC_WAKEUP
+            }
+            else {
+                AlarmManager.RTC_WAKEUP
+            }
+
+        } else {
+            AlarmManager.RTC_WAKEUP
         }
     }
 

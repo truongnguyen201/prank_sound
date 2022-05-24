@@ -13,7 +13,8 @@ class CallingReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val i = Intent(Constants.ALARM_SERVICE_ACTION, null, context, CallingActivity::class.java)
         if (intent?.action == Constants.ALARM_SERVICE_ACTION) {
-            val call = intent.extras?.getParcelable<Call>("call")!!
+            val call = intent.extras?.getParcelable<Call>("call")
+            Log.e("/////////////", "onReceive: ${call?.name}", )
             i.putExtra("call", call as Parcelable)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context!!.startActivity(i)

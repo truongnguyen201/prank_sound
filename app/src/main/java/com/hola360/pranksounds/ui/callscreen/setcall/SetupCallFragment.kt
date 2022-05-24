@@ -123,6 +123,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
 
         setupCallViewModel.startCallingLiveData.observe(this) {
             it?.let {
+                Log.e("/////////////", "observe: ${it?.name}", )
                 val alarmManager =
                     requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val intent = Intent(
@@ -130,7 +131,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                     null,
                     requireActivity(),
                     CallingReceiver::class.java
-                ).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING)
+                )
                 val bundle = Bundle()
                 bundle.putParcelable("call", it)
                 intent.putExtras(bundle)
@@ -139,12 +140,12 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                 } else {
                     val pendingIntent = PendingIntent.getBroadcast(
                         requireActivity(),
-                        1,
+                        Random().nextInt(123123),
                         intent,
                         Utils.getPendingIntentFlags()
                     )
                     alarmManager.setExact(
-                        AlarmManager.RTC,
+                        Utils.getAlarmManagerFlags(),
                         Calendar.getInstance().timeInMillis + Converter.convertTime(
                             setupCallViewModel.period.value!!
                         ),
