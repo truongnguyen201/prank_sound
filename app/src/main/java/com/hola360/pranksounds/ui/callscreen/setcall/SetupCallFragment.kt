@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
@@ -23,6 +24,7 @@ import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.FragmentSetupCallBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
+import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingReceiver
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
@@ -34,6 +36,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
     lateinit var setupCallViewModel: SetupCallViewModel
     private val args: SetupCallFragmentArgs by navArgs()
     lateinit var receiver: CallingReceiver
+    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private lateinit var action: Any
 
     override fun getLayout(): Int {
@@ -71,8 +74,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.edit_call -> {
+                        Log.e("-------------------", "setOnMenuItemClickListener", )
                         action =
-                            CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(args.callModel)
+                            CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
                         findNavController().navigate(action as NavDirections)
                         true
                     }
@@ -94,6 +98,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         val factory = SetupCallViewModel.Factory(requireActivity().application, args.callModel)
         setupCallViewModel = ViewModelProvider(this, factory)[SetupCallViewModel::class.java]
         setDataByViewModel()
+        sharedViewModel.setCall(args.callModel)
     }
 
 
@@ -103,7 +108,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                 it?.let {
                     val path =
                         if (it.isLocal) it.avatarUrl else Constants.SUB_URL + it.avatarUrl
-                    Log.e("xxxxx", "setDataByViewModel: update view${it.name}")
                     imgAvatar.let { imgView ->
                         Glide.with(imgView)
                             .load(path)
@@ -207,6 +211,10 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         setupCallViewModel.periodOfTime.observe(this) {
             binding.tvPeriod.text = it
         }
+
+        sharedViewModel.myCall.observe(this) {
+                setupCallViewModel.setCall(it)
+        }
     }
 
     private fun backToHome() {
@@ -234,9 +242,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
 
     override fun onResume() {
         super.onResume()
-        if (setupCallViewModel.curCallModel?.id != 0) {
-            setupCallViewModel.updateCallFromLocal()
-        }
+//        if (setupCallViewModel.curCallModel?.id != 0) {
+//            setupCallViewModel.updateCallFromLocal()
+//        }
     }
 
 

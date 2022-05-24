@@ -31,15 +31,17 @@ class PhoneBookRepository(app: Application) {
         }
     }
 
-    suspend fun addNewCallToLocal(call: Call) = withContext(Dispatchers.Default) {
-        db.addCallToLocal(call)
+    suspend fun addNewCallToLocal(call: Call) {
+        withContext(Dispatchers.Default) {
+            db.addCallToLocal(call)
+        }
     }
     suspend fun deleteCall(call: Call) = withContext(Dispatchers.Default) {
         db.removeCallFromLocal(call)
     }
 
-    suspend fun getLocalCallById(call: Call): Call? = withContext(Dispatchers.Default) {
-        db.getLocalCallById(call.id.toString())
+    suspend fun getLocalCallById(id: Int): Call? = withContext(Dispatchers.Default) {
+        db.getLocalCallById(id.toString())
     }
 
 }

@@ -18,7 +18,7 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
     var isUpdate = false
 
     val isEmpty: LiveData<Boolean> = Transformations.map(callLiveData){
-        curCallModel!!.name.isNullOrEmpty() || curCallModel!!.phone.isNullOrEmpty()
+        curCallModel?.name.isNullOrEmpty() || curCallModel?.phone.isNullOrEmpty()
     }
 
     fun setOnNameChange(name: String) {
@@ -36,10 +36,16 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
         callLiveData.value = curCallModel
     }
 
-    fun setCall(callTrans: Call) {
-        curCallModel = callTrans
-        callLiveData.value = curCallModel
-        isUpdate = true
+    fun setCall(callTrans: Call?) {
+        callTrans?.let {
+            curCallModel = it
+            callLiveData.value = curCallModel
+            isUpdate = true
+        }
+    }
+
+    fun getCurrentCall(): Call? {
+        return curCallModel
     }
 
     fun addCallToLocal() {
@@ -54,6 +60,7 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
         newCall.phone = newCall.phone.trimStart().trimEnd()
         viewModelScope.launch {
             repository.addNewCallToLocal(newCall)
+//            curCallModel = repository.getLocalCallById(id)
         }
     }
 

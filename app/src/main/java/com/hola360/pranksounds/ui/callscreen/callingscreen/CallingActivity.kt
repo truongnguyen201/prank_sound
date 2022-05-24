@@ -160,6 +160,7 @@ class CallingActivity : AppCompatActivity() {
             .asBitmap()
             .load(
                 if (call.isLocal) {
+
                     call.avatarUrl
                 } else {
                     Constants.SUB_URL + call.avatarUrl

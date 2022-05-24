@@ -47,7 +47,7 @@
     <string name="grant_permission">Please grant the application permission to continue using the app</string>
     <string name="goto_settings">You must approve this permission in Permissions in the app settings on your device to continue using the app.</string>
     <string name="settings">Settings</string>
-    <string name="default_image">Default image</string>
+    <string name="default_image"> <u>Default image</u></string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete">Are you sure you want to Delete</string>

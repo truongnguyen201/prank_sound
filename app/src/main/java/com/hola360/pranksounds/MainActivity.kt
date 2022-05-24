@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.ui.setupWithNavController
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ActivityMainBinding
+import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.utils.Constants
@@ -25,12 +26,15 @@ class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var sharedViewModel : SharedViewModel
+    private lateinit var callScreenSharedViewModel: CallScreenSharedViewModel
     private var taskJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = SharedViewModel.Factory(application)
         sharedViewModel = ViewModelProvider(this, factory)[SharedViewModel::class.java]
+        val callFactory = CallScreenSharedViewModel.Factory(application)
+        callScreenSharedViewModel = ViewModelProvider(this, callFactory)[CallScreenSharedViewModel::class.java]
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
