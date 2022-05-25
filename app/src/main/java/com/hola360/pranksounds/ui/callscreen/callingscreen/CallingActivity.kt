@@ -183,7 +183,7 @@ class CallingActivity : AppCompatActivity() {
                         val start = swatch!!.getVibrantColor(Color.DKGRAY)
                         val mid = swatch!!.getLightVibrantColor(Color.RED)
                         val end = swatch!!.getLightMutedColor(Color.MAGENTA)
-                        backgroundColor = swatch!!.getLightVibrantColor(Color.MAGENTA)
+                        backgroundColor = swatch!!.getVibrantColor(Color.MAGENTA)
                         setupGradient(start, mid, end)
                     }
 
@@ -238,7 +238,9 @@ class CallingActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        setupRingtone()
+        if(!isAnswer){
+            setupRingtone()
+        }
     }
 
     override fun onStop() {
@@ -248,6 +250,6 @@ class CallingActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 //        super.onBackPressed()
-        binding.motionLayout.transitionToState(R.id.dismissState)
+//        binding.motionLayout.transitionToState(R.id.dismissState)
     }
 }

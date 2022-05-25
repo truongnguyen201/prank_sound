@@ -31,6 +31,7 @@ import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
+@Suppress("SENSELESS_COMPARISON")
 class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
     private val detailCategoryAdapter = DetailCategoryAdapter()
     private lateinit var detailCategoryViewModel: DetailCategoryViewModel
@@ -170,6 +171,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             DetailCategoryViewModel.Factory(requireActivity().application, args.categoryId!!)
         detailCategoryViewModel =
             ViewModelProvider(this, factory)[DetailCategoryViewModel::class.java]
+
+        if(sharedVM == null){
+            return
+        }
 
         detailCategoryViewModel.soundLiveData.observe(this) {
             it?.let {

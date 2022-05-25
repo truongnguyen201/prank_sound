@@ -47,8 +47,8 @@
                 motion:motionTarget="@id/rvPanel" />
 
             <KeyAttribute
-                android:scaleX="0.7"
-                android:scaleY="0.7"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
                 motion:framePosition="100"
                 motion:motionTarget="@id/ivAvatar" />
 
@@ -89,8 +89,8 @@
     <ConstraintSet android:id="@+id/baseState">
         <Constraint android:id="@id/ivAvatar">
             <Layout
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
                 android:layout_marginTop="20dp"
                 motion:layout_constraintEnd_toEndOf="parent"
                 motion:layout_constraintStart_toStartOf="parent"
@@ -101,8 +101,8 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintStart_toStartOf="parent" />
         </Constraint>
@@ -121,8 +121,8 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent" />
         </Constraint>
@@ -141,7 +141,7 @@
             <Layout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="50dp"
                 motion:layout_constraintEnd_toEndOf="@+id/glVertical1"
                 motion:layout_constraintStart_toStartOf="@id/glVertical1"
                 motion:layout_constraintTop_toBottomOf="@id/ivAvatar" />
@@ -151,8 +151,8 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintStart_toStartOf="parent" />
         </Constraint>
@@ -161,8 +161,8 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent" />
 
@@ -174,7 +174,7 @@
             android:id="@id/vAnswer"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="80dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
@@ -183,7 +183,7 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent"
                 motion:layout_constraintStart_toStartOf="parent" />
@@ -193,8 +193,8 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintStart_toStartOf="parent" />
         </Constraint>
@@ -210,8 +210,9 @@
 
         <Constraint android:id="@id/ivAvatar">
             <Layout
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="10dp"
                 motion:layout_constraintEnd_toEndOf="parent"
                 motion:layout_constraintStart_toStartOf="parent"
                 motion:layout_constraintTop_toBottomOf="@id/tvCallerName" />
@@ -221,7 +222,7 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent"
                 motion:layout_constraintStart_toStartOf="parent" />
@@ -241,7 +242,7 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent"
                 motion:layout_constraintStart_toStartOf="parent" />
@@ -253,7 +254,7 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent"
                 motion:layout_constraintStart_toStartOf="parent" />
@@ -273,8 +274,8 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent" />
         </Constraint>
@@ -283,8 +284,8 @@
             android:id="@id/vAnswer"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="80dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toStartOf="parent" />
 
@@ -292,8 +293,8 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toStartOf="parent" />
         </Constraint>
@@ -302,8 +303,8 @@
             <Layout
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="80dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toStartOf="parent" />
         </Constraint>

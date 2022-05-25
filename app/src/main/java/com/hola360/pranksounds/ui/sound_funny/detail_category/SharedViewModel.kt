@@ -24,7 +24,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 @Suppress("DEPRECATION")
-class SharedViewModel(private val app: Application) : ViewModel() {
+class SharedViewModel constructor(private val app: Application) : ViewModel() {
     private val fileDownloadRepository = FileDownloadRepository()
 
     var isComplete = MutableLiveData<Boolean>()
@@ -40,10 +40,12 @@ class SharedViewModel(private val app: Application) : ViewModel() {
         soundList.value = mutableListOf()
     }
 
+
     fun downloadAndSet(url: String, type: Int, soundName: String) {
         val basePath = Utils.getBasePath()
         val dirName = basePath + Constants.DIR_PATH
-        val fileName = "$dirName$soundName.mp3"
+        val newSoundName = soundName.filterNot { Constants.FILE_NAME_FILTER.indexOf(it) > -1 }
+        val fileName = "$dirName$newSoundName.mp3"
         val file = File(fileName)
 
         val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -55,7 +57,6 @@ class SharedViewModel(private val app: Application) : ViewModel() {
         viewModelScope.launch {
             // check if the file is exists
             if (!File(fileName).exists()) {
-                Log.e("File $soundName is not exists", "1")
                 //check the directory is not exists -> create the dir
                 if (!File(dirName).exists()) {
                     File(dirName).mkdir()
@@ -67,7 +68,6 @@ class SharedViewModel(private val app: Application) : ViewModel() {
 
                 try {
                     //download the file from url and write to file
-                    Log.e("Downloading the file $soundName", " 1")
                     val response = fileDeferred.await()!!.body()
                     val input = response!!.byteStream()
                     val fos = FileOutputStream(fileName)
@@ -106,12 +106,13 @@ class SharedViewModel(private val app: Application) : ViewModel() {
                     duration!!.toLong(),
                     file,
                     uri!!,
-                    type
+                    type,
+                    soundName
                 )
             ) {
                 "Set $soundName as $typeToast successfully"
             } else {
-                "Set $soundName as $typeToast does not successfully"
+                "Something got error, please try again"
             }
             Toast.makeText(app.applicationContext, message, LENGTH_SHORT).show()
         }

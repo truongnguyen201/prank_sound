@@ -233,9 +233,16 @@ object Utils {
         activity.startActivity(intent)
     }
 
-    fun setRingtone(context: Context?, duration: Long, file: File, uri: Uri, type: Int): Boolean {
+    fun setRingtone(
+        context: Context?,
+        duration: Long,
+        file: File,
+        uri: Uri,
+        type: Int,
+        fileName: String
+    ): Boolean {
         return if (isAndroidQ()) {
-            setAsRingtone(context!!, duration, file)
+            setAsRingtone(context!!, duration, file, type, fileName)
         } else {
             RingtoneManager.setActualDefaultRingtoneUri(context, type, uri)
             true
@@ -243,13 +250,20 @@ object Utils {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun setAsRingtone(context: Context, duration: Long, file: File): Boolean {
+    private fun setAsRingtone(
+        context: Context,
+        duration: Long,
+        file: File,
+        type: Int,
+        fileName: String
+    ): Boolean {
         val newUri = createFile(
             context,
-            file.name,
+            fileName,
             duration,
             Environment.DIRECTORY_RINGTONES,
-            null
+            null,
+            type
         )
         try {
             context.contentResolver.openOutputStream(newUri!!).use { os ->
@@ -270,20 +284,24 @@ object Utils {
         } catch (ignored: Exception) {
             return false
         }
-        RingtoneManager.setActualDefaultRingtoneUri(
-            context, RingtoneManager.TYPE_RINGTONE,
-            newUri
-        )
-        return true
+        return try {
+            RingtoneManager.setActualDefaultRingtoneUri(
+                context, type, newUri
+            )
+            true
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            false
+        }
     }
-
 
     private fun createFile(
         context: Context,
         fileName: String,
         duration: Long,
         publicFolder: String,
-        subFolder: String?
+        subFolder: String?,
+        type: Int,
     ): Uri? {
         val now = Date()
         val mimeType =
@@ -304,7 +322,18 @@ object Utils {
         }
         contentValues.put(MediaStore.Audio.Media.DURATION, duration)
         contentValues.put(MediaStore.Audio.Media.IS_MUSIC, true)
-        contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, true)
+        when (type) {
+            RingtoneManager.TYPE_NOTIFICATION -> {
+                contentValues.put(MediaStore.Audio.Media.IS_NOTIFICATION, true)
+            }
+            RingtoneManager.TYPE_RINGTONE -> {
+                contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, true)
+            }
+            RingtoneManager.TYPE_ALARM -> {
+                contentValues.put(MediaStore.Audio.Media.IS_ALARM, true)
+            }
+        }
+
         if (isAndroidQ()) {
             val parentFolder: String = if (subFolder != null && subFolder.isNotEmpty()) {
                 publicFolder + File.separator + Constants.FOLDER_PATH
@@ -340,5 +369,23 @@ object Utils {
             )
         }
         return context.contentResolver.insert(fileCollection, contentValues)
+    }
+
+    fun isChangeSetting(context: Context?): Boolean? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Settings.System.canWrite(context)
+        } else true
+    }
+
+    fun gotoChangeSetting(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(context)) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                    Uri.parse("package:" + context.packageName)
+                )
+                context.startActivity(intent)
+            }
+        }
     }
 }
