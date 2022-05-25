@@ -69,11 +69,13 @@
     <string name="five_seconds">5 seconds</string>
     <string name="thirty_seconds">30 seconds</string>
     <string name="one_minute">1 minute</string>
+    <string name="confirm_message">Please grant Display over other apps!</string>
 
 
     <!--  Calling screen  -->
     <string name="incoming_call">Incoming Call</string>
     <string name="phone_number_">036-875-2432</string>
+
 
 </resources>
 

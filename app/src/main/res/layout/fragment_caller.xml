@@ -39,7 +39,13 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:elevation="@dimen/dp_4"
+                    android:backgroundTint="@color/design_color"
+                    app:tabIndicatorColor="@color/white"
+                    app:tabTextAppearance="@style/MyCustomTextAppearance"
+                    app:tabSelectedTextColor="@color/white"
+                    />
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vpCaller"

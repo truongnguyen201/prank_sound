@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         android:protectionLevel="signature"
@@ -29,9 +29,11 @@
         tools:replace="android:allowBackup">
         <activity
             android:name=".ui.callscreen.callingscreen.CallingActivity"
-            android:exported="true"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.PrankSounds.Fullscreen" />
+            android:theme="@style/Theme.PrankSounds.Fullscreen"
+            android:launchMode="singleTask"
+            />
 
         <activity
             android:name=".SplashActivity"
@@ -59,7 +61,8 @@
 
         <receiver android:name=".ui.callscreen.callingscreen.receiver.CallingReceiver"
             android:exported="true"
-            android:enabled="true">
+            android:enabled="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />

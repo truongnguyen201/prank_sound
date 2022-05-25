@@ -66,7 +66,14 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
             }
 
             btnSetCall.setOnClickListener {
-                setupCallViewModel.startCalling()
+                if (Utils.checkDisplayOverOtherAppPermission(requireContext())) {
+                    setupCallViewModel.startCalling()
+                }
+                else {
+//                    Utils.openAppInformation(requireActivity())
+                    Utils.setUpDialogGrantPermission(requireContext())
+                }
+
 //                backToHome()
             }
         }
@@ -74,7 +81,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.edit_call -> {
-                        Log.e("-------------------", "setOnMenuItemClickListener", )
                         action =
                             CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
                         findNavController().navigate(action as NavDirections)
@@ -125,13 +131,15 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
             it?.let {
                 Log.e("/////////////", "observe: ${it?.name}", )
                 val alarmManager =
-                    requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val intent = Intent(
                     Constants.ALARM_SERVICE_ACTION,
                     null,
-                    requireActivity(),
+                    requireContext(),
                     CallingReceiver::class.java
                 )
+
+
                 val bundle = Bundle()
                 bundle.putParcelable("call", it)
                 intent.putExtras(bundle)
@@ -139,7 +147,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                     requireActivity().sendBroadcast(intent)
                 } else {
                     val pendingIntent = PendingIntent.getBroadcast(
-                        requireActivity(),
+                        requireContext(),
                         Random().nextInt(123123),
                         intent,
                         Utils.getPendingIntentFlags()

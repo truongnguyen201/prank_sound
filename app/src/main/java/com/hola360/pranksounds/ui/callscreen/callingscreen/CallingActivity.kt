@@ -41,7 +41,6 @@ class CallingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCallingBinding.inflate(layoutInflater)
-
         val intent = intent
         var call = Call()
         val args = intent?.getParcelableExtra<Call>("call")

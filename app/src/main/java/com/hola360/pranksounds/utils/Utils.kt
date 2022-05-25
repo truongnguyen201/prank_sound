@@ -3,6 +3,7 @@ package com.hola360.pranksounds.utils
 import android.Manifest
 import android.app.Activity
 import android.app.AlarmManager
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -24,11 +25,16 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.hola360.pranksounds.R
+import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
+import kotlinx.coroutines.launch
+
 
 object Utils {
     private var STORAGE_PERMISSION_UNDER_STORAGE_SCOPE = arrayOf(
@@ -127,6 +133,7 @@ object Utils {
         } else {
             STORAGE_PERMISSION_UNDER_STORAGE_SCOPE
         }
+
     }
 
     fun getWritingPermission(): Array<String> {
@@ -255,5 +262,35 @@ object Utils {
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         activity.startActivity(intent)
+    }
+
+    fun checkDisplayOverOtherAppPermission(context: Context) : Boolean {
+        return if (isAndroidQ()) {
+            Settings.canDrawOverlays(context)
+        } else {
+            true
+        }
+    }
+
+    fun openAppInformation(context: Context) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.data = Uri.parse("package:" + context.packageName)
+        context.startActivity(intent)
+    }
+
+    fun setUpDialogGrantPermission(context: Context)  {
+        val builder = AlertDialog.Builder(context)
+        var res = false
+        builder.setMessage(context.resources.getString(R.string.confirm_message))
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, id ->
+                openAppInformation(context)
+            }
+            .setNegativeButton("No") { dialog, id ->
+                // Dismiss the dialog
+                dialog.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
     }
 }
