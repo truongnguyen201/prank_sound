@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Typeface
 import android.media.RingtoneManager
 import android.os.Bundle
 import android.util.Log
@@ -26,12 +24,14 @@ import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
+import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
+
 
 @Suppress("SENSELESS_COMPARISON")
 class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
@@ -46,20 +46,22 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
     private var currentMorePosition = 0
     var isUserControl = false
-    private lateinit var paint: Paint
+    private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
 
     override fun getLayout(): Int {
         return R.layout.fragment_detail_category
     }
 
     override fun initView() {
-        setupForSeekbar()
         requireActivity().title = args.categoryTitle
         setUpProgressBar()
         detailCategoryAdapter.setListener(this)
         mLayoutManager = LinearLayoutManager(requireContext())
         setupPopUpWindow()
         binding.viewModel = detailCategoryViewModel
+
+        seekbarBinding =
+            LayoutSeekbarThumbBinding.inflate(requireActivity().layoutInflater, null, false)
 
         binding.apply {
             rvSound.layoutManager = mLayoutManager
@@ -109,6 +111,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         controlPanelListener.onSeekBarChange(true, p0!!.progress)
                     }
                 })
+                thumb = Utils.createThumb(0, 0, seekbarBinding, resources)
             }
 
             ibPlayPause.setOnClickListener {
@@ -161,13 +164,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         }
     }
 
-    private fun setupForSeekbar() {
-        paint = Paint()
-        paint.typeface = Typeface.SANS_SERIF
-        paint.textSize = 20F
-        paint.color = (-0x1)
-    }
-
     override fun initViewModel() {
         val factory =
             DetailCategoryViewModel.Factory(requireActivity().application, args.categoryId!!)
@@ -211,7 +207,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
-        detailCategoryViewModel.favoriteSoundLiveData.observe(this) {
+        sharedVM.favoriteList.observe(this) {
             it?.let {
                 detailCategoryAdapter.updateFavoriteData(it)
                 sharedVM.favoriteList.value!!.addAll(it)
@@ -229,6 +225,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         ivThumbnail.setImageResource(sound.thumbRes)
                         ivPlayPause.setImageResource(R.drawable.ic_pause_arrow)
                         ibPlayPause.setImageResource(R.drawable.ic_pause_circle)
+                        rvSound.scrollToPosition(it)
                     }
                 }
             }
@@ -249,13 +246,11 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         animator.duration = 10
                         animator.interpolator = LinearInterpolator()
                         animator.start()
-                        Utils.drawThumb(
-                            requireContext(),
-                            this,
+                        thumb = Utils.createThumb(
                             it,
                             sharedVM.soundDuration.value!!,
-                            resource,
-                            paint
+                            seekbarBinding,
+                            resource
                         )
                     }
                 }
@@ -279,6 +274,17 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
+        sharedVM.isComplete.observe(this){
+            it?.let{
+                if(it){
+                    if(sharedVM.soundDuration.value!! < 1000){
+                        binding.sbDuration.max = 1000
+                        binding.sbDuration.progress = 1000
+//                        Utils.createThumb(1000, 1000, seekbarBinding, resource)
+                    }
+                }
+            }
+        }
 //        detailCategoryViewModel.getSound(1, false)
     }
 
@@ -339,12 +345,12 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
     //handle when favorite button checked: add sound to favorite
     override fun onCheckedButton(sound: Sound) {
-        detailCategoryViewModel.addFavoriteSound(sound)
+        sharedVM.addFavoriteSound(sound)
     }
 
     //handle when favorite button unchecked: remove sound from favorite
     override fun onUncheckedButton(sound: Sound) {
-        detailCategoryViewModel.removeFavoriteSound(sound)
+        sharedVM.removeFavoriteSound(sound)
     }
 
     //handle when click on sound item in recycler view

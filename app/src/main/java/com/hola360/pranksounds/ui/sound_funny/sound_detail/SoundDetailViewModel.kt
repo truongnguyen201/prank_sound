@@ -11,33 +11,6 @@ import kotlinx.coroutines.launch
 
 class SoundDetailViewModel(private val app: Application) : ViewModel() {
 
-    private val detailCategoryRepository = DetailCategoryRepository(app)
-    private val repository = DetailCategoryRepository(app)
-
-    fun addFavoriteSound(sound: Sound) {
-        viewModelScope.launch {
-            detailCategoryRepository.addFavoriteSound(sound)
-            Toast.makeText(
-                app.applicationContext, "Added ${sound.title} to favorite list",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    fun removeFavoriteSound(sound: Sound) {
-        viewModelScope.launch {
-            detailCategoryRepository.removeFavoriteSound(sound)
-            Toast.makeText(
-                app.applicationContext, "Removed ${sound.title} from favorite list",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    fun getDataWhenChangeTheme() {
-
-    }
-
     @Suppress("UNCHECKED_CAST")
     class Factory(private val app: Application) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

@@ -58,7 +58,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                         setDataSource(applicationContext, uri)
                         prepareAsync()
                         setOnPreparedListener {
-                            sharedViewModel.soundDuration.value = mediaPlayer.duration
+                            sharedViewModel.soundDuration.value = duration
                             start()
                             sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
                         }

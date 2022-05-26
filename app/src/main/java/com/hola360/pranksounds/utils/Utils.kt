@@ -14,6 +14,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -34,6 +35,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
 import com.hola360.pranksounds.R
+import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
 import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
 import java.io.BufferedInputStream
 import java.io.File
@@ -218,27 +220,29 @@ object Utils {
         return popupWindow
     }
 
-    //draw thumb seekbar
-    fun drawThumb(
-        context: Context,
-        seekBar: SeekBar,
+    fun createThumb(
         progress: Int,
-        duration: Int,
-        resources: Resources,
-        paint: Paint
-    ) {
-        val bitmap =
-            ContextCompat.getDrawable(context, R.drawable.seek_bar_thumb)?.toBitmap()!!
-                .copy(Bitmap.Config.ARGB_8888, true)
-        val canvas = Canvas(bitmap)
-        val text = String.format("00:%02d/00:%02d", progress / 1000, duration / 1000)
-
-        canvas.drawText(
-            text, (bitmap.width - paint.measureText(text)) / 2,
-            (canvas.height / 2 - (paint.descent() + paint.ascent()) / 2), paint
+        maxProgress: Int,
+        binding: LayoutSeekbarThumbBinding,
+        resources: Resources
+    ): Drawable? {
+        binding.tvProgress.text =
+            String.format("00:%02d/00:%02d", progress / 1000, maxProgress / 1000)
+        binding.root.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val bitmap = Bitmap.createBitmap(
+            binding.root.measuredWidth,
+            binding.root.measuredHeight,
+            Bitmap.Config.ARGB_8888
         )
-        seekBar.thumb.clearColorFilter()
-        seekBar.thumb = (BitmapDrawable(resources, bitmap))
+        val canvas = Canvas(bitmap)
+        binding.root.layout(
+            0,
+            0,
+            binding.root.measuredWidth,
+            binding.root.measuredHeight
+        )
+        binding.root.draw(canvas)
+        return BitmapDrawable(resources, bitmap)
     }
 
     fun getBasePath(): String {

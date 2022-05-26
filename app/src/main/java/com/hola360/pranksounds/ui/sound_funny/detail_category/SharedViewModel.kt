@@ -25,6 +25,8 @@ import java.io.FileOutputStream
 @Suppress("DEPRECATION")
 class SharedViewModel private constructor(private val app: Application) : ViewModel() {
     private val fileDownloadRepository = FileDownloadRepository()
+    private val categoryRepository = DetailCategoryRepository(app)
+
     var isComplete = MutableLiveData<Boolean>()
     var isPlaying = MutableLiveData<Boolean>()
     var soundList = MutableLiveData<MutableList<Sound>>()
@@ -116,6 +118,29 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
             Toast.makeText(app.applicationContext, message, LENGTH_SHORT).show()
         }
     }
+
+    fun addFavoriteSound(sound: Sound) {
+        viewModelScope.launch {
+            categoryRepository.addFavoriteSound(sound)
+            Toast.makeText(
+                app.applicationContext, "Added ${sound.title} to favorite list",
+                Toast.LENGTH_SHORT
+            ).show()
+            favoriteList.value = categoryRepository.getFavoriteSound()
+        }
+    }
+
+    fun removeFavoriteSound(sound: Sound) {
+        viewModelScope.launch {
+            categoryRepository.removeFavoriteSound(sound)
+            Toast.makeText(
+                app.applicationContext, "Removed ${sound.title} from favorite list",
+                Toast.LENGTH_SHORT
+            ).show()
+            favoriteList.value = categoryRepository.getFavoriteSound()
+        }
+    }
+
 
     class Factory(private val app: Application) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

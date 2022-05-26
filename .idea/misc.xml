@@ -88,6 +88,7 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_pop_up_window.xml" value="0.2435" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_prank_item.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_retry_button.xml" value="0.267" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_seekbar_thumb.xml" value="0.257" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_sound_category_item.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_sound_funny.xml" value="0.22" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_start_button.xml" value="0.2365" />
@@ -143,6 +144,7 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound.xml" value="0.33" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound_category.xml" value="0.33" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/layout_no_internet.xml" value="0.25" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/layout_seekbar_thumb.xml" value="0.5" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/no_internet_layout.xml" value="0.33055555555555555" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/pop_up_window_layout.xml" value="0.25" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/section_home_prank.xml" value="0.30512820512820515" />

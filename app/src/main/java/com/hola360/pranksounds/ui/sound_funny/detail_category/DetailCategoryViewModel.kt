@@ -122,20 +122,6 @@ class DetailCategoryViewModel(
         getSound(1, false)
     }
 
-    fun addFavoriteSound(sound: Sound) {
-        viewModelScope.launch {
-            repository.addFavoriteSound(sound)
-            Toast.makeText(app.applicationContext, "Added ${sound.title} to favorite list", LENGTH_SHORT).show()
-        }
-    }
-
-    fun removeFavoriteSound(sound: Sound) {
-        viewModelScope.launch {
-            repository.removeFavoriteSound(sound)
-            Toast.makeText(app.applicationContext, "Removed ${sound.title} to favorite list", LENGTH_SHORT).show()
-        }
-    }
-
     @Suppress("UNCHECKED_CAST")
     class Factory(private val app: Application, private val catId: String) :
         ViewModelProvider.NewInstanceFactory() {
