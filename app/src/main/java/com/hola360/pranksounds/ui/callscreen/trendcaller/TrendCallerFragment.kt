@@ -1,16 +1,12 @@
 package com.hola360.pranksounds.ui.callscreen.trendcaller
 
-import android.graphics.Color
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.github.ybq.android.spinkit.style.Circle
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
-import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.FragmentTrendCallerBinding
-import com.hola360.pranksounds.ui.callscreen.CallScreenViewModel
 import com.hola360.pranksounds.ui.callscreen.base.CallListBaseFragment
 
 class TrendCallerFragment : CallListBaseFragment<FragmentTrendCallerBinding>() {
@@ -36,9 +32,9 @@ class TrendCallerFragment : CallListBaseFragment<FragmentTrendCallerBinding>() {
         trendCallerViewModel.phoneBookLiveData.observe(this) {
             if (it.loadingStatus == LoadingStatus.Success) {
                 val phoneBook = (it as DataResponse.DataSuccess).body
-                callAdapter.updateData(phoneBook)
+                callAdapter.updateData(phoneBook, 0)
             } else if (it.loadingStatus == LoadingStatus.Error) {
-                callAdapter.updateData(null)
+                callAdapter.updateData(null, 0)
             }
         }
         try {

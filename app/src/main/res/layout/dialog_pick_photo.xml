@@ -29,8 +29,7 @@
                 android:layout_centerVertical="true"
                 android:background="?selectableItemBackground"
                 android:onClick="@{()->viewModel.onClose()}"
-                android:src="@{viewModel.isDetailMode?@drawable/ic_arrow_left_white:@drawable/ic_close_white}"
-                />
+                android:src="@{viewModel.isDetailMode?@drawable/ic_arrow_left_white:@drawable/ic_close_white}" />
 
             <TextView
                 android:layout_width="wrap_content"

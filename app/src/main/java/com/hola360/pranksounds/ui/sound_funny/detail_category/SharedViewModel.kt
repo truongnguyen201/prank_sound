@@ -40,7 +40,6 @@ class SharedViewModel constructor(private val app: Application) : ViewModel() {
         soundList.value = mutableListOf()
     }
 
-
     fun downloadAndSet(url: String, type: Int, soundName: String) {
         val basePath = Utils.getBasePath()
         val dirName = basePath + Constants.DIR_PATH
@@ -115,30 +114,6 @@ class SharedViewModel constructor(private val app: Application) : ViewModel() {
                 "Something got error, please try again"
             }
             Toast.makeText(app.applicationContext, message, LENGTH_SHORT).show()
-        }
-    }
-
-    private fun setAs(type: Int, uri: Uri, fileName: String, soundName: String) {
-        val values = ContentValues()
-        values.put(MediaStore.MediaColumns.DATA, fileName)
-        values.put(MediaStore.MediaColumns.TITLE, soundName)
-        values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mpeg")
-
-        val newUri = app.contentResolver.insert(uri, values)!!
-        try {
-            RingtoneManager.setActualDefaultRingtoneUri(app, type, newUri)
-            Toast.makeText(
-                app.applicationContext,
-                "Set $soundName as $type successfully",
-                LENGTH_SHORT
-            ).show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(
-                app.applicationContext,
-                "Something got error, please try again!!",
-                LENGTH_SHORT
-            ).show()
         }
     }
 

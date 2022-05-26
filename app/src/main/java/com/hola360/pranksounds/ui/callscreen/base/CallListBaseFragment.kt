@@ -1,5 +1,6 @@
 package com.hola360.pranksounds.ui.callscreen.base
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
@@ -95,6 +96,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setUpAlertDialog(call: Call) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setMessage(requireActivity().resources.getString(R.string.confirm_delete))
@@ -103,6 +105,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
                 lifecycleScope.launch {
                     repository.deleteCall(call)
                     getPhoneBook()
+                    callAdapter.notifyDataSetChanged()
                 }
                 Toast.makeText(
                     requireContext(),

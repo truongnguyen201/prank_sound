@@ -3,11 +3,13 @@ package com.hola360.pranksounds.ui.callscreen.addcallscreen
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
+import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -16,6 +18,7 @@ import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.model.PhotoModel
 import com.hola360.pranksounds.databinding.FragmentAddCallScreenBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.dialog.pickphoto.PickPhotoDialog
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
@@ -31,20 +34,21 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     private lateinit var action: Any
     private var call: Call? = null
     private val args: AddCallScreenFragmentArgs by navArgs()
+    val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
 
     override fun getLayout(): Int {
         return R.layout.fragment_add_call_screen
     }
 
     override fun initView() {
-        //args.callModel null, #null id >0
+        //args.callModel null, #null id >
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
-
             setNavigationOnClickListener {
                 requireActivity().onBackPressed()
             }
         }
+
         with(binding) {
             imgAvatar.setOnClickListener {
                 if (Utils.storagePermissionGrant(requireContext())) {
@@ -64,20 +68,50 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
 
             btnAdd.setOnClickListener {
                 viewModel!!.addCallToLocal()
-                Toast.makeText(requireContext(), "Insert success!", Toast.LENGTH_LONG).show()
+                sharedViewModel.setCall(viewModel!!.getCurrentCall())
+                Toast.makeText(requireContext(), requireContext().resources.getString(R.string.insert_success), Toast.LENGTH_LONG).show()
                 requireActivity().onBackPressed()
-//                action = CallScreenFragmentDirections.actionGlobalCallScreenFragment()
-//                findNavController().navigate(action as NavDirections)
+            }
+
+            tvDefaultImg.setOnClickListener {
+                viewModel!!.setAvatarDefault()
+                imgAvatar.setImageResource(R.drawable.img_avatar_default)
             }
         }
 
         call = args.callModel
         if (call != null) {
             binding.tbAddCallScreen.title = requireActivity().getString(R.string.edit_call_screen)
-            addCallScreenViewModel.setCall(call!!)
-            with(binding) {
-                val path =
-                    if (call!!.isLocal) call!!.avatarUrl else Constants.SUB_URL + call!!.avatarUrl
+            call?.let {
+                setView(it)
+            }
+        }
+        addCallScreenViewModel.setCall(call)
+    }
+
+    override fun initViewModel() {
+//        sharedViewModel.setCall(args.callModel)
+//        addCallScreenViewModel.setCall(call!!)
+//        Log.e("-------------------", "initViewModel: ${sharedViewModel.myCall.value?.name}", )
+        val factory = AddCallScreenViewModel.Factory(requireActivity().application, args.callModel)
+        addCallScreenViewModel =
+            ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
+        setDataByViewModel()
+    }
+
+    private fun setDataByViewModel() {
+        sharedViewModel.myCall.observe(this) {
+            addCallScreenViewModel.setCall(it)
+        }
+    }
+
+    private fun setView(call: Call) {
+        with(binding) {
+            val path =
+                if (call.isLocal) call.avatarUrl else Constants.SUB_URL + call.avatarUrl
+            if (path.isEmpty()) {
+                imgAvatar.setImageResource(R.drawable.img_avatar_default)
+            } else {
                 imgAvatar.let { imgView ->
                     Glide.with(imgView)
                         .load(path)
@@ -85,18 +119,10 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                         .error(R.drawable.img_avatar_default)
                         .into(imgView)
                 }
-                tvCallerName.setText(call!!.name)
-                tvPhoneNumber.setText(call!!.phone)
             }
-
+            tvCallerName.setText(call.name)
+            tvPhoneNumber.setText(call.phone)
         }
-    }
-
-    override fun initViewModel() {
-        val factory = AddCallScreenViewModel.Factory(requireActivity().application,args.callModel)
-        addCallScreenViewModel =
-            ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
-
     }
 
     private fun requestStoragePermission() {
@@ -128,7 +154,6 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 binding.imgAvatar.setImageURI(imageUri)
                 binding.viewModel!!.curCallModel!!.avatarUrl = imageUri.path.toString()
             }
-//            binding.viewModel!!.imageUri.value = imageUri
         }
     }
 
@@ -136,7 +161,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         val date: Date = Calendar.getInstance().time
         var destinationFileName = date.time.seconds.toString()
         destinationFileName += ".jpg"
-        var uCrop =
+        val uCrop =
             UCrop.of(uri, Uri.fromFile(File(requireActivity().cacheDir, destinationFileName)))
         uCrop.withAspectRatio(1F, 1F)
         uCrop.withMaxResultSize(450, 450)
@@ -146,9 +171,8 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
 
 
     private fun getCropOptions(): UCrop.Options {
-        var options = UCrop.Options()
+        val options = UCrop.Options()
         options.setCompressionQuality(70)
-
         options.setHideBottomControls(false)
         options.setFreeStyleCropEnabled(true)
         options.setStatusBarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
@@ -160,8 +184,10 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
 
 
     override fun onPickPhoto(photoModel: PhotoModel) {
-        Log.e("TAG", "on pick photo: ")
         startCrop(photoModel.uri)
     }
 
+    private fun setAvatarDefault() {
+
+    }
 }

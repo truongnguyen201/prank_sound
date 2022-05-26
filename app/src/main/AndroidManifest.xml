@@ -7,11 +7,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
+        android:protectionLevel="signature"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
@@ -29,9 +29,10 @@
         tools:replace="android:allowBackup">
         <activity
             android:name=".ui.callscreen.callingscreen.CallingActivity"
-            android:exported="true"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.PrankSounds.Fullscreen" />
+            android:theme="@style/Theme.PrankSounds.Fullscreen"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".SplashActivity"
@@ -52,6 +53,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PrankSounds.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
+
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

@@ -38,9 +38,9 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
         myCallerViewModel.phoneBookLiveData.observe(this) {
             if (it.loadingStatus == LoadingStatus.Success) {
                 val phoneBook = (it as DataResponse.DataSuccess).body
-                callAdapter.updateData(phoneBook)
+                callAdapter.updateData(phoneBook, 0)
             } else if (it.loadingStatus == LoadingStatus.Error) {
-                callAdapter.updateData(null)
+                callAdapter.updateData(null, 1)
             }
         }
         try {
@@ -48,6 +48,12 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
         } catch (e: Exception) {
 
         }
+
+//        myCallerViewModel.isEmpty.observe(this) {
+//            if (it) {
+//                callAdapter.updateData(null)
+//            }
+//        }
     }
 
     override fun getPhoneBook() {

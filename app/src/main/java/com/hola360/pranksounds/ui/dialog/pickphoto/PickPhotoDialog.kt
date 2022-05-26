@@ -28,7 +28,6 @@ class PickPhotoDialog(
     ) : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.ListenClickItem{
     lateinit var viewModel: PickPhotoDialogViewModel
     lateinit var adapter: PhotoAdapter
-//    var
     lateinit var layoutManager: GridLayoutManager
     var albumState: Parcelable? = null
 

@@ -20,9 +20,10 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
     lateinit var callItemListener: CallItemListener
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(list: List<Call>?) {
+    fun updateData(list: List<Call>?, status: Int) {
         if (!list.isNullOrEmpty())
             listData = list
+        if (status == 1) listData = listOf<Call>()
         notifyDataSetChanged()
     }
 

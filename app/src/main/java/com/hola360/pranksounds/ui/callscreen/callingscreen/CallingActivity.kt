@@ -3,6 +3,7 @@ package com.hola360.pranksounds.ui.callscreen.callingscreen
 import android.animation.ArgbEvaluator
 import android.animation.TimeAnimator
 import android.animation.ValueAnimator
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -11,6 +12,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
@@ -31,6 +33,8 @@ import kotlinx.coroutines.*
 
 class CallingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCallingBinding
+    private val url =
+        "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2021/10/9/961804/Ca-Si-Lisa-Blackpink.jpg"
     private lateinit var gradient: GradientDrawable
     private lateinit var evaluator: ArgbEvaluator
     private lateinit var gradientAnimator: ValueAnimator
@@ -91,6 +95,7 @@ class CallingActivity : AppCompatActivity() {
                         endId: Int,
                         progress: Float
                     ) {
+
                     }
 
                     override fun onTransitionCompleted(
@@ -215,10 +220,6 @@ class CallingActivity : AppCompatActivity() {
         }
     }
 
-    private fun stopCountTime() {
-        countTime?.cancel()
-    }
-
     private fun setupRingtone() {
         mediaPlayer = MediaPlayer()
         mediaPlayer.apply {
@@ -238,7 +239,7 @@ class CallingActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if(!isAnswer){
+        if (!isAnswer) {
             setupRingtone()
         }
     }
@@ -251,5 +252,9 @@ class CallingActivity : AppCompatActivity() {
     override fun onBackPressed() {
 //        super.onBackPressed()
 //        binding.motionLayout.transitionToState(R.id.dismissState)
+    }
+
+    private fun stopCountTime() {
+        countTime?.cancel()
     }
 }

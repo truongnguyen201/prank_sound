@@ -2,6 +2,9 @@ package com.hola360.pranksounds.utils
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.AlertDialog
+import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -38,6 +41,7 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.util.*
 
+
 object Utils {
     private var STORAGE_PERMISSION_UNDER_STORAGE_SCOPE = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -52,7 +56,7 @@ object Utils {
         Manifest.permission.READ_EXTERNAL_STORAGE,
     )
 
-    private fun isAndroidQ(): Boolean {
+    fun isAndroidQ(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }
 
@@ -64,8 +68,38 @@ object Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
     }
 
+    fun isAndroidM(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+    }
+
     fun isAndroidR(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+    }
+
+    fun getPendingIntentFlags(): Int {
+        return if (isAndroidM()) {
+            if (isAndroidQ()) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                PendingIntent.FLAG_IMMUTABLE
+            }
+
+        } else {
+            PendingIntent.FLAG_ONE_SHOT
+        }
+    }
+
+    fun getAlarmManagerFlags(): Int {
+        return if (isAndroidM()) {
+            if (isAndroidQ()) {
+                AlarmManager.RTC_WAKEUP
+            } else {
+                AlarmManager.RTC_WAKEUP
+            }
+
+        } else {
+            AlarmManager.RTC_WAKEUP
+        }
     }
 
     fun writeSettingPermissionGrant(context: Context): Boolean {
@@ -103,6 +137,7 @@ object Utils {
         } else {
             STORAGE_PERMISSION_UNDER_STORAGE_SCOPE
         }
+
     }
 
     fun getWritingPermission(): Array<String> {
@@ -371,21 +406,33 @@ object Utils {
         return context.contentResolver.insert(fileCollection, contentValues)
     }
 
-    fun isChangeSetting(context: Context?): Boolean? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Settings.System.canWrite(context)
-        } else true
+    fun checkDisplayOverOtherAppPermission(context: Context): Boolean {
+        return if (isAndroidQ()) {
+            Settings.canDrawOverlays(context)
+        } else {
+            true
+        }
     }
 
-    fun gotoChangeSetting(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.System.canWrite(context)) {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_WRITE_SETTINGS,
-                    Uri.parse("package:" + context.packageName)
-                )
-                context.startActivity(intent)
+    fun openAppInformation(context: Context) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        intent.data = Uri.parse("package:" + context.packageName)
+        context.startActivity(intent)
+    }
+
+    fun setUpDialogGrantPermission(context: Context) {
+        val builder = AlertDialog.Builder(context)
+        var res = false
+        builder.setMessage(context.resources.getString(R.string.confirm_message))
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, id ->
+                openAppInformation(context)
             }
-        }
+            .setNegativeButton("No") { dialog, id ->
+                // Dismiss the dialog
+                dialog.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
     }
 }

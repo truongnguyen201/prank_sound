@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.media.RingtoneManager
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
@@ -41,6 +42,8 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     }
 
     override fun initView() {
+        Log.i("Im in create view", "HAHAHA")
+
         binding.apply {
             toolbar.apply {
                 setNavigationOnClickListener {
@@ -175,8 +178,14 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     }
 
     override fun initViewModel() {
+        Log.i("Im in create", "HAHAHA")
+
         val factory = SoundDetailViewModel.Factory(requireActivity().application)
         soundDetailViewModel = ViewModelProvider(this, factory)[SoundDetailViewModel::class.java]
+
+        if(sharedVM.soundList.value!!.isNullOrEmpty()){
+
+        }
 
         sharedVM.soundList.observe(this) {
             it?.let {

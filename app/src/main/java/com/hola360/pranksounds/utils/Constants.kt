@@ -12,6 +12,7 @@ object Constants {
     const val AUDIO_EXTENSION = "mp3"
     const val FOLDER_PATH = "PranSounds"
     const val FILE_NAME_FILTER = "?\"*"
+    const val ALARM_SERVICE_ACTION = "com.hola360.pranksounds.ACTION_CALL"
 
     //list of recycler view in home screen
     val PRANK_LIST = listOf(

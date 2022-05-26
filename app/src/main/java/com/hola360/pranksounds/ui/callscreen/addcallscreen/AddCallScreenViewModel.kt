@@ -18,7 +18,7 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
     var isUpdate = false
 
     val isEmpty: LiveData<Boolean> = Transformations.map(callLiveData){
-        curCallModel!!.name.isNullOrEmpty() || curCallModel!!.phone.isNullOrEmpty()
+        curCallModel?.name.isNullOrEmpty() || curCallModel?.phone.isNullOrEmpty()
     }
 
     fun setOnNameChange(name: String) {
@@ -31,21 +31,36 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
         callLiveData.value = curCallModel
     }
 
-    fun setCall(callTrans: Call) {
-        curCallModel = callTrans
+    fun setAvatarDefault() {
+        curCallModel!!.avatarUrl = ""
         callLiveData.value = curCallModel
-        isUpdate = true
+    }
+
+    fun setCall(callTrans: Call?) {
+        callTrans?.let {
+            curCallModel = it
+            callLiveData.value = curCallModel
+            isUpdate = true
+        }
+    }
+
+    fun getCurrentCall(): Call? {
+        return curCallModel
     }
 
     fun addCallToLocal() {
-        var newCall: Call = curCallModel!!
+        callLiveData.value = curCallModel
+        val newCall: Call = curCallModel!!
 
         if (!newCall.isLocal && call != null) {
             newCall.avatarUrl = Constants.SUB_URL + newCall.avatarUrl
         }
         newCall.isLocal = true
+        newCall.name = newCall.name.trimStart().trimEnd()
+        newCall.phone = newCall.phone.trimStart().trimEnd()
         viewModelScope.launch {
             repository.addNewCallToLocal(newCall)
+//            curCallModel = repository.getLocalCallById(id)
         }
     }
 
