@@ -1,13 +1,10 @@
 package com.hola360.pranksounds.ui.sound_funny.detail_category
 
 import android.app.Application
-import android.content.ContentValues
 import android.media.MediaMetadataRetriever
 import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.MutableLiveData
@@ -15,8 +12,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hola360.pranksounds.data.model.Sound
+import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.data.repository.FileDownloadRepository
 import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.SingletonHolder
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -24,9 +23,8 @@ import java.io.File
 import java.io.FileOutputStream
 
 @Suppress("DEPRECATION")
-class SharedViewModel constructor(private val app: Application) : ViewModel() {
+class SharedViewModel private constructor(private val app: Application) : ViewModel() {
     private val fileDownloadRepository = FileDownloadRepository()
-
     var isComplete = MutableLiveData<Boolean>()
     var isPlaying = MutableLiveData<Boolean>()
     var soundList = MutableLiveData<MutableList<Sound>>()
@@ -34,6 +32,8 @@ class SharedViewModel constructor(private val app: Application) : ViewModel() {
     var currentPosition = MutableLiveData<Int>()
     var soundDuration = MutableLiveData<Int>()
     var seekBarProgress = MutableLiveData<Int>()
+
+    companion object : SingletonHolder<SharedViewModel, Application>(::SharedViewModel)
 
     init {
         favoriteList.value = mutableListOf()

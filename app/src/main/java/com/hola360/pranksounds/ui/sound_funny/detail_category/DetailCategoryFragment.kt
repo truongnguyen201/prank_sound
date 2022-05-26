@@ -7,13 +7,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.media.RingtoneManager
+import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -27,6 +28,7 @@ import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
+import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
@@ -36,7 +38,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private val detailCategoryAdapter = DetailCategoryAdapter()
     private lateinit var detailCategoryViewModel: DetailCategoryViewModel
     private var mLayoutManager: LinearLayoutManager? = null
-    private val sharedVM by activityViewModels<SharedViewModel>()
+    private lateinit var sharedVM: SharedViewModel
     private val args: DetailCategoryFragmentArgs by navArgs()
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popUpWindow: PopupWindow
@@ -93,7 +95,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
 
             sbDuration.apply {
-                setPadding(70, 0, 70, 0)
+                setPadding(Constants.SEEKBAR_PADDING, 0, Constants.SEEKBAR_PADDING, 0)
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
 
@@ -172,9 +174,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         detailCategoryViewModel =
             ViewModelProvider(this, factory)[DetailCategoryViewModel::class.java]
 
-        if(sharedVM == null){
-            return
-        }
+        sharedVM = SharedViewModel.getInstance(requireActivity().application)
 
         detailCategoryViewModel.soundLiveData.observe(this) {
             it?.let {
@@ -188,6 +188,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                             newPageItems.add(bannerItem)
                             newPageItems.addAll(data)
                             sharedVM.soundList.value!!.addAll(newPageItems)
+                            Log.e("Sound list in sharedvm", "${sharedVM.soundList.value!!.size}")
                             detailCategoryAdapter.updateData(
                                 detailCategoryViewModel.currentPage!! > 1,
                                 newPageItems
@@ -277,7 +278,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                 }
             }
         }
-        detailCategoryViewModel.getSound(1, false)
+
+//        detailCategoryViewModel.getSound(1, false)
     }
 
     private fun setUpProgressBar() {
@@ -384,5 +386,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         controlPanelListener.onDetachFragment()
         sharedVM.soundList.value!!.clear()
         sharedVM.currentPosition.value = 0
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.e("Im in create", "HAHA")
     }
 }

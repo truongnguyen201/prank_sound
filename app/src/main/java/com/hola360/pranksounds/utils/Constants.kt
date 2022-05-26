@@ -13,7 +13,7 @@ object Constants {
     const val FOLDER_PATH = "PranSounds"
     const val FILE_NAME_FILTER = "?\"*"
     const val ALARM_SERVICE_ACTION = "com.hola360.pranksounds.ACTION_CALL"
-
+    const val SEEKBAR_PADDING = 70
     //list of recycler view in home screen
     val PRANK_LIST = listOf(
         Prank(1, R.drawable.ic_hair_cutting, R.drawable.bg_hair_cutting, "Hair Cutting"),

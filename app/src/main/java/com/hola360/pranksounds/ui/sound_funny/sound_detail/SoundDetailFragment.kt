@@ -29,7 +29,7 @@ import com.hola360.pranksounds.utils.listener.ControlPanelListener
 
 class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     private val viewPagerAdapter = ViewPagerAdapter()
-    private val sharedVM by activityViewModels<SharedViewModel>()
+    private lateinit var sharedVM : SharedViewModel
     private lateinit var soundDetailViewModel: SoundDetailViewModel
     private val args: SoundDetailFragmentArgs by navArgs()
     private lateinit var controlPanelListener: ControlPanelListener
@@ -183,9 +183,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
         val factory = SoundDetailViewModel.Factory(requireActivity().application)
         soundDetailViewModel = ViewModelProvider(this, factory)[SoundDetailViewModel::class.java]
 
-        if(sharedVM.soundList.value!!.isNullOrEmpty()){
-
-        }
+        sharedVM = SharedViewModel.getInstance(requireActivity().application)
 
         sharedVM.soundList.observe(this) {
             it?.let {
