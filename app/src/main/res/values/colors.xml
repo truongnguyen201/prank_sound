@@ -34,6 +34,8 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="disable_button">#FFDDAF</color>
     <color name="enable_button">#FCA631</color>
+    <color name="unselected_text_color">#66FFFFFF</color>
+    <color name="pop_up_text_color">#535353</color>
     <!--  setup call screen-->
     <color name="when_to_call">#555555</color>
     <color name="fenc">#E8E2E2</color>

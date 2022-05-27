@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         android:protectionLevel="signature"
@@ -30,6 +31,7 @@
         <activity
             android:name=".ui.callscreen.callingscreen.CallingActivity"
             android:exported="false"
+            android:showOnLockScreen="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PrankSounds.Fullscreen"
             android:launchMode="singleTask"
@@ -51,6 +53,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PrankSounds.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
@@ -59,8 +62,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <service android:name=".ui.callscreen.callingscreen.service.IncomingCallService"
+            android:enabled="true"/>
+
         <receiver android:name=".ui.callscreen.callingscreen.receiver.CallingReceiver"
             android:exported="true"
+
             android:enabled="true"
             >
             <intent-filter>

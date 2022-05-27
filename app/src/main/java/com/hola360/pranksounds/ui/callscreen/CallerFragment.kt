@@ -1,10 +1,12 @@
 package com.hola360.pranksounds.ui.callscreen
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
@@ -16,6 +18,7 @@ import com.hola360.pranksounds.ui.callscreen.adapter.ViewPagerAdapter
 
 class CallerFragment : BaseFragment<FragmentCallerBinding>() {
     private lateinit var action: Any
+    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     override fun getLayout(): Int {
         return R.layout.fragment_caller
     }
@@ -56,6 +59,17 @@ class CallerFragment : BaseFragment<FragmentCallerBinding>() {
 
     override fun initViewModel() {
         doNothing()
+    }
+
+    override fun onResume() {
+        Log.e("///////", "onResume: ${sharedViewModel.isBackToMyCaller()}", )
+        if (sharedViewModel.isBackToMyCaller()) {
+            binding.tabLayout.getTabAt(1)?.select()
+        }else {
+            binding.tabLayout.getTabAt(0)?.select()
+        }
+        sharedViewModel.setBackToMyCaller(false)
+        super.onResume()
     }
 
     fun doNothing() {

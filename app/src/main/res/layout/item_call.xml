@@ -33,13 +33,16 @@
 
     <TextView
         android:id="@+id/tvContactPersonName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
-        android:text="Girl friend"
+        android:gravity="start"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/black"
         android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toEndOf="@id/cvAvatar"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="6dp"
+        android:gravity="center"
+        android:maxLength="@integer/max_length_of_phone_number"
         android:text="098349744"
         android:textColor="@color/phone_number_color"
         android:textSize="10sp"
@@ -56,25 +61,33 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/cvAvatar" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7" />
+
     <ImageView
         android:id="@+id/ivOptionMenu"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="@dimen/dp_8"
+        android:contentDescription="@string/app_name"
         android:paddingHorizontal="@dimen/dp_8"
         android:paddingVertical="@dimen/dp_8"
-        android:contentDescription="@string/app_name"
         android:src="@drawable/ic_baseline_more_vert_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <ImageView
         android:id="@+id/icIsLocal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_local_offer_18"
         android:layout_marginRight="@dimen/dp_4"
+        android:src="@drawable/ic_local_offer_18"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ivOptionMenu"
@@ -83,10 +96,12 @@
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="@color/fence"
         android:layout_marginTop="7dp"
         android:layout_marginEnd="20dp"
+        android:background="@color/fence"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cvAvatar" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

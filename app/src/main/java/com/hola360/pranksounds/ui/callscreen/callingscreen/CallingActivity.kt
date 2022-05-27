@@ -5,10 +5,13 @@ import android.animation.TimeAnimator
 import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +29,7 @@ import com.hola360.pranksounds.ui.callscreen.callingscreen.adapter.PanelAdapter
 import com.hola360.pranksounds.utils.Constants
 import kotlinx.coroutines.*
 
+
 class CallingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCallingBinding
     private lateinit var gradient: GradientDrawable
@@ -41,6 +45,8 @@ class CallingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCallingBinding.inflate(layoutInflater)
+
+
         val intent = intent
         var call = Call()
         val args = intent?.getParcelableExtra<Call>("call")

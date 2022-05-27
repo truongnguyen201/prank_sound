@@ -17,6 +17,7 @@ class PickPhotoDialogViewModel(val app: App): ViewModel() {
     val allPhoto = mutableListOf<PhotoModel>()
     val photoLiveData = MutableLiveData<DataResponse<PickPhotoModel>>()
     val isExitDialog = MutableLiveData(false)
+    var albumName = ""
 
     init {
         photoLiveData.value = DataResponse.DataIdle()
@@ -42,7 +43,7 @@ class PickPhotoDialogViewModel(val app: App): ViewModel() {
         if (photoLiveData.value!!.loadingStatus == LoadingStatus.Success) {
             val pickPhotoModel = (photoLiveData.value as DataResponse.DataSuccess).body
             if (pickPhotoModel.pickModelDataType == PickModelDataType.LoadDetailAlbum) {
-                "Detail"
+                albumName
             }
             else
                 app.getString(R.string.photos)

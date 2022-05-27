@@ -10,8 +10,20 @@ import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 class CallScreenSharedViewModel(private val app: Application): ViewModel() {
     var myCall = MutableLiveData<Call?>()
 
+    var isBackToMyCaller = MutableLiveData<Boolean>(false)
+
     fun setCall(call: Call?) {
         myCall.value = call
+    }
+    fun getCall(): Call? {
+        return myCall.value
+    }
+
+    fun setBackToMyCaller(boolean: Boolean) {
+        isBackToMyCaller.value = boolean
+    }
+    fun isBackToMyCaller(): Boolean {
+        return isBackToMyCaller.value!!
     }
 
     class Factory(private val app: Application) : ViewModelProvider.NewInstanceFactory() {

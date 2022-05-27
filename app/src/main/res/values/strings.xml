@@ -50,10 +50,12 @@
     <string name="default_image"> <u>Default image</u></string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="confirm_delete">Are you sure you want to Delete</string>
+    <string name="confirm_delete_start">Are you sure you want to delete \"</string>
+    <string name="confirm_delete_end">\"\?\n It cannot be undone.</string>
+    <string name="confirm_title">Confirm?</string>
     <string name="delete_complete">Delete complete</string>
-    <string name="trend_caller">Trend caller</string>
-    <string name="my_caller">My caller</string>
+    <string name="trend_caller">Trend Caller</string>
+    <string name="my_caller">My Caller</string>
     <string name="edit_call_screen">Edit call screen</string>
     <string name="write_setting_permission">Please allow the app to modify system settings to use this feature</string>
 
@@ -65,7 +67,7 @@
     <string name="minutes">minutes</string>
     <string name="minute">minute</string>
     <string name="now">Now</string>
-    <string name="set_call">Set call</string>
+    <string name="set_call">Set Call</string>
     <string name="five_seconds">5 seconds</string>
     <string name="thirty_seconds">30 seconds</string>
     <string name="one_minute">1 minute</string>

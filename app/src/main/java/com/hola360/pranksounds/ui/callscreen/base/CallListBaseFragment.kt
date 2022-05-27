@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -24,6 +26,7 @@ import com.hola360.pranksounds.data.repository.PhoneBookRepository
 import com.hola360.pranksounds.databinding.PopUpCallMoreBinding
 import com.hola360.pranksounds.ui.callscreen.CallItemListener
 import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
+import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.adapter.CallAdapter
 import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
 import kotlinx.coroutines.launch
@@ -35,6 +38,8 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     private lateinit var action: Any
     private lateinit var popUpWindow: PopupWindow
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
+    private val screenHeight = Resources.getSystem().displayMetrics.heightPixels - 100
+    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,9 +104,12 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     @SuppressLint("NotifyDataSetChanged")
     private fun setUpAlertDialog(call: Call) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setMessage(requireActivity().resources.getString(R.string.confirm_delete))
+        builder.setTitle(requireActivity().resources.getString(R.string.confirm_title))
+            .setMessage(requireActivity().resources.getString(R.string.confirm_delete_start)
+                    + call.name
+                    + requireActivity().resources.getString(R.string.confirm_delete_end))
             .setCancelable(false)
-            .setPositiveButton("Yes") { dialog, id ->
+            .setPositiveButton("OK") { dialog, id ->
                 lifecycleScope.launch {
                     repository.deleteCall(call)
                     getPhoneBook()
@@ -113,7 +121,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            .setNegativeButton("No") { dialog, id ->
+            .setNegativeButton("Cancel") { dialog, id ->
                 // Dismiss the dialog
                 dialog.dismiss()
             }
@@ -135,8 +143,8 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     override fun onMoreClick(view: View, call: Call) {
         setupPopUpWindow(call)
         popUpWindow.showAsDropDown(
-            view, (screenWidth * 0.68).toInt(),
-            ((-view.height) * 0.7).toInt()
+            view, 0,
+            0
         )
     }
 

@@ -42,7 +42,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
     override fun getLayout(): Int {
         return R.layout.fragment_setup_call
     }
-
     override fun initView() {
 
         binding.tbSetupCallScreen.setNavigationOnClickListener {
@@ -70,17 +69,15 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                     setupCallViewModel.startCalling()
                 }
                 else {
-//                    Utils.openAppInformation(requireActivity())
                     Utils.setUpDialogGrantPermission(requireContext())
                 }
-
-//                backToHome()
             }
         }
         with(binding.tbSetupCallScreen) {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.edit_call -> {
+                        sharedViewModel.setBackToMyCaller(false)
                         action =
                             CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
                         findNavController().navigate(action as NavDirections)
@@ -117,7 +114,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                     imgAvatar.let { imgView ->
                         Glide.with(imgView)
                             .load(path)
-                            .placeholder(R.drawable.smaller_loading)
+                            .placeholder(R.drawable.img_avatar_default)
                             .error(R.drawable.img_avatar_default)
                             .into(imgView)
                     }
@@ -238,22 +235,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         requireContext().unregisterReceiver(receiver)
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (data?.action == "DataFix") {
-//            val fixCall: Call? = data.getParcelableExtra<Call>("CallAfterFix")
-//            if (fixCall != null) {
-//                setupCallViewModel.setCall(fixCall)
-//                Log.e("/////", "on activity reult: update call", )
-//            }
-//        }
-//    }
-
 
     override fun onResume() {
         super.onResume()
-//        if (setupCallViewModel.curCallModel?.id != 0) {
-//            setupCallViewModel.updateCallFromLocal()
-//        }
     }
 
 

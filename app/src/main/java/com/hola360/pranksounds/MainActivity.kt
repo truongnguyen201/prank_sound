@@ -1,15 +1,16 @@
 package com.hola360.pranksounds
 
-import android.content.Intent
+import android.content.Context
+import android.graphics.Rect
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
-import androidx.activity.viewModels
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.ui.setupWithNavController
@@ -21,6 +22,7 @@ import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import kotlinx.coroutines.*
+
 
 class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
@@ -178,6 +180,23 @@ class MainActivity : BaseActivity(), ControlPanelListener {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event!!.action == MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    v.clearFocus()
+                    val imm: InputMethodManager? =
+                        applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                    imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
 }
