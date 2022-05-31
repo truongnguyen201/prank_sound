@@ -200,8 +200,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
-        detailCategoryViewModel.favoriteSoundLiveData.observe(this){
-            it?.let{
+        detailCategoryViewModel.favoriteSoundLiveData.observe(this) {
+            it?.let {
                 sharedVM.favoriteList.value!!.addAll(it)
             }
         }

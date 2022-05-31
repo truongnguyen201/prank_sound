@@ -76,7 +76,7 @@
 
     <!--  Calling screen  -->
     <string name="incoming_call">Incoming Call</string>
-    <string name="phone_number_">036-875-2432</string>
+    <string name="phone_number_">036–875–2432</string>
 
     <!-- Toolbar title   -->
     <string name="toolbar_title_privacy_policy">Privacy Policy</string>
