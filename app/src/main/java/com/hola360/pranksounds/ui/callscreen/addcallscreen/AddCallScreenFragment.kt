@@ -64,9 +64,9 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 }
             }
 
-            tvCallerName.doAfterTextChanged {
-                viewModel!!.setOnNameChange(tvCallerName.text.toString())
-            }
+//            tvCallerName.doAfterTextChanged {
+//                viewModel!!.setOnNameChange(tvCallerName.text.toString())
+//            }
 
             tvPhoneNumber.doAfterTextChanged {
                 viewModel!!.setOnPhoneNumberChange(tvPhoneNumber.text.toString())

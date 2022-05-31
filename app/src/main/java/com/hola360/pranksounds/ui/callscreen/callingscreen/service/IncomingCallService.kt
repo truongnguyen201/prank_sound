@@ -27,27 +27,31 @@ class IncomingCallService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         buildNotification(intent!!)
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
 
-    private fun buildNotification(intent: Intent){
+    private fun buildNotification(intent: Intent) {
         val notificationIntent = Intent(this, CallingActivity::class.java)
         val call = intent.extras?.getParcelable<Call>("call")
         notificationIntent.putExtra("call", call as Parcelable)
 
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             .addCategory(Intent.CATEGORY_LAUNCHER)
         startActivity(notificationIntent)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
         val notification: Notification =
             NotificationCompat.Builder(this, App.channelId)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentTitle(call.name)
                 .setContentText(call.name)
-                .setSilent(true)
-                .setAutoCancel(false)
-
+                .setAutoCancel(true)
                 .setSmallIcon(R.drawable.ic_menu_call)
                 .setContentIntent(pendingIntent)
                 .build()

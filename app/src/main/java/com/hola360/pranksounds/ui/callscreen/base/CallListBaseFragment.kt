@@ -27,11 +27,13 @@ import com.hola360.pranksounds.databinding.PopUpCallMoreBinding
 import com.hola360.pranksounds.ui.callscreen.CallItemListener
 import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
+import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
 import com.hola360.pranksounds.ui.callscreen.adapter.CallAdapter
 import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
+import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
 import kotlinx.coroutines.launch
 
-abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemListener {
+abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemListener, DeleteConfirmListener {
     protected lateinit var binding: V
     private lateinit var repository: PhoneBookRepository
     protected var callAdapter: CallAdapter= CallAdapter { handleOnclickItem(it) }
@@ -101,33 +103,50 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+
     private fun setUpAlertDialog(call: Call) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(requireActivity().resources.getString(R.string.confirm_title))
-            .setMessage(requireActivity().resources.getString(R.string.confirm_delete_start)
-                    + call.name
-                    + requireActivity().resources.getString(R.string.confirm_delete_end))
-            .setCancelable(false)
-            .setPositiveButton("OK") { dialog, id ->
-                lifecycleScope.launch {
-                    repository.deleteCall(call)
-                    getPhoneBook()
-                    callAdapter.notifyDataSetChanged()
-                }
-                Toast.makeText(
-                    requireContext(),
-                    requireActivity().resources.getString(R.string.delete_complete),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            .setNegativeButton("Cancel") { dialog, id ->
-                // Dismiss the dialog
-                dialog.dismiss()
-            }
-        val alert = builder.create()
-        alert.show()
-        popUpWindow.dismiss()
+        val dialog = ConfirmDeleteDialog.create(this, call)
+        dialog.show(childFragmentManager, "")
+//        val builder = AlertDialog.Builder(requireContext())
+//        builder.setTitle(requireActivity().resources.getString(R.string.confirm_title))
+//            .setMessage(requireActivity().resources.getString(R.string.confirm_delete_start)
+//                    + call.name
+//                    + requireActivity().resources.getString(R.string.confirm_delete_end))
+//            .setCancelable(false)
+//            .setPositiveButton("OK") { dialog, id ->
+//                lifecycleScope.launch {
+//                    repository.deleteCall(call)
+//                    getPhoneBook()
+//                    callAdapter.notifyDataSetChanged()
+//                }
+//                Toast.makeText(
+//                    requireContext(),
+//                    requireActivity().resources.getString(R.string.delete_complete),
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//            .setNegativeButton("Cancel") { dialog, id ->
+//                // Dismiss the dialog
+//                dialog.dismiss()
+//            }
+//        val alert = builder.create()
+//        alert.show()
+//        popUpWindow.dismiss()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onOkClick(call: Call) {
+        lifecycleScope.launch {
+            repository.deleteCall(call)
+            getPhoneBook()
+            callAdapter.notifyDataSetChanged()
+        }
+        Toast.makeText(
+            requireContext(),
+            requireActivity().resources.getString(R.string.delete_complete),
+            Toast.LENGTH_SHORT
+        ).show()
+
     }
 
     private fun passCallToUpDate(call: Call) {

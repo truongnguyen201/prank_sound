@@ -36,6 +36,8 @@
     <color name="enable_button">#FCA631</color>
     <color name="unselected_text_color">#66FFFFFF</color>
     <color name="pop_up_text_color">#535353</color>
+    <color name="gray">#E2E2E2</color>
+    <color name="cancel_text_color">#585858</color>
     <!--  setup call screen-->
     <color name="when_to_call">#555555</color>
     <color name="fenc">#E8E2E2</color>

@@ -43,6 +43,7 @@ class CallerFragment : BaseFragment<FragmentCallerBinding>() {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.add_new_call -> {
+                        sharedViewModel.setCall(null)
                         action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(null)
                         findNavController().navigate(action as NavDirections)
                         true

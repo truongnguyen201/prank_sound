@@ -51,13 +51,16 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_start">Are you sure you want to delete \"</string>
-    <string name="confirm_delete_end">\"\?\n It cannot be undone.</string>
+    <string name="confirm_delete_start_end">\"\?</string>
+    <string name="confirm_delete_end">It cannot be undone.</string>
     <string name="confirm_title">Confirm?</string>
     <string name="delete_complete">Delete complete</string>
     <string name="trend_caller">Trend Caller</string>
     <string name="my_caller">My Caller</string>
     <string name="edit_call_screen">Edit call screen</string>
     <string name="write_setting_permission">Please allow the app to modify system settings to use this feature</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
 
     <!--    // setup call screen-->
     <string name="default_text">Default text</string>

@@ -10,11 +10,13 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -25,14 +27,17 @@ import com.hola360.pranksounds.databinding.FragmentSetupCallBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
+import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
 import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingReceiver
+import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.Converter
+import kotlinx.coroutines.launch
 import java.util.*
 
 
-class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
+class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfirmListener {
     lateinit var setupCallViewModel: SetupCallViewModel
     private val args: SetupCallFragmentArgs by navArgs()
     lateinit var receiver: CallingReceiver
@@ -43,10 +48,14 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         return R.layout.fragment_setup_call
     }
     override fun initView() {
-
+        if (setupCallViewModel.getCurrentCall()?.isLocal == true) {
+            binding.tbSetupCallScreen.inflateMenu(R.menu.setup_call_menu_2)
+            sharedViewModel.setBackToMyCaller(true)
+        }
         binding.tbSetupCallScreen.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
+
 
         with(binding) {
             btnNow.setOnClickListener {
@@ -81,6 +90,10 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                         action =
                             CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
                         findNavController().navigate(action as NavDirections)
+                        true
+                    }
+                    R.id.delete_call -> {
+                        confirmDelete()
                         true
                     }
                     else -> false
@@ -135,7 +148,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                     requireContext(),
                     CallingReceiver::class.java
                 )
-
 
                 val bundle = Bundle()
                 bundle.putParcelable("call", it)
@@ -229,6 +241,21 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
     }
+    private fun confirmDelete() {
+        val dialog = ConfirmDeleteDialog.create(this, setupCallViewModel.getCurrentCall()!!)
+        dialog.show(childFragmentManager, "")
+
+    }
+
+    override fun onOkClick(call: Call) {
+        setupCallViewModel.deleteCall()
+        requireActivity().onBackPressed()
+        Toast.makeText(
+            requireContext(),
+            requireActivity().resources.getString(R.string.delete_complete),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -238,6 +265,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
 
     override fun onResume() {
         super.onResume()
+        if (setupCallViewModel.getCurrentCall()?.isLocal == true) {
+            sharedViewModel.setBackToMyCaller(true)
+        }
     }
 
 

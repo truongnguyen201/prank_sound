@@ -1,6 +1,7 @@
 package com.hola360.pranksounds
 
 import android.app.Application
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
@@ -20,7 +21,8 @@ class App : Application() {
             val channel = NotificationChannel(
                 channelId,
                 "Channel Service",
-                NotificationManager.IMPORTANCE_DEFAULT)
+                NotificationManager.IMPORTANCE_HIGH)
+            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             val manager: NotificationManager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
 

@@ -18,13 +18,13 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
     var isUpdate = false
 
     val isEmpty: LiveData<Boolean> = Transformations.map(callLiveData){
-        curCallModel?.name.isNullOrEmpty() || curCallModel?.phone.isNullOrEmpty()
+        curCallModel?.phone.isNullOrEmpty()
     }
 
-    fun setOnNameChange(name: String) {
-        curCallModel!!.name = name
-        callLiveData.value = curCallModel
-    }
+//    fun setOnNameChange(name: String) {
+//        curCallModel!!.name = name
+//        callLiveData.value = curCallModel
+//    }
 
     fun setOnPhoneNumberChange(phoneNumber: String) {
         curCallModel!!.phone = phoneNumber
