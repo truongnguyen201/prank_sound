@@ -1,12 +1,10 @@
 package com.hola360.pranksounds.ui.sound_funny.detail_category
 
 import android.app.Application
-import android.content.ContentValues
+import android.media.MediaMetadataRetriever
 import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.MutableLiveData
@@ -14,18 +12,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hola360.pranksounds.data.model.Sound
+import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.data.repository.FileDownloadRepository
 import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.SingletonHolder
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
 
 @Suppress("DEPRECATION")
-class SharedViewModel(private val app: Application) : ViewModel() {
+class SharedViewModel private constructor(private val app: Application) : ViewModel() {
     private val fileDownloadRepository = FileDownloadRepository()
+    private val categoryRepository = DetailCategoryRepository(app)
 
     var isComplete = MutableLiveData<Boolean>()
     var isPlaying = MutableLiveData<Boolean>()
@@ -35,15 +35,19 @@ class SharedViewModel(private val app: Application) : ViewModel() {
     var soundDuration = MutableLiveData<Int>()
     var seekBarProgress = MutableLiveData<Int>()
 
+    companion object : SingletonHolder<SharedViewModel, Application>(::SharedViewModel)
+
     init {
         favoriteList.value = mutableListOf()
         soundList.value = mutableListOf()
     }
 
-    fun downloadAndSet(url: String, type: String, soundName: String) {
+    fun downloadAndSet(url: String, type: Int, soundName: String) {
         val basePath = Utils.getBasePath()
         val dirName = basePath + Constants.DIR_PATH
-        val fileName = "$dirName$soundName.mp3"
+        val newSoundName = soundName.filterNot { Constants.FILE_NAME_FILTER.indexOf(it) > -1 }
+        val fileName = "$dirName$newSoundName.mp3"
+        val file = File(fileName)
 
         val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
@@ -54,7 +58,6 @@ class SharedViewModel(private val app: Application) : ViewModel() {
         viewModelScope.launch {
             // check if the file is exists
             if (!File(fileName).exists()) {
-                Log.e("File $soundName is not exists", "1")
                 //check the directory is not exists -> create the dir
                 if (!File(dirName).exists()) {
                     File(dirName).mkdir()
@@ -65,8 +68,7 @@ class SharedViewModel(private val app: Application) : ViewModel() {
                 }
 
                 try {
-                    //download the file from url
-                    Log.e("Downloading the file $soundName", " 1")
+                    //download the file from url and write to file
                     val response = fileDeferred.await()!!.body()
                     val input = response!!.byteStream()
                     val fos = FileOutputStream(fileName)
@@ -91,66 +93,54 @@ class SharedViewModel(private val app: Application) : ViewModel() {
                 }
             }
 
-            try {
-                app.contentResolver.delete(
+            val metaRetriever = MediaMetadataRetriever()
+            metaRetriever.setDataSource(fileName)
+            val duration =
+                metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            val typeToast = when (type) {
+                RingtoneManager.TYPE_ALARM -> "Alarm"
+                RingtoneManager.TYPE_NOTIFICATION -> "Notification"
+                else -> "Ringtone"
+            }
+            val message = if (Utils.setRingtone(
+                    app.applicationContext,
+                    duration!!.toLong(),
+                    file,
                     uri!!,
-                    MediaStore.MediaColumns.DATA + "=\"" + File(fileName).absolutePath + "\"",
-                    null
+                    type,
+                    soundName
                 )
-            } catch (e: Exception) {
-                e.printStackTrace()
+            ) {
+                "Set $soundName as $typeToast successfully"
+            } else {
+                "Something got error, please try again"
             }
-
-            setAs(type, uri!!, fileName, soundName)
+            Toast.makeText(app.applicationContext, message, LENGTH_SHORT).show()
         }
     }
 
-    private fun setAs(type: String, uri: Uri, fileName: String, soundName: String) {
-        val values = ContentValues()
-        values.put(MediaStore.MediaColumns.DATA, fileName)
-        values.put(MediaStore.MediaColumns.TITLE, soundName)
-        values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mpeg")
-        var TYPE = 0
-        when (type) {
-            "Notification" -> {
-                values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true)
-                values.put(MediaStore.Audio.Media.IS_ALARM, false)
-                values.put(MediaStore.Audio.Media.IS_RINGTONE, false)
-                values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-                TYPE = RingtoneManager.TYPE_NOTIFICATION
-            }
-            "Ringtone" -> {
-                values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false)
-                values.put(MediaStore.Audio.Media.IS_ALARM, false)
-                values.put(MediaStore.Audio.Media.IS_RINGTONE, true)
-                values.put(MediaStore.Audio.Media.IS_MUSIC, false)
-                TYPE = RingtoneManager.TYPE_RINGTONE
-            }
-            "Alarm" -> {
-                values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false)
-                values.put(MediaStore.Audio.Media.IS_ALARM, true)
-                values.put(MediaStore.Audio.Media.IS_RINGTONE, false)
-                values.put(MediaStore.Audio.Media.IS_MUSIC, false)
-                TYPE = RingtoneManager.TYPE_ALARM
-            }
-        }
-        val newUri = app.contentResolver.insert(uri, values)!!
-        try {
-            RingtoneManager.setActualDefaultRingtoneUri(app, TYPE, newUri)
+    fun addFavoriteSound(sound: Sound) {
+        viewModelScope.launch {
+            categoryRepository.addFavoriteSound(sound)
             Toast.makeText(
-                app.applicationContext,
-                "Set $soundName as ${type.toLowerCase(Locale.ROOT)} successfully",
-                LENGTH_SHORT
+                app.applicationContext, "Added ${sound.title} to favorite list",
+                Toast.LENGTH_SHORT
             ).show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(
-                app.applicationContext,
-                "Something got error, please try again!!",
-                LENGTH_SHORT
-            ).show()
+            favoriteList.value = categoryRepository.getFavoriteSound()
         }
     }
+
+    fun removeFavoriteSound(sound: Sound) {
+        viewModelScope.launch {
+            categoryRepository.removeFavoriteSound(sound)
+            Toast.makeText(
+                app.applicationContext, "Removed ${sound.title} from favorite list",
+                Toast.LENGTH_SHORT
+            ).show()
+            favoriteList.value = categoryRepository.getFavoriteSound()
+        }
+    }
+
 
     class Factory(private val app: Application) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

@@ -30,7 +30,10 @@ import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
 import com.hola360.pranksounds.ui.callscreen.adapter.CallAdapter
 import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
+import com.hola360.pranksounds.ui.callscreen.popup.ActionAdapter
+import com.hola360.pranksounds.ui.callscreen.popup.ListActionPopup
 import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
+import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.launch
 
 abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemListener, DeleteConfirmListener {
@@ -39,9 +42,9 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     protected var callAdapter: CallAdapter= CallAdapter { handleOnclickItem(it) }
     private lateinit var action: Any
     private lateinit var popUpWindow: PopupWindow
-    private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
-    private val screenHeight = Resources.getSystem().displayMetrics.heightPixels - 100
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+
+    private val listActionPopup by lazy { ListActionPopup(requireContext()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,9 +58,6 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     ): View? {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
         binding.lifecycleOwner = this
-//        callAdapter = CallAdapter {
-//            handleOnclickItem(it)
-//        }
         callAdapter.setListener(this)
         repository = PhoneBookRepository(requireActivity().application)
         initView()
@@ -74,64 +74,26 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
 
     }
 
-    private fun setupPopUpWindow(call: Call) {
-        val popUpInflater =
-            requireActivity().applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popUpBinding = PopUpCallMoreBinding.inflate(popUpInflater)
+    private fun setupPopUpWindow(view: View, call: Call) {
 
-        if (!call.isLocal) {
-            popUpBinding.llDelete.visibility = View.GONE
-        }
-        popUpBinding.apply {
-            llEdit.setOnClickListener {
-                popUpWindow.dismiss()
-                passCallToUpDate(call)
+        listActionPopup.showPopup(view, Utils.getActionPopup(call.isLocal, requireContext()), object : ActionAdapter.OnActionListener{
+            override fun onItemClickListener(position: Int) {
+                when (position) {
+                    0 -> {
+                        passCallToUpDate(call)
+                    }
+                    else -> {
+                        setUpAlertDialog(call)
+                    }
+                }
             }
-            llDelete.setOnClickListener {
-                popUpWindow.dismiss()
-                setUpAlertDialog(call)
-            }
-        }
-        popUpWindow = PopupWindow(
-            popUpBinding.root,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            true
-        ).apply {
-            elevation = 20F
-            contentView.setOnClickListener { dismiss() }
-        }
+        })
     }
 
 
     private fun setUpAlertDialog(call: Call) {
         val dialog = ConfirmDeleteDialog.create(this, call)
         dialog.show(childFragmentManager, "")
-//        val builder = AlertDialog.Builder(requireContext())
-//        builder.setTitle(requireActivity().resources.getString(R.string.confirm_title))
-//            .setMessage(requireActivity().resources.getString(R.string.confirm_delete_start)
-//                    + call.name
-//                    + requireActivity().resources.getString(R.string.confirm_delete_end))
-//            .setCancelable(false)
-//            .setPositiveButton("OK") { dialog, id ->
-//                lifecycleScope.launch {
-//                    repository.deleteCall(call)
-//                    getPhoneBook()
-//                    callAdapter.notifyDataSetChanged()
-//                }
-//                Toast.makeText(
-//                    requireContext(),
-//                    requireActivity().resources.getString(R.string.delete_complete),
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//            .setNegativeButton("Cancel") { dialog, id ->
-//                // Dismiss the dialog
-//                dialog.dismiss()
-//            }
-//        val alert = builder.create()
-//        alert.show()
-//        popUpWindow.dismiss()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -160,11 +122,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     }
 
     override fun onMoreClick(view: View, call: Call) {
-        setupPopUpWindow(call)
-        popUpWindow.showAsDropDown(
-            view, 0,
-            0
-        )
+        setupPopUpWindow(view, call)
     }
 
     abstract fun getLayout(): Int

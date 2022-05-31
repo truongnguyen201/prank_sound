@@ -3,8 +3,7 @@ package com.hola360.pranksounds.ui.sound_funny.sound_detail
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Paint
-import android.graphics.Typeface
+import android.media.RingtoneManager
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -13,12 +12,12 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.doOnLayout
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentSoundDetailBinding
+import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.ui.sound_funny.sound_detail.adapter.ViewPagerAdapter
@@ -28,19 +27,22 @@ import com.hola360.pranksounds.utils.listener.ControlPanelListener
 
 class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     private val viewPagerAdapter = ViewPagerAdapter()
-    private val sharedVM by activityViewModels<SharedViewModel>()
+    private lateinit var sharedVM: SharedViewModel
     private lateinit var soundDetailViewModel: SoundDetailViewModel
     private val args: SoundDetailFragmentArgs by navArgs()
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popupWindow: PopupWindow
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
-    var isUserControl = false
+    private var isUserControl = false
+    private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
 
     override fun getLayout(): Int {
         return R.layout.fragment_sound_detail
     }
 
     override fun initView() {
+        seekbarBinding =
+            LayoutSeekbarThumbBinding.inflate(requireActivity().layoutInflater, null, false)
         binding.apply {
             toolbar.apply {
                 setNavigationOnClickListener {
@@ -57,11 +59,9 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
 
             vp2Sound.apply {
                 adapter = viewPagerAdapter
-
                 doOnLayout {
-                    val pos =
-                        args.position + (args.position / 10 - 1)
-                    Log.e("Position", pos.toString())
+                    var pos = args.position
+                    pos -= ((pos) / 11 + 1)
                     vp2Sound.setCurrentItem(pos, false)
                 }
 
@@ -95,6 +95,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                         controlPanelListener.onSeekBarChange(true, p0!!.progress)
                     }
                 })
+                thumb = Utils.createThumb(0, 0, seekbarBinding, resources)
             }
 
             ivNext.setOnClickListener {
@@ -143,15 +144,19 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                 setOnClickListener {
                     val position = vp2Sound.currentItem + vp2Sound.currentItem / 10 + 1
                     if (isChecked) {
-                        soundDetailViewModel.addFavoriteSound(sharedVM.soundList.value!![position])
+                        sharedVM.addFavoriteSound(sharedVM.soundList.value!![position])
                     } else {
-                        soundDetailViewModel.removeFavoriteSound(sharedVM.soundList.value!![position])
+                        sharedVM.removeFavoriteSound(sharedVM.soundList.value!![position])
                     }
                 }
             }
 
             val setAsListener = View.OnClickListener {
-                val type = (it as TextView).text.toString()
+                val type = when ((it as TextView).text.toString()) {
+                    "Ringtone" -> RingtoneManager.TYPE_RINGTONE
+                    "Notification" -> RingtoneManager.TYPE_NOTIFICATION
+                    else -> RingtoneManager.TYPE_ALARM
+                }
                 if (Utils.storagePermissionGrant(requireContext())) {
                     if (Utils.writeSettingPermissionGrant(requireContext())) {
                         setupWhenPermissionGranted(
@@ -168,13 +173,14 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                 popupWindow.dismiss()
             }
             popupWindow = Utils.showPopUpSetAs(requireActivity(), setAsListener)
-
         }
     }
 
     override fun initViewModel() {
         val factory = SoundDetailViewModel.Factory(requireActivity().application)
         soundDetailViewModel = ViewModelProvider(this, factory)[SoundDetailViewModel::class.java]
+
+        sharedVM = SharedViewModel.getInstance(requireActivity().application)
 
         sharedVM.soundList.observe(this) {
             it?.let {
@@ -212,10 +218,6 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
         }
 
         val resource = resources
-        val paint = Paint()
-        paint.typeface = Typeface.DEFAULT
-        paint.textSize = 20F
-        paint.color = (-0x1)
         sharedVM.seekBarProgress.observe(this) {
             val animator = ObjectAnimator.ofInt(binding.sbDuration, "progress", it!! - 10, it)
             it.let {
@@ -224,14 +226,23 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                         animator.duration = 10
                         animator.interpolator = LinearInterpolator()
                         animator.start()
-                        Utils.drawThumb(
-                            requireContext(),
-                            this,
+                        thumb = Utils.createThumb(
                             it,
                             sharedVM.soundDuration.value!!,
-                            resource,
-                            paint
+                            seekbarBinding,
+                            resource
                         )
+                    }
+                }
+            }
+        }
+
+        sharedVM.isComplete.observe(this){
+            it?.let{
+                if(it){
+                    if(sharedVM.soundDuration.value!! < 1000){
+                        binding.sbDuration.max = 1000
+                        binding.sbDuration.progress = 1000
                     }
                 }
             }
@@ -274,7 +285,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
             }
         }
 
-    private fun setupWhenPermissionGranted(type: String, position: Int) {
+    private fun setupWhenPermissionGranted(type: Int, position: Int) {
         sharedVM.downloadAndSet(
             sharedVM.soundList.value!![position].soundUrl!!,
             type,

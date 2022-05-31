@@ -37,6 +37,7 @@
     <dimen name="viewpager_current_item_horizontal_margin">42dp</dimen>
     <dimen name="text_primary">20sp</dimen>
     <dimen name="text_secondary">13sp</dimen>
+    <dimen name="popup_dialog_width">130sp</dimen>
 
     <dimen name="sp_15">15sp</dimen>
     <dimen name="sp_16">16sp</dimen>

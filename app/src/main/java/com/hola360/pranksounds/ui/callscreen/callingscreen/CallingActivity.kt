@@ -3,13 +3,18 @@ package com.hola360.pranksounds.ui.callscreen.callingscreen
 import android.animation.ArgbEvaluator
 import android.animation.TimeAnimator
 import android.animation.ValueAnimator
+import android.content.res.Configuration
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
@@ -31,6 +36,8 @@ import kotlinx.coroutines.*
 
 class CallingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCallingBinding
+    private val url =
+        "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2021/10/9/961804/Ca-Si-Lisa-Blackpink.jpg"
     private lateinit var gradient: GradientDrawable
     private lateinit var evaluator: ArgbEvaluator
     private lateinit var gradientAnimator: ValueAnimator
@@ -40,6 +47,8 @@ class CallingActivity : AppCompatActivity() {
     private val panelAdapter = PanelAdapter()
     private var isAnswer = false
     private var swatch: Palette? = null
+    private lateinit var mediaPlayer: MediaPlayer
+    private var backgroundColor = -3491739
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,13 +74,15 @@ class CallingActivity : AppCompatActivity() {
             tvCallerName.text = call.name
             tvPhoneNumber.text = call.phone
 
-            Glide.with(baseContext).load(
-                if (call.isLocal) {
-                    call.avatarUrl
-                } else {
-                    Constants.SUB_URL + call.avatarUrl
-                }
-            ).into(binding.ivAvatar)
+            if (call.avatarUrl.isNotEmpty()) {
+                Glide.with(baseContext).load(
+                    if (call.isLocal) {
+                        call.avatarUrl
+                    } else {
+                        Constants.SUB_URL + call.avatarUrl
+                    }
+                ).into(binding.ivAvatar)
+            }
 
             motionLayout.apply {
                 setTransitionListener(object : MotionLayout.TransitionListener {
@@ -96,20 +107,20 @@ class CallingActivity : AppCompatActivity() {
                         motionLayout: MotionLayout?,
                         currentId: Int
                     ) {
-                        gradientAnimator.cancel()
-                        binding.root.setBackgroundColor(swatch!!.getVibrantColor(Color.MAGENTA))
-
-                        if (currentId == R.id.answerState) {
-                            isAnswer = true
-                            startCountTime()
-                            ivDismiss.setOnClickListener {
+                        if (motionLayout?.currentState == R.id.dismissState || motionLayout?.currentState == R.id.answerState) {
+                            gradientAnimator.cancel()
+                            binding.root.setBackgroundColor(backgroundColor)
+                            motionLayout.getTransition(R.id.transition1).isEnabled = false
+                            mediaPlayer.release()
+                            if (currentId == R.id.answerState) {
+                                isAnswer = true
+                                startCountTime()
+                                ivDismiss.setOnClickListener {
+                                    finish()
+                                }
+                            } else {
                                 finish()
                             }
-                        } else {
-                            val notificationManager =
-                                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                            notificationManager.cancelAll()
-                            finish()
                         }
                     }
 
@@ -161,35 +172,46 @@ class CallingActivity : AppCompatActivity() {
         gradientAnimator.repeatCount = ValueAnimator.INFINITE
         gradientAnimator.repeatMode = ValueAnimator.REVERSE
 
-        Glide.with(applicationContext)
-            .asBitmap()
-            .load(
-                if (call.isLocal) {
-
-                    call.avatarUrl
-                } else {
-                    Constants.SUB_URL + call.avatarUrl
-                }
-            )
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    swatch = createPaletteSync(resource)
-                    val start = swatch!!.getVibrantColor(Color.DKGRAY)
-                    val mid = swatch!!.getLightVibrantColor(Color.RED)
-                    val end = swatch!!.getLightMutedColor(Color.MAGENTA)
-                    gradientAnimator.addUpdateListener {
-                        val fraction = it.animatedFraction
-                        val newStart = evaluator.evaluate(fraction, start, end) as Int
-                        val newMid = evaluator.evaluate(fraction, mid, start) as Int
-                        val newEnd = evaluator.evaluate(fraction, end, mid) as Int
-                        gradient.colors = intArrayOf(newStart, newMid, newEnd)
+        if (call.avatarUrl.isEmpty()) {
+            setupGradient(-1603804, -4934297, -1603545)
+        } else {
+            Glide.with(applicationContext)
+                .asBitmap()
+                .load(
+                    if (call.isLocal) {
+                        call.avatarUrl
+                    } else {
+                        Constants.SUB_URL + call.avatarUrl
+                    }
+                )
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        swatch = createPaletteSync(resource)
+                        val start = swatch!!.getVibrantColor(Color.DKGRAY)
+                        val mid = swatch!!.getLightVibrantColor(Color.RED)
+                        val end = swatch!!.getLightMutedColor(Color.MAGENTA)
+                        backgroundColor = swatch!!.getVibrantColor(Color.MAGENTA)
+                        setupGradient(start, mid, end)
                     }
 
-                    gradientAnimator.start()
-                }
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
+        }
+    }
 
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
+    private fun setupGradient(start: Int, mid: Int, end: Int) {
+        gradientAnimator.addUpdateListener {
+            val fraction = it.animatedFraction
+            val newStart = evaluator.evaluate(fraction, start, end) as Int
+            val newMid = evaluator.evaluate(fraction, mid, start) as Int
+            val newEnd = evaluator.evaluate(fraction, end, mid) as Int
+            gradient.colors = intArrayOf(newStart, newMid, newEnd)
+        }
+
+        gradientAnimator.start()
     }
 
     private fun startCountTime() {
@@ -201,6 +223,40 @@ class CallingActivity : AppCompatActivity() {
                 timing++
             }
         }
+    }
+
+    private fun setupRingtone() {
+        mediaPlayer = MediaPlayer()
+        mediaPlayer.apply {
+            setAudioAttributes(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            )
+            setDataSource(
+                applicationContext,
+                Uri.parse("https://nf1f8200-a.akamaihd.net/downloads/ringtones/files/mp3/7120-download-iphone-6-original-ringtone-42676.mp3")
+            )
+            prepareAsync()
+            setOnPreparedListener {
+                start()
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!isAnswer) {
+            setupRingtone()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mediaPlayer.release()
+    }
+
+    override fun onBackPressed() {
+//        super.onBackPressed()
+//        binding.motionLayout.transitionToState(R.id.dismissState)
     }
 
     private fun stopCountTime() {

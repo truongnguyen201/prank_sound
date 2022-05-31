@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.PendingIntent
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,16 +14,21 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -32,8 +38,16 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
+import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
 import com.hola360.pranksounds.databinding.PopUpWindowLayoutBinding
+import com.hola360.pranksounds.ui.callscreen.popup.ActionModel
 import kotlinx.coroutines.launch
+
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.util.*
 
 
 object Utils {
@@ -133,7 +147,6 @@ object Utils {
         } else {
             STORAGE_PERMISSION_UNDER_STORAGE_SCOPE
         }
-
     }
 
     fun getWritingPermission(): Array<String> {
@@ -214,27 +227,29 @@ object Utils {
         return popupWindow
     }
 
-    //draw thumb seekbar
-    fun drawThumb(
-        context: Context,
-        seekBar: SeekBar,
+    fun createThumb(
         progress: Int,
-        duration: Int,
-        resources: Resources,
-        paint: Paint
-    ) {
-        val bitmap =
-            ContextCompat.getDrawable(context, R.drawable.seek_bar_thumb)?.toBitmap()!!
-                .copy(Bitmap.Config.ARGB_8888, true)
-        val canvas = Canvas(bitmap)
-        val text = String.format("00:%02d/00:%02d", progress / 1000, duration / 1000)
-
-        canvas.drawText(
-            text, (bitmap.width - paint.measureText(text)) / 2,
-            (canvas.height / 2 - (paint.descent() + paint.ascent()) / 2), paint
+        maxProgress: Int,
+        binding: LayoutSeekbarThumbBinding,
+        resources: Resources
+    ): Drawable? {
+        binding.tvProgress.text =
+            String.format("00:%02d/00:%02d", progress / 1000, maxProgress / 1000)
+        binding.root.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val bitmap = Bitmap.createBitmap(
+            binding.root.measuredWidth,
+            binding.root.measuredHeight,
+            Bitmap.Config.ARGB_8888
         )
-        seekBar.thumb.clearColorFilter()
-        seekBar.thumb = (BitmapDrawable(resources, bitmap))
+        val canvas = Canvas(bitmap)
+        binding.root.layout(
+            0,
+            0,
+            binding.root.measuredWidth,
+            binding.root.measuredHeight
+        )
+        binding.root.draw(canvas)
+        return BitmapDrawable(resources, bitmap)
     }
 
     fun getBasePath(): String {
@@ -264,7 +279,145 @@ object Utils {
         activity.startActivity(intent)
     }
 
-    fun checkDisplayOverOtherAppPermission(context: Context) : Boolean {
+    fun setRingtone(
+        context: Context?,
+        duration: Long,
+        file: File,
+        uri: Uri,
+        type: Int,
+        fileName: String
+    ): Boolean {
+        return if (isAndroidQ()) {
+            setAsRingtone(context!!, duration, file, type, fileName)
+        } else {
+            RingtoneManager.setActualDefaultRingtoneUri(context, type, uri)
+            true
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun setAsRingtone(
+        context: Context,
+        duration: Long,
+        file: File,
+        type: Int,
+        fileName: String
+    ): Boolean {
+        val newUri = createFile(
+            context,
+            fileName,
+            duration,
+            Environment.DIRECTORY_RINGTONES,
+            null,
+            type
+        )
+        try {
+            context.contentResolver.openOutputStream(newUri!!).use { os ->
+                val size = file.length().toInt()
+                val bytes = ByteArray(size)
+                try {
+                    val buf =
+                        BufferedInputStream(FileInputStream(file))
+                    buf.read(bytes, 0, bytes.size)
+                    buf.close()
+                    os!!.write(bytes)
+                    os.close()
+                    os.flush()
+                } catch (e: IOException) {
+                    return false
+                }
+            }
+        } catch (ignored: Exception) {
+            return false
+        }
+        return try {
+            RingtoneManager.setActualDefaultRingtoneUri(
+                context, type, newUri
+            )
+            true
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            false
+        }
+    }
+
+    private fun createFile(
+        context: Context,
+        fileName: String,
+        duration: Long,
+        publicFolder: String,
+        subFolder: String?,
+        type: Int,
+    ): Uri? {
+        val now = Date()
+        val mimeType =
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(Constants.AUDIO_EXTENSION)
+        val fileCollection: Uri = if (isAndroidQ()) {
+            MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        } else {
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        }
+        val fullName = fileName + "." + Constants.AUDIO_EXTENSION
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fullName)
+        contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, mimeType)
+        contentValues.put(MediaStore.Files.FileColumns.DATE_ADDED, now.time / 1000)
+        contentValues.put(MediaStore.Files.FileColumns.DATE_MODIFIED, now.time / 1000)
+        if (!isAndroidQ()) {
+            contentValues.put(MediaStore.Audio.Media.ARTIST, context.getString(R.string.app_name))
+        }
+        contentValues.put(MediaStore.Audio.Media.DURATION, duration)
+        contentValues.put(MediaStore.Audio.Media.IS_MUSIC, true)
+        when (type) {
+            RingtoneManager.TYPE_NOTIFICATION -> {
+                contentValues.put(MediaStore.Audio.Media.IS_NOTIFICATION, true)
+            }
+            RingtoneManager.TYPE_RINGTONE -> {
+                contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, true)
+            }
+            RingtoneManager.TYPE_ALARM -> {
+                contentValues.put(MediaStore.Audio.Media.IS_ALARM, true)
+            }
+        }
+
+        if (isAndroidQ()) {
+            val parentFolder: String = if (subFolder != null && subFolder.isNotEmpty()) {
+                publicFolder + File.separator + Constants.FOLDER_PATH
+            } else {
+                publicFolder
+            }
+            contentValues.put(
+                MediaStore.Files.FileColumns.RELATIVE_PATH,
+                parentFolder
+            )
+        } else {
+            val parentFolderFile: File = if (subFolder != null && subFolder.isNotEmpty()) {
+                File(
+                    Environment.getExternalStoragePublicDirectory(
+                        publicFolder
+                    ), Constants.FOLDER_PATH
+                )
+            } else {
+                Environment.getExternalStoragePublicDirectory(
+                    publicFolder
+                )
+            }
+            if (!parentFolderFile.exists()) {
+                parentFolderFile.mkdirs()
+            }
+            val outputFile = File(
+                parentFolderFile,
+                fullName
+            )
+            contentValues.put(
+                MediaStore.Files.FileColumns.DATA,
+                outputFile.absolutePath
+            )
+        }
+        return context.contentResolver.insert(fileCollection, contentValues)
+    }
+
+    fun checkDisplayOverOtherAppPermission(context: Context): Boolean {
         return if (isAndroidQ()) {
             Settings.canDrawOverlays(context)
         } else {
@@ -278,7 +431,7 @@ object Utils {
         context.startActivity(intent)
     }
 
-    fun setUpDialogGrantPermission(context: Context)  {
+    fun setUpDialogGrantPermission(context: Context) {
         val builder = AlertDialog.Builder(context)
         var res = false
         builder.setMessage(context.resources.getString(R.string.confirm_message))
@@ -293,4 +446,17 @@ object Utils {
         val alert = builder.create()
         alert.show()
     }
+
+    fun getActionPopup(isFull: Boolean, context: Context): MutableList<ActionModel>{
+        var actions = mutableListOf<ActionModel>()
+        if (isFull) {
+            actions.add(ActionModel(R.drawable.ic_edit, context.getString(R.string.edit)))
+            actions.add(ActionModel(R.drawable.ic_delete, context.getString(R.string.delete)))
+        }
+        else {
+            actions.add(ActionModel(R.drawable.ic_edit, context.getString(R.string.edit)))
+        }
+        return actions
+    }
+
 }

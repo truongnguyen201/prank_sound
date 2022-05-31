@@ -51,13 +51,14 @@ class MainActivity : BaseActivity(), ControlPanelListener {
             }
         }
         mediaPlayer = MediaPlayer()
-        mediaPlayer.setAudioAttributes(
-            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
-        )
-
-        mediaPlayer.setOnCompletionListener {
-            sharedViewModel.isComplete.value = true
-            sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+        mediaPlayer.apply {
+            setAudioAttributes(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            )
+            setOnCompletionListener {
+                sharedViewModel.isComplete.value = true
+                sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+            }
         }
 
         sharedViewModel.currentPosition.observe(this) {
@@ -70,7 +71,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                         setDataSource(applicationContext, uri)
                         prepareAsync()
                         setOnPreparedListener {
-                            sharedViewModel.soundDuration.value = mediaPlayer.duration
+                            sharedViewModel.soundDuration.value = duration
                             start()
                             sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
                         }

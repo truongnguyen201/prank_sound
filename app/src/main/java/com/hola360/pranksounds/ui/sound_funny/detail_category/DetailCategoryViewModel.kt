@@ -6,12 +6,15 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.*
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.SingletonHolder
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -26,7 +29,7 @@ import java.io.OutputStream
 
 @Suppress("DEPRECATION")
 class DetailCategoryViewModel(
-    app: Application,
+    private val app: Application,
     private val catId: String
     ) : ViewModel() {
 
@@ -38,6 +41,7 @@ class DetailCategoryViewModel(
 
     init {
         soundLiveData.value = DataResponse.DataIdle()
+        getSound(1, false)
     }
 
     val isEmpty: LiveData<Boolean> = Transformations.map(soundLiveData) {
@@ -53,6 +57,7 @@ class DetailCategoryViewModel(
     }
 
     fun getSound(pageNumber: Int, isLoadMore: Boolean) {
+        Log.e("Detail view model", "get sound when init view model")
         if (soundLiveData.value!!.loadingStatus != LoadingStatus.Loading
             && soundLiveData.value!!.loadingStatus != LoadingStatus.LoadingMore
             && soundLiveData.value!!.loadingStatus != LoadingStatus.Refresh
@@ -115,18 +120,6 @@ class DetailCategoryViewModel(
 
     fun retry(){
         getSound(1, false)
-    }
-
-    fun addFavoriteSound(sound: Sound) {
-        viewModelScope.launch {
-            repository.addFavoriteSound(sound)
-        }
-    }
-
-    fun removeFavoriteSound(sound: Sound) {
-        viewModelScope.launch {
-            repository.removeFavoriteSound(sound)
-        }
     }
 
     @Suppress("UNCHECKED_CAST")

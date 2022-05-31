@@ -1,18 +1,17 @@
 package com.hola360.pranksounds.ui.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.hola360.pranksounds.ui.callscreen.adapter.ViewPagerAdapter
 
 @Suppress("SENSELESS_COMPARISON")
 abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
     protected lateinit var binding: V
+    protected val isBindingInitialized get() = this::binding.isInitialized
     private var mView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +24,7 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return if(mView != null){
+        return if (mView != null) {
             mView
         } else {
             binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
@@ -39,10 +38,12 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.unbind()
+        if(isBindingInitialized){
+            binding.unbind()
+        }
     }
 
-    open fun onBackPressed() : Boolean{
+    open fun onBackPressed(): Boolean {
         return false
     }
 

@@ -13,6 +13,10 @@ object Constants {
 
     const val CHANNEL_ID = "com.hola360.pranksounds.ACTION_CALL"
 
+    const val AUDIO_EXTENSION = "mp3"
+    const val FOLDER_PATH = "PranSounds"
+    const val FILE_NAME_FILTER = "?\"*"
+    const val SEEKBAR_PADDING = 70
     //list of recycler view in home screen
     val PRANK_LIST = listOf(
         Prank(1, R.drawable.ic_hair_cutting, R.drawable.bg_hair_cutting, "Hair Cutting"),

@@ -4,6 +4,8 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import android.os.Parcelable
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -41,9 +43,10 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     }
 
     override fun initView() {
-        //args.callModel null, #null id >
+        //args.callModel null, #null id >0
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
+
             setNavigationOnClickListener {
                 if (sharedViewModel.getCall()?.isLocal == true) {
                     sharedViewModel.setBackToMyCaller(true)
@@ -54,7 +57,6 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 requireActivity().onBackPressed()
             }
         }
-
         with(binding) {
             imgAvatar.setOnClickListener {
                 if (Utils.storagePermissionGrant(requireContext())) {
@@ -63,10 +65,6 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                     requestStoragePermission()
                 }
             }
-
-//            tvCallerName.doAfterTextChanged {
-//                viewModel!!.setOnNameChange(tvCallerName.text.toString())
-//            }
 
             tvPhoneNumber.doAfterTextChanged {
                 viewModel!!.setOnPhoneNumberChange(tvPhoneNumber.text.toString())
@@ -179,7 +177,9 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     private fun getCropOptions(): UCrop.Options {
         val options = UCrop.Options()
         options.setCompressionQuality(70)
+
         options.setHideBottomControls(false)
+        options.setFreeStyleCropEnabled(true)
         options.setStatusBarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
         options.setToolbarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
         options.setToolbarWidgetColor(ContextCompat.getColor(requireActivity(), R.color.white))

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.lifecycle.ViewModelProvider
@@ -17,15 +18,29 @@ import com.hola360.pranksounds.utils.Constants
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
     private lateinit var splashViewModel: SplashViewModel
-    override fun initView() {
-        Handler(Looper.getMainLooper()).postDelayed({
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        handler = Handler(Looper.myLooper()!!)
+        runnable = Runnable {
             if (splashViewModel.action == null) {
                 requireActivity().startActivity(Intent(context, MainActivity::class.java))
                 requireActivity().finish()
             } else {
                 findNavController().navigate(splashViewModel.action as NavDirections)
             }
-        }, Constants.SPLASH_TIMING)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        handler.postDelayed(runnable, Constants.SPLASH_TIMING)
+    }
+
+    override fun initView() {
+
     }
 
     override fun getLayout(): Int {
@@ -47,5 +62,10 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
         super.onStop()
         //remove flag to show normal mode when navigate to next screen from splash screen
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+    }
+
+    override fun onPause() {
+        handler.removeCallbacks(runnable)
+        super.onPause()
     }
 }
