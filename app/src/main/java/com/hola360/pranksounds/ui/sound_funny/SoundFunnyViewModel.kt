@@ -17,6 +17,7 @@ class SoundFunnyViewModel(app: Application) : ViewModel() {
 
     init {
         soundCategoryLiveData.value = DataResponse.DataIdle()
+        getCategory()
     }
 
     val isEmpty: LiveData<Boolean> = Transformations.map(soundCategoryLiveData) {
@@ -27,14 +28,16 @@ class SoundFunnyViewModel(app: Application) : ViewModel() {
         soundCategoryLiveData.value!!.loadingStatus == LoadingStatus.Loading
     }
 
-    fun getCategory() {
+    private fun getCategory() {
         if (soundCategoryLiveData.value!!.loadingStatus != LoadingStatus.Loading) {
             soundCategoryLiveData.value = DataResponse.DataLoading(LoadingStatus.Loading)
             viewModelScope.launch {
+                //get list category from api
                 val soundCategoryResponseDeferred = viewModelScope.async {
                     repository.getSoundCategory(Constants.SOUND_CAT_PARAM)
                 }
 
+                //get number of favorite sound in room
                 val favoriteQuantityDeferred = viewModelScope.async {
                     repository.getQuantityOfFavoriteSound()
                 }
@@ -44,6 +47,7 @@ class SoundFunnyViewModel(app: Application) : ViewModel() {
                     val categoryList =
                         soundCategoryResponseDeferred.await()!!.data.dataApps.listSoundCategory
 
+                    //if has favorite sound, add favorite category to the category list
                     if (quantity > 0) {
                         categoryList.add(0, Constants.FAVORITE_CATEGORY)
                     }
@@ -70,6 +74,4 @@ class SoundFunnyViewModel(app: Application) : ViewModel() {
             throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
-
-
 }

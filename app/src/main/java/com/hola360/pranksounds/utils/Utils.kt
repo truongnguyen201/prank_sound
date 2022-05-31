@@ -42,6 +42,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.util.*
+import kotlin.random.Random
 
 
 object Utils {
@@ -408,6 +409,10 @@ object Utils {
             )
         }
         return context.contentResolver.insert(fileCollection, contentValues)
+    }
+
+    fun randomThumbRes(): Int {
+        return Constants.THUMB_RES[Random.nextInt(0, 7)]
     }
 
     fun checkDisplayOverOtherAppPermission(context: Context): Boolean {

@@ -3,6 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="design_color">"#F18924"</string>
+
     <!-- Splash Screen   -->
     <string name="content_label">Enjoy a relaxing time \nwith your friends</string>
     <string name="content_detail">Lets start your joke. Some jokes create good laughs \naround others … the red face of the prankster\'s part!</string>
@@ -26,8 +28,8 @@
         connection an try again.
     </string>
 
+    <string name="play_more_button">Play More Sound</string>
     <string name="retry_button">Tap to retry</string>
-
     <string name="pop_up_menu_notification">Notification</string>
     <string name="pop_up_menu_ringtone">Ringtone</string>
     <string name="pop_up_menu_alarm">Alarm</string>
@@ -76,6 +78,14 @@
     <string name="incoming_call">Incoming Call</string>
     <string name="phone_number_">036-875-2432</string>
 
-
+    <!-- Toolbar title   -->
+    <string name="toolbar_title_privacy_policy">Privacy Policy</string>
+    <string name="toolbar_title_sound_funny">Sound Funny</string>
+    <string name="toolbar_title_broken_screen">Broken Screen</string>
+    <string name="toolbar_title_hair_cutting">Hair Cutting</string>
+    <string name="toolbar_title_settings">Settings</string>
+    <string name="toolbar_title_taser_prank">Taser Prank</string>
+    <string name="toolbar_title_call_screen">Call Screen</string>
+    <string name="favorite_sound_is_empty">Favorite Sound is Empty</string>
 </resources>
 

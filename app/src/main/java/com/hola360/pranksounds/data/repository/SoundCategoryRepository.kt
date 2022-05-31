@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class SoundCategoryRepository(app: Application) {
-
     private val retrofitHelper: RetrofitHelper = RetrofitHelper.instance!!
     private val db = AppDatabase.getInstance(app).soundDAO()
 

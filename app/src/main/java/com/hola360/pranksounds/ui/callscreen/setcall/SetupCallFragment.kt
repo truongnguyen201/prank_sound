@@ -1,26 +1,21 @@
 package com.hola360.pranksounds.ui.callscreen.setcall
 
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.hola360.pranksounds.R
-import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.FragmentSetupCallBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
@@ -33,9 +28,9 @@ import java.util.*
 
 
 class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
-    lateinit var setupCallViewModel: SetupCallViewModel
+    private lateinit var setupCallViewModel: SetupCallViewModel
     private val args: SetupCallFragmentArgs by navArgs()
-    lateinit var receiver: CallingReceiver
+    private lateinit var receiver: CallingReceiver
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private lateinit var action: Any
 
@@ -68,8 +63,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
             btnSetCall.setOnClickListener {
                 if (Utils.checkDisplayOverOtherAppPermission(requireContext())) {
                     setupCallViewModel.startCalling()
-                }
-                else {
+                } else {
 //                    Utils.openAppInformation(requireActivity())
                     Utils.setUpDialogGrantPermission(requireContext())
                 }
@@ -82,7 +76,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
                 when (it.itemId) {
                     R.id.edit_call -> {
                         action =
-                            CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
+                            CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(
+                                setupCallViewModel.curCallModel
+                            )
                         findNavController().navigate(action as NavDirections)
                         true
                     }
@@ -129,7 +125,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
 
         setupCallViewModel.startCallingLiveData.observe(this) {
             it?.let {
-                Log.e("/////////////", "observe: ${it?.name}", )
+                Log.e("/////////////", "observe: ${it?.name}")
                 val alarmManager =
                     requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val intent = Intent(
@@ -222,7 +218,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>() {
         }
 
         sharedViewModel.myCall.observe(this) {
-                setupCallViewModel.setCall(it)
+            setupCallViewModel.setCall(it)
         }
     }
 
