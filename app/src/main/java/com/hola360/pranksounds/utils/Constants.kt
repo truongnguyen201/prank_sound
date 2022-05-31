@@ -11,7 +11,7 @@ object Constants {
     const val PREFERENCE_NAME = "PRANK_SOUNDS"
     const val ALARM_SERVICE_ACTION = "com.hola360.pranksounds.ACTION_CALL"
 
-    const val CHANNEL_ID = "com.hola360.pranksounds.ACTION_CALL"
+    const val CHANNEL_ID = 101
 
     const val AUDIO_EXTENSION = "mp3"
     const val FOLDER_PATH = "PranSounds"

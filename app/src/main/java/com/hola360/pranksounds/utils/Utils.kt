@@ -75,6 +75,9 @@ object Utils {
     fun isAndroidO(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
     }
+    fun isAndroidO_MR1(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1
+    }
 
     fun isAndroidM(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M

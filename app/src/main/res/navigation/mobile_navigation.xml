@@ -41,15 +41,6 @@
         android:id="@+id/action_global_brokenScreenFragment"
         app:destination="@id/brokenScreenFragment" />
 
-    <fragment
-        android:id="@+id/callScreenFragment"
-        android:name="com.hola360.pranksounds.ui.callscreen.CallScreenFragment"
-        android:label="Call Screen "
-        tools:layout="@layout/fragment_call_screen" />
-
-    <action
-        android:id="@+id/action_global_callScreenFragment"
-        app:destination="@id/callScreenFragment" />
 
     <fragment
         android:id="@+id/soundFunnyFragment"

@@ -66,6 +66,10 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 }
             }
 
+            tvCallerName.doAfterTextChanged {
+                viewModel!!.setOnNameChange(tvCallerName.text.toString())
+            }
+
             tvPhoneNumber.doAfterTextChanged {
                 viewModel!!.setOnPhoneNumberChange(tvPhoneNumber.text.toString())
             }
@@ -179,7 +183,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         options.setCompressionQuality(70)
 
         options.setHideBottomControls(false)
-        options.setFreeStyleCropEnabled(true)
+        options.setFreeStyleCropEnabled(false)
         options.setStatusBarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
         options.setToolbarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
         options.setToolbarWidgetColor(ContextCompat.getColor(requireActivity(), R.color.white))

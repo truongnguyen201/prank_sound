@@ -21,10 +21,10 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
         curCallModel?.phone.isNullOrEmpty()
     }
 
-//    fun setOnNameChange(name: String) {
-//        curCallModel!!.name = name
-//        callLiveData.value = curCallModel
-//    }
+    fun setOnNameChange(name: String) {
+        curCallModel!!.name = name
+        callLiveData.value = curCallModel
+    }
 
     fun setOnPhoneNumberChange(phoneNumber: String) {
         curCallModel!!.phone = phoneNumber

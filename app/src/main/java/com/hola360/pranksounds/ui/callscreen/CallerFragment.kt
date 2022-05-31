@@ -44,7 +44,7 @@ class CallerFragment : BaseFragment<FragmentCallerBinding>() {
                 when (it.itemId) {
                     R.id.add_new_call -> {
                         sharedViewModel.setCall(null)
-                        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(null)
+                        action = CallerFragmentDirections.actionGlobalAddCallScreenFragment(null)
                         findNavController().navigate(action as NavDirections)
                         true
                     }

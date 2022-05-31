@@ -27,12 +27,10 @@ class CallingReceiver : BroadcastReceiver() {
 //
 //            context!!.startActivity(i)
             startAlarmService(context!!, intent)
-            Log.e("----", "onReceive: ", )
         }
     }
 
     private fun startAlarmService(context: Context, intent: Intent) {
-        Log.e("----", "startAlarmService: ", )
         val intentService = Intent(context, IncomingCallService::class.java)
         val call = intent.extras?.getParcelable<Call>("call")
         intentService.putExtra("call", call as Parcelable)

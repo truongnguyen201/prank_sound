@@ -25,8 +25,8 @@ import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.repository.PhoneBookRepository
 import com.hola360.pranksounds.databinding.PopUpCallMoreBinding
 import com.hola360.pranksounds.ui.callscreen.CallItemListener
-import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
+import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
 import com.hola360.pranksounds.ui.callscreen.adapter.CallAdapter
 import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
@@ -112,12 +112,12 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     }
 
     private fun passCallToUpDate(call: Call) {
-        action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(call)
+        action = CallerFragmentDirections.actionGlobalAddCallScreenFragment(call)
         findNavController().navigate(action as NavDirections)
     }
 
     override fun onItemClick(call: Call,position: Int) {
-        action = CallScreenFragmentDirections.actionGlobalSetupCallFragment(call)
+        action = CallerFragmentDirections.actionGlobalSetupCallFragment(call)
         findNavController().navigate(action as NavDirections)
     }
 

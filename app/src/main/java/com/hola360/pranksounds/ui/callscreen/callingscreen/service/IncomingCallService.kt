@@ -7,8 +7,10 @@ import android.os.Build
 import android.os.IBinder
 import android.os.Parcelable
 import android.util.Log
+import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.bumptech.glide.Priority
 import com.hola360.pranksounds.App
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.ui.callscreen.callingscreen.CallingActivity
@@ -19,17 +21,16 @@ import java.util.*
 
 
 class IncomingCallService : Service() {
+
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         buildNotification(intent!!)
         return START_STICKY
     }
-
 
     private fun buildNotification(intent: Intent) {
         val notificationIntent = Intent(this, CallingActivity::class.java)
@@ -49,14 +50,16 @@ class IncomingCallService : Service() {
         val notification: Notification =
             NotificationCompat.Builder(this, App.channelId)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_CALL)
+                .setFullScreenIntent(pendingIntent, true)
                 .setContentTitle(call.name)
-                .setContentText(call.name)
+                .setContentText(call.phone)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.ic_menu_call)
-                .setContentIntent(pendingIntent)
                 .build()
 
-        startForeground(1, notification)
+        startForeground(Constants.CHANNEL_ID, notification)
     }
 
     override fun onCreate() {

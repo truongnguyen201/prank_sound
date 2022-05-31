@@ -3,9 +3,7 @@ package com.hola360.pranksounds.ui.callscreen.callingscreen
 import android.animation.ArgbEvaluator
 import android.animation.TimeAnimator
 import android.animation.ValueAnimator
-import android.content.res.Configuration
 import android.app.NotificationManager
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -14,8 +12,8 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +29,7 @@ import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.ActivityCallingBinding
 import com.hola360.pranksounds.ui.callscreen.callingscreen.adapter.PanelAdapter
 import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.*
 
 
@@ -54,6 +53,7 @@ class CallingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCallingBinding.inflate(layoutInflater)
 
+        setShowWhenScreenLock()
 
         val intent = intent
         var call = Call()
@@ -117,9 +117,11 @@ class CallingActivity : AppCompatActivity() {
                                 startCountTime()
                                 ivDismiss.setOnClickListener {
                                     finish()
+                                    cancelNotification()
                                 }
                             } else {
                                 finish()
+                                cancelNotification()
                             }
                         }
                     }
@@ -134,6 +136,23 @@ class CallingActivity : AppCompatActivity() {
                 })
             }
         }
+    }
+
+    private fun setShowWhenScreenLock() {
+        if (Utils.isAndroidO_MR1()) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
+        else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                    or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+        }
+    }
+
+    private fun cancelNotification() {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()//(Constants.CHANNEL_ID)
     }
 
     private fun setupWaveAnimation(view1: View, view2: View) {

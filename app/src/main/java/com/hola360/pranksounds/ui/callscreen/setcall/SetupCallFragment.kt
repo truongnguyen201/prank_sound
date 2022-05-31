@@ -1,22 +1,16 @@
 package com.hola360.pranksounds.ui.callscreen.setcall
 
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -25,15 +19,14 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.FragmentSetupCallBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
-import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
+import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
 import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingReceiver
 import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.Converter
-import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -88,7 +81,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                     R.id.edit_call -> {
                         sharedViewModel.setBackToMyCaller(false)
                         action =
-                            CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
+                            CallerFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
                         findNavController().navigate(action as NavDirections)
                         true
                     }
@@ -139,7 +132,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
 
         setupCallViewModel.startCallingLiveData.observe(this) {
             it?.let {
-                Log.e("/////////////", "observe: ${it?.name}", )
                 val alarmManager =
                     requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val intent = Intent(

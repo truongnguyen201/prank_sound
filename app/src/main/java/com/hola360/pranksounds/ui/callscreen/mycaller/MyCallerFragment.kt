@@ -9,7 +9,7 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.databinding.FragmentMyCallerBinding
-import com.hola360.pranksounds.ui.callscreen.CallScreenFragmentDirections
+import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.base.CallListBaseFragment
 
 class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
@@ -27,7 +27,7 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
         }
         binding.viewModel = myCallerViewModel
         binding.btnAdd.setOnClickListener {
-            action = CallScreenFragmentDirections.actionGlobalAddCallScreenFragment(null)
+            action = CallerFragmentDirections.actionGlobalAddCallScreenFragment(null)
             findNavController().navigate(action as NavDirections)
         }
     }
