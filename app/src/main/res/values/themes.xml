@@ -89,7 +89,7 @@
         <item name="android:paddingLeft">1dp</item>
         <item name="android:paddingRight">1dp</item>
         <item name="android:radius">3dp</item>
-        <item name="backgroundColor">@color/design_color</item>
+        <item name="backgroundColor">#FEB850</item>
     </style>
 
     <style name="Theme.PrankSounds.Fullscreen" parent="@style/Theme.AppCompat.Light.NoActionBar">

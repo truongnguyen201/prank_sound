@@ -169,7 +169,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 binding.btnNow.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.design_color
+                        R.color.time_button
                     )
                 )
             else binding.btnNow.setBackgroundColor(
@@ -182,7 +182,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 binding.btnFiveSeconds.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.design_color
+                        R.color.time_button
                     )
                 )
             else binding.btnFiveSeconds.setBackgroundColor(
@@ -195,7 +195,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 binding.btnThirtySeconds.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.design_color
+                        R.color.time_button
                     )
                 )
             else binding.btnThirtySeconds.setBackgroundColor(
@@ -208,7 +208,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 binding.btnOneMinute.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.design_color
+                        R.color.time_button
                     )
                 )
             else binding.btnOneMinute.setBackgroundColor(
