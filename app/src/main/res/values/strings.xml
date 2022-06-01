@@ -74,7 +74,8 @@
     <string name="five_seconds">5 seconds</string>
     <string name="thirty_seconds">30 seconds</string>
     <string name="one_minute">1 minute</string>
-    <string name="confirm_message">Please grant Display over other apps!</string>
+    <string name="confirm_message">To allow this permission, you first click "YES" > Display over other apps and allow this permission</string>
+    <string name="confirm_display_over_title">Please grant Display over other apps!</string>
 
 
     <!--  Calling screen  -->

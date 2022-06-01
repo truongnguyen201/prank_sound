@@ -2,6 +2,7 @@ package com.hola360.pranksounds.ui.callscreen.callingscreen.service
 
 import android.R
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
@@ -60,6 +61,8 @@ class IncomingCallService : Service() {
                 .build()
 
         startForeground(Constants.CHANNEL_ID, notification)
+
+
     }
 
     override fun onCreate() {
@@ -68,6 +71,6 @@ class IncomingCallService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        stopForeground(true)
+        stopForeground(false)
     }
 }

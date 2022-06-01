@@ -79,14 +79,14 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
                     icIsLocal.visibility = View.GONE
                 }
                 root.setOnClickListener {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
                         callItemListener.onItemClick(call, position)
                     }
                     mLastClickTime = SystemClock.elapsedRealtime()
 
                 }
                 ivOptionMenu.setOnClickListener {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
                         callItemListener.onMoreClick(it, call)
                     }
                     mLastClickTime = SystemClock.elapsedRealtime()

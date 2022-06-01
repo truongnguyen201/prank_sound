@@ -3,7 +3,9 @@ package com.hola360.pranksounds.ui.callscreen.callingscreen
 import android.animation.ArgbEvaluator
 import android.animation.TimeAnimator
 import android.animation.ValueAnimator
+import android.app.Notification
 import android.app.NotificationManager
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -11,13 +13,17 @@ import android.graphics.drawable.GradientDrawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Target
 import androidx.recyclerview.widget.GridLayoutManager
@@ -151,8 +157,12 @@ class CallingActivity : AppCompatActivity() {
     }
 
     private fun cancelNotification() {
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancelAll()//(Constants.CHANNEL_ID)
+        val manager: NotificationManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            applicationContext.getSystemService(NotificationManager::class.java)
+        } else {
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        }
+        manager.cancelAll()
     }
 
     private fun setupWaveAnimation(view1: View, view2: View) {
