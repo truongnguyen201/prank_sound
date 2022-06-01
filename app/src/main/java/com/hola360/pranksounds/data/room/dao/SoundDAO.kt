@@ -11,6 +11,9 @@ interface SoundDAO {
     @Query("select * from tblFavoriteSound")
     suspend fun getAllFavoriteSong(): MutableList<Sound>
 
+    @Query("select sound_id from tblFavoriteSound")
+    suspend fun getFavoriteSoundID(): MutableList<String>
+
     @Query("select * from tblFavoriteSound where sound_id = (:id)")
     suspend fun getSoundById(id: String): Sound
 

@@ -6,10 +6,11 @@ import com.hola360.pranksounds.data.model.SoundCategory
 
 object Constants {
     const val PREFERENCE_NAME = "PRANK_SOUNDS"
+    const val ALARM_SERVICE_ACTION = "com.hola360.pranksounds.ACTION_CALL"
+    const val CHANNEL_ID = 101
     const val AUDIO_EXTENSION = "mp3"
     const val FOLDER_PATH = "PranSounds"
     const val FILE_NAME_FILTER = "?\"*"
-    const val ALARM_SERVICE_ACTION = "com.hola360.pranksounds.ACTION_CALL"
     const val SEEKBAR_PADDING = 70
 
     //list of recycler view in home screen
@@ -70,4 +71,20 @@ object Constants {
     const val SOUND_ITEM_PER_PAGE = 10
 
     const val DIR_PATH = "/PranSounds/"
+
+    //CALLING SCREEN
+    //calling ringtone
+    const val CALLING_RINGTONE =
+        "https://nf1f8200-a.akamaihd.net/downloads/ringtones/files/mp3/7120-download-iphone-6-original-ringtone-42676.mp3"
+    //calling time format
+    const val CALLING_TIME_FORMAT = "%02d:%02d"
+    //wave animation duration
+    const val WAVE_ANIM_DURATION = 2000L
+    //default background color off calling screen
+    const val DEFAULT_BACKGROUND_COLOR = -3491739
+    const val DEFAULT_GRADIENT_START_COLOR = -1603804
+    const val DEFAULT_GRADIENT_MID_COLOR = -4934297
+    const val DEFAULT_GRADIENT_END_COLOR = -1603545
+    //delay update time in calling screen
+    const val DELAY_CALLING_TIME = 1000L
 }

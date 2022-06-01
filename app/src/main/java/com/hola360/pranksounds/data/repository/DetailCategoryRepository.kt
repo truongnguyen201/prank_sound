@@ -1,20 +1,12 @@
 package com.hola360.pranksounds.data.repository
 
 import android.app.Application
-import android.util.Log
 import com.hola360.pranksounds.data.api.RetrofitHelper
 import com.hola360.pranksounds.data.api.response.detail_category_response.DetailCategoryResponse
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.data.room.database.AppDatabase
-import com.hola360.pranksounds.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okio.BufferedSink
-import okio.buffer
-import okio.sink
-import java.io.*
 
 class DetailCategoryRepository(app: Application) {
     private val retrofitHelper: RetrofitHelper = RetrofitHelper.instance!!
@@ -36,6 +28,14 @@ class DetailCategoryRepository(app: Application) {
     suspend fun getFavoriteSound(): MutableList<Sound>? = withContext(Dispatchers.Default) {
         try {
             db.getAllFavoriteSong()
+        } catch (ex: Exception) {
+            null
+        }
+    }
+
+    suspend fun getFavoriteSoundID(): MutableList<String>? = withContext(Dispatchers.Default) {
+        try {
+            db.getFavoriteSoundID()
         } catch (ex: Exception) {
             null
         }
@@ -69,10 +69,10 @@ class DetailCategoryRepository(app: Application) {
         }
     }
 
-    suspend fun getPageDB(pageNumber: Int) : MutableList<Sound>? = withContext(Dispatchers.Default){
+    suspend fun getPageDB(pageNumber: Int): MutableList<Sound>? = withContext(Dispatchers.Default) {
         try {
             db.getPaging(pageNumber - 1)
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             null
         }
     }

@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.media.RingtoneManager
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
@@ -65,9 +66,8 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
             vp2Sound.apply {
                 adapter = viewPagerAdapter
                 doOnLayout {
-                    var pos = args.position
-                    pos -= ((pos) / 11 + 1)
-                    vp2Sound.setCurrentItem(pos, false)
+                    val pos = args.position - ((args.position) / 11 + 1)
+                    vp2Sound.setCurrentItem(pos, true)
                 }
                 registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageSelected(position: Int) {
@@ -75,7 +75,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                         val newPosition = position + (position / 10 + 1)
                         toolbar.title = soundList[newPosition].title
                         cbFavorite.isChecked =
-                            sharedVM.favoriteList.value!!.contains(soundList[newPosition])
+                            sharedVM.favoriteList.value!!.contains(soundList[newPosition].soundId)
                         controlPanelListener.onPlaySound(soundList[newPosition])
                     }
                 })

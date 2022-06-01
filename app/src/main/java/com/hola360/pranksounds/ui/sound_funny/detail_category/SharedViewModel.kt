@@ -17,8 +17,7 @@ import com.hola360.pranksounds.data.repository.FileDownloadRepository
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.SingletonHolder
 import com.hola360.pranksounds.utils.Utils
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
 
@@ -30,7 +29,7 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
     var isComplete = MutableLiveData<Boolean>()
     var isPlaying = MutableLiveData<Boolean>()
     var soundList = MutableLiveData<MutableList<Sound>>()
-    var favoriteList = MutableLiveData<MutableList<Sound>>()
+    var favoriteList = MutableLiveData<MutableList<String>>()
 
     // position of playing item in the list
     var currentPosition = MutableLiveData<Int>()
@@ -132,7 +131,7 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
                 app.applicationContext, "Added ${sound.title} to favorite list",
                 LENGTH_SHORT
             ).show()
-            favoriteList.value = categoryRepository.getFavoriteSound()
+            favoriteList.value = categoryRepository.getFavoriteSoundID()
         }
     }
 
@@ -143,7 +142,7 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
                 app.applicationContext, "Removed ${sound.title} from favorite list",
                 LENGTH_SHORT
             ).show()
-            favoriteList.value = categoryRepository.getFavoriteSound()
+            favoriteList.value = categoryRepository.getFavoriteSoundID()
         }
     }
 

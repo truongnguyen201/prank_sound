@@ -41,6 +41,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
     private var currentMorePosition = 0
+    private var playingItem = 0
     var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
     private var isDestroyView = false
@@ -93,6 +94,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
 
             sbDuration.apply {
+                thumb = Utils.createThumb(0, 0, seekbarBinding, resources)
                 setPadding(Constants.SEEKBAR_PADDING, 0, Constants.SEEKBAR_PADDING, 0)
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
@@ -107,7 +109,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         controlPanelListener.onSeekBarChange(true, p0!!.progress)
                     }
                 })
-                thumb = Utils.createThumb(0, 0, seekbarBinding, resources)
             }
 
             ibPlayPause.setOnClickListener {
@@ -182,9 +183,24 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                             detailCategoryAdapter.updateData(
                                 detailCategoryViewModel.currentPage!! > 1, newPageItems
                             )
+
+                            binding.swipeRefreshLayout.isEnabled = true
+                            binding.swipeRefreshLayout.isRefreshing = false
+                        } else {
+                            if (args.categoryId == Constants.FAVORITE_ID) {
+                                binding.apply {
+                                    llEmptyFavorite.visibility = View.VISIBLE
+                                    rvSound.visibility = View.GONE
+                                    swipeRefreshLayout.isEnabled = false
+                                    swipeRefreshLayout.isRefreshing = false
+                                    btPlayMore.setOnClickListener {
+                                        findNavController().navigate(
+                                            DetailCategoryFragmentDirections.actionDetailCategoryFragmentToSoundFunnyFragment()
+                                        )
+                                    }
+                                }
+                            }
                         }
-                        binding.swipeRefreshLayout.isEnabled = true
-                        binding.swipeRefreshLayout.isRefreshing = false
                     }
                     LoadingStatus.Refresh -> {
                         sharedVM.soundList.value!!.clear()
@@ -203,12 +219,13 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         detailCategoryViewModel.favoriteSoundLiveData.observe(this) {
             it?.let {
                 sharedVM.favoriteList.value!!.addAll(it)
+                detailCategoryAdapter.updateFavoriteData(it)
             }
         }
 
         sharedVM.favoriteList.observe(this) {
             it?.let {
-                detailCategoryAdapter.updateFavoriteData(it)
+                detailCategoryAdapter.updateFavoriteData(it) 
             }
         }
 

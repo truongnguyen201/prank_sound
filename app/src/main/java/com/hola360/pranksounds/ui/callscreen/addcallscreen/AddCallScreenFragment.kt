@@ -3,6 +3,7 @@ package com.hola360.pranksounds.ui.callscreen.addcallscreen
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
+import android.view.View
 import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
@@ -23,6 +24,7 @@ import com.hola360.pranksounds.ui.dialog.pickphoto.PickPhotoDialog
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.yalantis.ucrop.UCrop
+import com.yalantis.ucrop.model.AspectRatio
 import java.io.File
 import java.util.*
 import kotlin.time.Duration.Companion.seconds
@@ -34,21 +36,27 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     private lateinit var action: Any
     private var call: Call? = null
     private val args: AddCallScreenFragmentArgs by navArgs()
-    val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
 
     override fun getLayout(): Int {
         return R.layout.fragment_add_call_screen
     }
 
     override fun initView() {
-        //args.callModel null, #null id >
+        //args.callModel null, #null id >0
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
+
             setNavigationOnClickListener {
+                if (sharedViewModel.getCall()?.isLocal == true) {
+                    sharedViewModel.setBackToMyCaller(true)
+                }
+                else {
+                    sharedViewModel.setBackToMyCaller(false)
+                }
                 requireActivity().onBackPressed()
             }
         }
-
         with(binding) {
             imgAvatar.setOnClickListener {
                 if (Utils.storagePermissionGrant(requireContext())) {
@@ -69,6 +77,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
             btnAdd.setOnClickListener {
                 viewModel!!.addCallToLocal()
                 sharedViewModel.setCall(viewModel!!.getCurrentCall())
+                sharedViewModel.setBackToMyCaller(true)
                 Toast.makeText(requireContext(), requireContext().resources.getString(R.string.insert_success), Toast.LENGTH_LONG).show()
                 requireActivity().onBackPressed()
             }
@@ -84,18 +93,17 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
             binding.tbAddCallScreen.title = requireActivity().getString(R.string.edit_call_screen)
             call?.let {
                 setView(it)
+                sharedViewModel.setCall(it)
             }
         }
-        addCallScreenViewModel.setCall(call)
+//        addCallScreenViewModel.setCall(call)
     }
 
     override fun initViewModel() {
-//        sharedViewModel.setCall(args.callModel)
-//        addCallScreenViewModel.setCall(call!!)
-//        Log.e("-------------------", "initViewModel: ${sharedViewModel.myCall.value?.name}", )
         val factory = AddCallScreenViewModel.Factory(requireActivity().application, args.callModel)
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
+//        sharedViewModel.setCall(args.callModel)
         setDataByViewModel()
     }
 
@@ -103,6 +111,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         sharedViewModel.myCall.observe(this) {
             addCallScreenViewModel.setCall(it)
         }
+//        addCallScreenViewModel.setCall(sharedViewModel.myCall.value)
     }
 
     private fun setView(call: Call) {
@@ -115,7 +124,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 imgAvatar.let { imgView ->
                     Glide.with(imgView)
                         .load(path)
-                        .placeholder(R.drawable.smaller_loading)
+                        .placeholder(R.drawable.img_avatar_default)
                         .error(R.drawable.img_avatar_default)
                         .into(imgView)
                 }
@@ -169,25 +178,21 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         uCrop.start(requireContext(), this)
     }
 
-
     private fun getCropOptions(): UCrop.Options {
         val options = UCrop.Options()
         options.setCompressionQuality(70)
+
         options.setHideBottomControls(false)
-        options.setFreeStyleCropEnabled(true)
+        options.setFreeStyleCropEnabled(false)
         options.setStatusBarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
         options.setToolbarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
         options.setToolbarWidgetColor(ContextCompat.getColor(requireActivity(), R.color.white))
         options.setToolbarTitle("Crop image")
+        options.setAspectRatioOptions(0, AspectRatio("",1f, 1f))
         return options
     }
 
-
     override fun onPickPhoto(photoModel: PhotoModel) {
         startCrop(photoModel.uri)
-    }
-
-    private fun setAvatarDefault() {
-
     }
 }

@@ -3,7 +3,7 @@ package com.hola360.pranksounds.ui.callscreen.callingscreen
 import android.animation.ArgbEvaluator
 import android.animation.TimeAnimator
 import android.animation.ValueAnimator
-import android.content.res.Configuration
+import android.app.NotificationManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -12,8 +12,8 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
@@ -29,12 +29,12 @@ import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.ActivityCallingBinding
 import com.hola360.pranksounds.ui.callscreen.callingscreen.adapter.PanelAdapter
 import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.*
+
 
 class CallingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCallingBinding
-    private val url =
-        "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2021/10/9/961804/Ca-Si-Lisa-Blackpink.jpg"
     private lateinit var gradient: GradientDrawable
     private lateinit var evaluator: ArgbEvaluator
     private lateinit var gradientAnimator: ValueAnimator
@@ -45,11 +45,14 @@ class CallingActivity : AppCompatActivity() {
     private var isAnswer = false
     private var swatch: Palette? = null
     private lateinit var mediaPlayer: MediaPlayer
-    private var backgroundColor = -3491739
+    private var backgroundColor = Constants.DEFAULT_BACKGROUND_COLOR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCallingBinding.inflate(layoutInflater)
+
+        setShowWhenScreenLock()
+
         val intent = intent
         var call = Call()
         val args = intent?.getParcelableExtra<Call>("call")
@@ -95,7 +98,7 @@ class CallingActivity : AppCompatActivity() {
                         endId: Int,
                         progress: Float
                     ) {
-
+                        waveAnimation.start()
                     }
 
                     override fun onTransitionCompleted(
@@ -107,14 +110,17 @@ class CallingActivity : AppCompatActivity() {
                             binding.root.setBackgroundColor(backgroundColor)
                             motionLayout.getTransition(R.id.transition1).isEnabled = false
                             mediaPlayer.release()
+                            waveAnimation.cancel()
                             if (currentId == R.id.answerState) {
                                 isAnswer = true
                                 startCountTime()
                                 ivDismiss.setOnClickListener {
                                     finish()
+                                    cancelNotification()
                                 }
                             } else {
                                 finish()
+                                cancelNotification()
                             }
                         }
                     }
@@ -131,6 +137,24 @@ class CallingActivity : AppCompatActivity() {
         }
     }
 
+    private fun setShowWhenScreenLock() {
+        if (Utils.isAndroidO_MR1()) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        } else {
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                        or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            )
+        }
+    }
+
+    private fun cancelNotification() {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()//(Constants.CHANNEL_ID)
+    }
+
     private fun setupWaveAnimation(view1: View, view2: View) {
         waveAnimation = ScaleAnimation(
             1f,
@@ -141,7 +165,7 @@ class CallingActivity : AppCompatActivity() {
             Animation.RELATIVE_TO_SELF, 0.5f
         )
         waveAnimation.apply {
-            duration = 2000
+            duration = Constants.WAVE_ANIM_DURATION
             repeatCount = Animation.INFINITE
             repeatMode = Animation.RESTART
         }
@@ -168,7 +192,11 @@ class CallingActivity : AppCompatActivity() {
         gradientAnimator.repeatMode = ValueAnimator.REVERSE
 
         if (call.avatarUrl.isEmpty()) {
-            setupGradient(-1603804, -4934297, -1603545)
+            setupGradient(
+                Constants.DEFAULT_GRADIENT_START_COLOR,
+                Constants.DEFAULT_GRADIENT_MID_COLOR,
+                Constants.DEFAULT_GRADIENT_END_COLOR
+            )
         } else {
             Glide.with(applicationContext)
                 .asBitmap()
@@ -213,8 +241,9 @@ class CallingActivity : AppCompatActivity() {
         stopCountTime()
         countTime = CoroutineScope(Dispatchers.Main).launch {
             while (isAnswer) {
-                binding.tvTitleNTime.text = String.format("%02d:%02d", timing / 60, timing % 60)
-                delay(1000)
+                binding.tvTitleNTime.text =
+                    String.format(Constants.CALLING_TIME_FORMAT, timing / 60, timing % 60)
+                delay(Constants.DELAY_CALLING_TIME)
                 timing++
             }
         }
@@ -228,7 +257,7 @@ class CallingActivity : AppCompatActivity() {
             )
             setDataSource(
                 applicationContext,
-                Uri.parse("https://nf1f8200-a.akamaihd.net/downloads/ringtones/files/mp3/7120-download-iphone-6-original-ringtone-42676.mp3")
+                Uri.parse(Constants.CALLING_RINGTONE)
             )
             prepareAsync()
             setOnPreparedListener {

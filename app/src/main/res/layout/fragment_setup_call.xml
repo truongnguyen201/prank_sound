@@ -30,7 +30,8 @@
             app:menu="@menu/setup_call_menu"
             app:navigationIcon="@drawable/ic_baseline_arrow_back"
             app:title="@string/set_call"
-            app:titleTextColor="@color/white" />
+            app:titleTextColor="@color/white"
+            app:titleTextAppearance="@style/Theme.PrankSounds.ToolbarTextAppearance"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -59,11 +60,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginHorizontal="@dimen/dp_24"
                     android:text="@string/default_text"
                     android:textAppearance="?textAppearanceBody1"
                     android:textColor="@color/black"
                     android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
 
                 <TextView
                     android:id="@+id/tvPhoneNumber"

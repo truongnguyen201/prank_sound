@@ -1,10 +1,15 @@
 package com.hola360.pranksounds
 
+import android.content.Context
+import android.graphics.Rect
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ActivityMainBinding
@@ -14,6 +19,7 @@ import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import kotlinx.coroutines.*
+
 
 class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
@@ -89,9 +95,9 @@ class MainActivity : BaseActivity(), ControlPanelListener {
         cancelJob()
         taskJob = CoroutineScope(Dispatchers.Main).launch {
             while (mediaPlayer.isPlaying) {
-                delay(Constants.DELAY_UPDATE)
                 sharedViewModel.seekBarProgress.value =
                     mediaPlayer.currentPosition
+                delay(Constants.DELAY_UPDATE)
             }
         }
     }
@@ -160,18 +166,23 @@ class MainActivity : BaseActivity(), ControlPanelListener {
 
     override fun onDetachFragment() {
         mediaPlayer.reset()
+        sharedViewModel.isPlaying.value = false
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val manager = supportFragmentManager
-        val transaction = manager.beginTransaction()
-
-        when (item.itemId) {
-            R.id.add_new_call -> {
-                transaction.add(R.id.navHostFragmentContentMain, AddCallScreenFragment())
-                transaction.commit()
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event!!.action == MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    v.clearFocus()
+                    val imm: InputMethodManager? =
+                        applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                    imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                }
             }
         }
-        return super.onOptionsItemSelected(item)
+        return super.dispatchTouchEvent(event)
     }
 }

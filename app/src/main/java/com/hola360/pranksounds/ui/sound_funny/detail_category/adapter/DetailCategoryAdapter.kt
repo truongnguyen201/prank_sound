@@ -9,7 +9,6 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ItemBannerBinding
 import com.hola360.pranksounds.databinding.ItemSoundBinding
-import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.SoundListener
 
 @SuppressLint("NotifyDataSetChanged")
@@ -17,7 +16,7 @@ class DetailCategoryAdapter(private val catID: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val data = mutableListOf<Sound>()
-    val favoriteData = mutableListOf<Sound>()
+    val favoriteData = mutableListOf<String>()
     private var currentPosition: Int? = null
     lateinit var listener: SoundListener
 
@@ -29,6 +28,7 @@ class DetailCategoryAdapter(private val catID: String) :
                 notifyItemInserted(oldSize)
             }
         } else {
+            Log.e("fav size", favoriteData.size.toString())
             data.clear()
             if (!newData.isNullOrEmpty()) {
                 data.addAll(newData)
@@ -50,7 +50,7 @@ class DetailCategoryAdapter(private val catID: String) :
     }
 
     //update favorite data
-    fun updateFavoriteData(newData: List<Sound>?) {
+    fun updateFavoriteData(newData: List<String>?) {
         if (!newData.isNullOrEmpty()) {
             favoriteData.clear()
             favoriteData.addAll(newData)
@@ -114,31 +114,13 @@ class DetailCategoryAdapter(private val catID: String) :
                 }
                 //check if the sound is exists in favorite data, set isChecked of the checkbox is true
                 //set listener when click on the checkbox
-                if (catID == Constants.FAVORITE_ID) {
-                    cbFavorite.apply {
-                        isChecked = true
-                        setOnClickListener {
-                            if (cbFavorite.isChecked) {
-                                listener.onCheckedButton(sound)
-                            } else {
-                                if (data[position - 1].isBanner && position + 1 == data.size) {
-                                    data.removeAt(position - 1)
-                                }
-                                listener.onUncheckedButton(sound)
-                                data.remove(sound)
-                                notifyItemRangeRemoved(position - 1, 2)
-                            }
-                        }
-                    }
-                } else {
-                    cbFavorite.apply {
-                        isChecked = sound in favoriteData
-                        setOnClickListener {
-                            if (cbFavorite.isChecked) {
-                                listener.onCheckedButton(sound)
-                            } else {
-                                listener.onUncheckedButton(sound)
-                            }
+                cbFavorite.apply {
+                    isChecked = sound.soundId in favoriteData
+                    setOnClickListener {
+                        if (cbFavorite.isChecked) {
+                            listener.onCheckedButton(sound)
+                        } else {
+                            listener.onUncheckedButton(sound)
                         }
                     }
                 }

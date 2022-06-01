@@ -99,6 +99,7 @@ class PickPhotoDialog(
         if (pickModelDataType == PickModelDataType.LoadAlbum) {
             albumState = binding.recycleView.layoutManager!!.onSaveInstanceState()
             viewModel.loadAlbumDetail(photoModel.albumId)
+            viewModel.albumName = photoModel.albumName
         } else {
             dismiss()
             onClickListener.onPickPhoto(photoModel)

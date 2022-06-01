@@ -1,12 +1,11 @@
-package com.hola360.pranksounds
+package com.hola360.pranksounds.ui.callscreen.callingscreen.notification
 
 import android.app.Application
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 
-class App : Application() {
+class CallingNotification : Application() {
     companion object {
         val channelId: String = "channel_service"
     }
@@ -21,10 +20,10 @@ class App : Application() {
             val channel = NotificationChannel(
                 channelId,
                 "Channel Service",
-                NotificationManager.IMPORTANCE_HIGH)
-            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                NotificationManager.IMPORTANCE_DEFAULT)
             val manager: NotificationManager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
+
         }
     }
 }

@@ -8,6 +8,7 @@ import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.utils.Constants
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -20,7 +21,7 @@ class DetailCategoryViewModel(
     private val repository = DetailCategoryRepository(app)
 
     val soundLiveData = MutableLiveData<DataResponse<MutableList<Sound>>>()
-    val favoriteSoundLiveData = MutableLiveData<MutableList<Sound>>()
+    val favoriteSoundLiveData = MutableLiveData<MutableList<String>>()
     var totalPage: Int? = null
     var currentPage: Int? = null
 
@@ -71,7 +72,7 @@ class DetailCategoryViewModel(
     private fun fetchFavoriteData() {
         viewModelScope.launch {
             val favoriteSoundDeferred = viewModelScope.async {
-                repository.getFavoriteSound()
+                repository.getFavoriteSoundID()
             }
             try {
                 val favoriteList = favoriteSoundDeferred.await()
@@ -94,10 +95,6 @@ class DetailCategoryViewModel(
                     requestPage,
                     Constants.SOUND_ITEM_PER_PAGE
                 )
-            }
-
-            val favoriteSoundDeferred = viewModelScope.async {
-                repository.getFavoriteSound()
             }
 
             try {
