@@ -60,4 +60,20 @@ class DetailCategoryRepository(app: Application) {
             null
         }
     }
+
+    suspend fun getQuantityOfFavoriteSound(): Int? = withContext(Dispatchers.Default) {
+        try {
+            db.getQuantity()
+        } catch (ex: Exception) {
+            null
+        }
+    }
+
+    suspend fun getPageDB(pageNumber: Int) : MutableList<Sound>? = withContext(Dispatchers.Default){
+        try {
+            db.getPaging(pageNumber - 1)
+        } catch (ex: Exception){
+            null
+        }
+    }
 }

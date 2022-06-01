@@ -13,13 +13,14 @@ class PolicyFragment : BaseFragment<FragmentPolicyBinding>() {
 
     override fun initView() {
         //Set isAcceptPolicy as true when click on btStart
-        binding.btStart.setOnClickListener {
-            policyViewModel.setAcceptPolicy()
-            requireActivity().startActivity(Intent(context, MainActivity::class.java))
-            requireActivity().finish()
+        binding.apply {
+            btStart.setOnClickListener {
+                policyViewModel.setAcceptPolicy()
+                requireActivity().startActivity(Intent(context, MainActivity::class.java))
+                requireActivity().finish()
+            }
+            wvPolicy.loadUrl("file:///android_asset/policy.adp")
         }
-
-        binding.wvPolicy.loadUrl("file:///android_asset/policy.adp")
 
         requireActivity().onBackPressedDispatcher.addCallback(
             this,

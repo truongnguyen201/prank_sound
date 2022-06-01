@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.ui.setupWithNavController
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ActivityMainBinding
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
@@ -27,7 +26,7 @@ import kotlinx.coroutines.*
 class MainActivity : BaseActivity(), ControlPanelListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var sharedViewModel : SharedViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var callScreenSharedViewModel: CallScreenSharedViewModel
     private var taskJob: Job? = null
 
@@ -38,18 +37,11 @@ class MainActivity : BaseActivity(), ControlPanelListener {
         val callFactory = CallScreenSharedViewModel.Factory(application)
         callScreenSharedViewModel = ViewModelProvider(this, callFactory)[CallScreenSharedViewModel::class.java]
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.homeFragment -> {
-                    binding.toolbar.visibility = View.GONE
-                }
-                else -> {
-                    val navIcon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_arrow_back)
-                    binding.toolbar.navigationIcon = navIcon
-                    binding.toolbar.visibility = View.GONE
-                }
-            }
-        }
+        initMediaPlayer()
+        initViewModel()
+    }
+
+    private fun initMediaPlayer() {
         mediaPlayer = MediaPlayer()
         mediaPlayer.apply {
             setAudioAttributes(
@@ -60,6 +52,13 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                 sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
             }
         }
+    }
+
+    private fun initViewModel() {
+        sharedViewModel = SharedViewModel.getInstance(application)
+        val factory = CallScreenSharedViewModel.Factory(this.application)
+        callScreenSharedViewModel =
+            ViewModelProvider(this, factory)[CallScreenSharedViewModel::class.java]
 
         sharedViewModel.currentPosition.observe(this) {
             it?.let {
@@ -103,7 +102,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
         cancelJob()
         taskJob = CoroutineScope(Dispatchers.Main).launch {
             while (mediaPlayer.isPlaying) {
-                delay(200)
+                delay(Constants.DELAY_UPDATE)
                 sharedViewModel.seekBarProgress.value =
                     mediaPlayer.currentPosition
             }
@@ -123,14 +122,6 @@ class MainActivity : BaseActivity(), ControlPanelListener {
         setContentView(binding.root)
     }
 
-    override fun setupActionBar() {
-        setSupportActionBar(binding.toolbar)
-    }
-
-    override fun actionBarSetupWithNavController() {
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-    }
-
     override fun onPlayPauseClick() {
         mediaPlayer.apply {
             if (isPlaying) {
@@ -148,6 +139,20 @@ class MainActivity : BaseActivity(), ControlPanelListener {
 
     override fun onStartTracking() {
         mediaPlayer.pause()
+    }
+
+    override fun onPlaySound(sound: Sound) {
+        val uri = Uri.parse(Constants.SUB_URL + sound.soundUrl)
+        mediaPlayer.apply {
+            reset()
+            setDataSource(applicationContext, uri)
+            prepareAsync()
+            setOnPreparedListener {
+                sharedViewModel.soundDuration.value = duration
+                start()
+                sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+            }
+        }
     }
 
     override fun onPanelClick(sound: Sound) {}

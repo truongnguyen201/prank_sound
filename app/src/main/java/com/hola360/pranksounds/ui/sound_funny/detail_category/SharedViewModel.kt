@@ -31,8 +31,12 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
     var isPlaying = MutableLiveData<Boolean>()
     var soundList = MutableLiveData<MutableList<Sound>>()
     var favoriteList = MutableLiveData<MutableList<Sound>>()
+
+    // position of playing item in the list
     var currentPosition = MutableLiveData<Int>()
+    // duration of playing item
     var soundDuration = MutableLiveData<Int>()
+    // progress of MediaPlayer
     var seekBarProgress = MutableLiveData<Int>()
 
     companion object : SingletonHolder<SharedViewModel, Application>(::SharedViewModel)
@@ -93,10 +97,12 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
                 }
             }
 
+            //get duration of the .mp3 file
             val metaRetriever = MediaMetadataRetriever()
             metaRetriever.setDataSource(fileName)
             val duration =
                 metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+
             val typeToast = when (type) {
                 RingtoneManager.TYPE_ALARM -> "Alarm"
                 RingtoneManager.TYPE_NOTIFICATION -> "Notification"
@@ -124,7 +130,7 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
             categoryRepository.addFavoriteSound(sound)
             Toast.makeText(
                 app.applicationContext, "Added ${sound.title} to favorite list",
-                Toast.LENGTH_SHORT
+                LENGTH_SHORT
             ).show()
             favoriteList.value = categoryRepository.getFavoriteSound()
         }
@@ -135,7 +141,7 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
             categoryRepository.removeFavoriteSound(sound)
             Toast.makeText(
                 app.applicationContext, "Removed ${sound.title} from favorite list",
-                Toast.LENGTH_SHORT
+                LENGTH_SHORT
             ).show()
             favoriteList.value = categoryRepository.getFavoriteSound()
         }

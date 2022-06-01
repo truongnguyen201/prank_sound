@@ -1,11 +1,8 @@
 package com.hola360.pranksounds.utils
 
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Prank
 import com.hola360.pranksounds.data.model.SoundCategory
-import kotlin.random.Random
 
 object Constants {
     const val PREFERENCE_NAME = "PRANK_SOUNDS"
@@ -17,6 +14,7 @@ object Constants {
     const val FOLDER_PATH = "PranSounds"
     const val FILE_NAME_FILTER = "?\"*"
     const val SEEKBAR_PADDING = 70
+
     //list of recycler view in home screen
     val PRANK_LIST = listOf(
         Prank(1, R.drawable.ic_hair_cutting, R.drawable.bg_hair_cutting, "Hair Cutting"),
@@ -35,7 +33,7 @@ object Constants {
         R.drawable.banner_4,
     )
 
-    private val THUMB_RES = listOf(
+    val THUMB_RES = listOf(
         R.drawable.thumb_1,
         R.drawable.thumb_2,
         R.drawable.thumb_3,
@@ -46,12 +44,15 @@ object Constants {
         R.drawable.thumb_8,
     )
 
-    fun randomThumbRes(): Int {
-        return THUMB_RES[Random.nextInt(0, 7)]
-    }
+    //delay for update seekbar
+    const val DELAY_UPDATE = 200L
+
+    //minimum sound duration
+    const val MIN_SOUND_DURATION = 1000
 
     //favorite category item
     val FAVORITE_CATEGORY = SoundCategory("Favorite Sound", "fav_sound", "thumb_cat/pro_7.webp")
+    const val FAVORITE_ID = "fav_sound"
 
     //timing of splash screen before navigate to another screen
     const val SPLASH_TIMING = 3000L

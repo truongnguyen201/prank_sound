@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.media.RingtoneManager
-import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
@@ -32,14 +30,12 @@ import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
-
-@Suppress("SENSELESS_COMPARISON")
 class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
-    private val detailCategoryAdapter = DetailCategoryAdapter()
     private lateinit var detailCategoryViewModel: DetailCategoryViewModel
     private var mLayoutManager: LinearLayoutManager? = null
     private lateinit var sharedVM: SharedViewModel
     private val args: DetailCategoryFragmentArgs by navArgs()
+    private lateinit var detailCategoryAdapter: DetailCategoryAdapter
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popUpWindow: PopupWindow
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
@@ -47,13 +43,13 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private var currentMorePosition = 0
     var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
+    private var isDestroyView = false
 
     override fun getLayout(): Int {
         return R.layout.fragment_detail_category
     }
 
     override fun initView() {
-        requireActivity().title = args.categoryTitle
         setUpProgressBar()
         detailCategoryAdapter.setListener(this)
         mLayoutManager = LinearLayoutManager(requireContext())
@@ -81,8 +77,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                     super.onScrolled(recyclerView, dx, dy)
                     if (!rvSound.canScrollVertically(1) && dy > 0) {
                         detailCategoryViewModel.apply {
-                            if (currentPage!! < totalPageNumber!!) {
-                                getSound(currentPage!! + 1, true)
+                            if (currentPage!! < totalPage!!) {
+                                fetchData(true, args.categoryId!!, currentPage!! + 1)
                             }
                         }
                     }
@@ -90,7 +86,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             })
 
             swipeRefreshLayout.setOnRefreshListener {
-                detailCategoryViewModel.getSound(1, false)
+                detailCategoryViewModel.fetchData(false, args.categoryId!!, 1)
                 controlPanel.visibility = View.GONE
                 sharedVM.currentPosition.value = 0
                 controlPanelListener.onReset()
@@ -116,11 +112,9 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
             ibPlayPause.setOnClickListener {
                 if (controlPanelListener.isPlaying()) {
-                    ibPlayPause.setImageResource(R.drawable.ic_play_circle)
-                    ivPlayPause.setImageResource(R.drawable.ic_play_arrow)
+                    changeImageResourceOnPause()
                 } else {
-                    ibPlayPause.setImageResource(R.drawable.ic_pause_circle)
-                    ivPlayPause.setImageResource(R.drawable.ic_pause_arrow)
+                    changeImageResourceOnPlay()
                 }
                 controlPanelListener.onPlayPauseClick()
             }
@@ -157,6 +151,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                     DetailCategoryFragmentDirections
                         .actionDetailCategoryFragmentToSoundDetailFragment()
                         .setPosition(sharedVM.currentPosition.value!!)
+                        .setList(sharedVM.soundList.value!!.toTypedArray())
                 )
             }
 
@@ -169,8 +164,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             DetailCategoryViewModel.Factory(requireActivity().application, args.categoryId!!)
         detailCategoryViewModel =
             ViewModelProvider(this, factory)[DetailCategoryViewModel::class.java]
-
         sharedVM = SharedViewModel.getInstance(requireActivity().application)
+        detailCategoryAdapter = DetailCategoryAdapter(args.categoryId!!)
 
         detailCategoryViewModel.soundLiveData.observe(this) {
             it?.let {
@@ -184,10 +179,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                             newPageItems.add(bannerItem)
                             newPageItems.addAll(data)
                             sharedVM.soundList.value!!.addAll(newPageItems)
-                            Log.e("Sound list in sharedvm", "${sharedVM.soundList.value!!.size}")
                             detailCategoryAdapter.updateData(
-                                detailCategoryViewModel.currentPage!! > 1,
-                                newPageItems
+                                detailCategoryViewModel.currentPage!! > 1, newPageItems
                             )
                         }
                         binding.swipeRefreshLayout.isEnabled = true
@@ -207,10 +200,15 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
+        detailCategoryViewModel.favoriteSoundLiveData.observe(this){
+            it?.let{
+                sharedVM.favoriteList.value!!.addAll(it)
+            }
+        }
+
         sharedVM.favoriteList.observe(this) {
             it?.let {
                 detailCategoryAdapter.updateFavoriteData(it)
-                sharedVM.favoriteList.value!!.addAll(it)
             }
         }
 
@@ -220,7 +218,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                 if (sharedVM.soundList.value!!.size > 0) {
                     val sound = sharedVM.soundList.value!![it]
                     binding.apply {
-                        controlPanel.visibility = View.VISIBLE
                         tvTitle.text = sound.title
                         ivThumbnail.setImageResource(sound.thumbRes)
                         ivPlayPause.setImageResource(R.drawable.ic_pause_arrow)
@@ -260,39 +257,49 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         sharedVM.isPlaying.observe(this) {
             it?.let {
                 detailCategoryAdapter.updatePlayingItem(sharedVM.currentPosition.value!!, it)
-                if (!it) {
-                    binding.apply {
-                        ibPlayPause.setImageResource(R.drawable.ic_play_circle)
-                        ivPlayPause.setImageResource(R.drawable.ic_play_arrow)
-                    }
+                if (it) {
+                    changeImageResourceOnPlay()
                 } else {
-                    binding.apply {
-                        ibPlayPause.setImageResource(R.drawable.ic_pause_circle)
-                        ivPlayPause.setImageResource(R.drawable.ic_pause_arrow)
+                    changeImageResourceOnPause()
+                }
+            }
+        }
+
+        sharedVM.isComplete.observe(this) {
+            it?.let {
+                if (it) {
+                    val duration = sharedVM.soundDuration.value!!
+                    if (duration < Constants.MIN_SOUND_DURATION) {
+                        binding.sbDuration.max = duration
+                        binding.sbDuration.progress = duration
                     }
                 }
             }
         }
 
-        sharedVM.isComplete.observe(this){
-            it?.let{
-                if(it){
-                    if(sharedVM.soundDuration.value!! < 1000){
-                        binding.sbDuration.max = 1000
-                        binding.sbDuration.progress = 1000
-//                        Utils.createThumb(1000, 1000, seekbarBinding, resource)
-                    }
-                }
-            }
+        detailCategoryViewModel.fetchData(false, args.categoryId!!, 1)
+    }
+
+    private fun changeImageResourceOnPlay() {
+        binding.apply {
+            ibPlayPause.setImageResource(R.drawable.ic_pause_circle)
+            ivPlayPause.setImageResource(R.drawable.ic_pause_arrow)
         }
-//        detailCategoryViewModel.getSound(1, false)
+    }
+
+    private fun changeImageResourceOnPause() {
+        binding.apply {
+            ibPlayPause.setImageResource(R.drawable.ic_play_circle)
+            ivPlayPause.setImageResource(R.drawable.ic_play_arrow)
+        }
     }
 
     private fun setUpProgressBar() {
         val circle1 = Circle()
         val circle2 = Circle()
-        circle1.color = Color.parseColor("#F18924")
-        circle2.color = Color.parseColor("#F18924")
+        val color = resources.getString(R.string.design_color)
+        circle1.color = Color.parseColor(color)
+        circle2.color = Color.parseColor(color)
         binding.loadMoreProgressBar.indeterminateDrawable = circle1
         binding.progressBar.indeterminateDrawable = circle2
     }
@@ -356,7 +363,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     //handle when click on sound item in recycler view
     override fun onItemClick(position: Int) {
         sharedVM.currentPosition.value = position
-        binding.sbDuration.progress = 0
+        binding.apply {
+            sbDuration.progress = 0
+            controlPanel.visibility = View.VISIBLE
+        }
     }
 
     override fun onMoreIconClick(view: View, position: Int) {
@@ -370,7 +380,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             view, (screenWidth * 0.6).toInt(),
             yPosition
         )
+    }
 
+    override fun onFavoriteEmpty() {
+        binding.llEmptyFavorite.visibility = View.VISIBLE
     }
 
     //get controlPanelListener from activity
@@ -394,8 +407,15 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         sharedVM.currentPosition.value = 0
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.e("Im in create", "HAHA")
+    override fun onStart() {
+        super.onStart()
+        if (isDestroyView) {
+            binding.controlPanel.visibility = View.GONE
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        isDestroyView = true
     }
 }

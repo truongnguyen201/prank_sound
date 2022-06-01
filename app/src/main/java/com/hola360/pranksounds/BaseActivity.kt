@@ -9,8 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 
 abstract class BaseActivity : AppCompatActivity() {
     private lateinit var navHostFragment: NavHostFragment
-    protected lateinit var navController: NavController
-    protected lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,15 +17,9 @@ abstract class BaseActivity : AppCompatActivity() {
         navHostFragment =
             supportFragmentManager.findFragmentById(getFragmentID()) as NavHostFragment
         navController = navHostFragment.navController
-        setupActionBar()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        actionBarSetupWithNavController()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     abstract fun getFragmentID(): Int
     abstract fun bind()
-    abstract fun setupActionBar()
-    abstract fun actionBarSetupWithNavController()
 }

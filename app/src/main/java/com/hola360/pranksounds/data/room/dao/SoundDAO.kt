@@ -25,4 +25,7 @@ interface SoundDAO {
 
     @Query("select count(*) from tblFavoriteSound where sound_id = (:id)")
     suspend fun isExist(id: String): Int
+
+    @Query("select * from tblFavoriteSound limit 10 offset :pageNumber*10")
+    suspend fun getPaging(pageNumber: Int): MutableList<Sound>
 }

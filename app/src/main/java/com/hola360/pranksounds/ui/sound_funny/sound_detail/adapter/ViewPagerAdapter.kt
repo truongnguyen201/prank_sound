@@ -15,7 +15,7 @@ class ViewPagerAdapter : RecyclerView.Adapter<ViewPagerAdapter.SoundDetailViewHo
     private val data = mutableListOf<Sound>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(newData: List<Sound>?) {
+    fun setData(newData: Array<Sound>?) {
         data.clear()
         if (!newData.isNullOrEmpty()) {
             data.addAll(newData)

@@ -14,9 +14,11 @@ import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.adapter.SoundCategoryAdapter
 
 class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
+
     private val soundCategoryAdapter = SoundCategoryAdapter {
         handleOnItemClick(it)
     }
+
     private lateinit var soundFunnyViewModel: SoundFunnyViewModel
 
     override fun getLayout(): Int {
@@ -28,18 +30,21 @@ class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
             toolbar.setNavigationOnClickListener {
                 requireActivity().onBackPressed()
             }
-            rvCategory.layoutManager = LinearLayoutManager(requireContext())
-            rvCategory.setHasFixedSize(true)
-            rvCategory.adapter = soundCategoryAdapter
+            rvCategory.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                setHasFixedSize(true)
+                adapter = soundCategoryAdapter
+            }
             noInternetLayout.btRetry.setOnClickListener { soundFunnyViewModel.retry() }
+            viewModel = soundFunnyViewModel
         }
-        binding.viewModel = soundFunnyViewModel
         setUpProgressBar()
     }
 
     override fun initViewModel() {
         val factory = SoundFunnyViewModel.Factory(requireActivity().application)
         soundFunnyViewModel = ViewModelProvider(this, factory)[SoundFunnyViewModel::class.java]
+
         soundFunnyViewModel.soundCategoryLiveData.observe(this) {
             it?.let {
                 if (it.loadingStatus == LoadingStatus.Success) {
@@ -52,7 +57,6 @@ class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
                 }
             }
         }
-        soundFunnyViewModel.getCategory()
     }
 
     private fun handleOnItemClick(category: SoundCategory) {
@@ -67,5 +71,4 @@ class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
         circle.color = Color.parseColor("#F18924")
         binding.progressBar.indeterminateDrawable = circle
     }
-
 }

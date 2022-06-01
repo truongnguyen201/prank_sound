@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.media.RingtoneManager
-import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
@@ -16,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.hola360.pranksounds.R
+import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentSoundDetailBinding
 import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
@@ -35,14 +35,19 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
     private var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
+    private lateinit var soundList: Array<Sound>
 
     override fun getLayout(): Int {
         return R.layout.fragment_sound_detail
     }
 
     override fun initView() {
+        soundList = args.list!!
+        viewPagerAdapter.setData(soundList)
+
         seekbarBinding =
             LayoutSeekbarThumbBinding.inflate(requireActivity().layoutInflater, null, false)
+
         binding.apply {
             toolbar.apply {
                 setNavigationOnClickListener {
@@ -64,15 +69,14 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                     pos -= ((pos) / 11 + 1)
                     vp2Sound.setCurrentItem(pos, false)
                 }
-
                 registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageSelected(position: Int) {
                         super.onPageSelected(position)
                         val newPosition = position + (position / 10 + 1)
-                        toolbar.title = sharedVM.soundList.value!![newPosition].title
+                        toolbar.title = soundList[newPosition].title
                         cbFavorite.isChecked =
-                            sharedVM.favoriteList.value!!.contains(sharedVM.soundList.value!![newPosition])
-                        sharedVM.currentPosition.value = newPosition
+                            sharedVM.favoriteList.value!!.contains(soundList[newPosition])
+                        controlPanelListener.onPlaySound(soundList[newPosition])
                     }
                 })
                 offscreenPageLimit = 1
@@ -101,34 +105,11 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
             ivNext.setOnClickListener {
                 val viewPagerPosition = vp2Sound.currentItem
                 vp2Sound.setCurrentItem(viewPagerPosition + 1, true)
-                sharedVM.currentPosition.apply {
-                    val positionInList = viewPagerPosition + (viewPagerPosition / 10 + 1)
-                    //if current position less than sound list size
-                    if (positionInList < sharedVM.soundList.value!!.size - 1) {
-                        //if current item is banner
-                        value = if (sharedVM.soundList.value!![positionInList + 1].isBanner) {
-                            positionInList + 2
-                        } else {
-                            positionInList + 1
-                        }
-                    }
-                }
             }
 
             ivPrevious.setOnClickListener {
                 val viewPagerPosition = vp2Sound.currentItem
                 vp2Sound.setCurrentItem(viewPagerPosition - 1, true)
-                sharedVM.currentPosition.apply {
-                    val positionInList = viewPagerPosition + (viewPagerPosition / 10 + 1)
-                    //if current position larger than 1
-                    if (positionInList > 1) {
-                        value = if (sharedVM.soundList.value!![positionInList - 1].isBanner) {
-                            positionInList - 2
-                        } else {
-                            positionInList - 1
-                        }
-                    }
-                }
             }
 
             ivPlayPause.setOnClickListener {
@@ -144,9 +125,9 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                 setOnClickListener {
                     val position = vp2Sound.currentItem + vp2Sound.currentItem / 10 + 1
                     if (isChecked) {
-                        sharedVM.addFavoriteSound(sharedVM.soundList.value!![position])
+                        sharedVM.addFavoriteSound(soundList[position])
                     } else {
-                        sharedVM.removeFavoriteSound(sharedVM.soundList.value!![position])
+                        sharedVM.removeFavoriteSound(soundList[position])
                     }
                 }
             }
@@ -182,38 +163,9 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
 
         sharedVM = SharedViewModel.getInstance(requireActivity().application)
 
-        sharedVM.soundList.observe(this) {
-            it?.let {
-                if (it.size > 0) {
-                    viewPagerAdapter.setData(it)
-                }
-            }
-        }
-
         sharedVM.soundDuration.observe(this) {
             it?.let {
                 binding.sbDuration.max = it
-            }
-        }
-
-        sharedVM.isComplete.observe(this) {
-            it?.let {
-                binding.apply {
-                    if (it) {
-                        ivPlayPause.setImageResource(R.drawable.ic_play_circle_51dp)
-                    } else {
-                        ivPlayPause.setImageResource(R.drawable.ic_pause_circle_51dp)
-                    }
-                }
-            }
-        }
-
-        sharedVM.currentPosition.observe(this) {
-            it?.let {
-                binding.apply {
-                    ivPlayPause.setImageResource(R.drawable.ic_pause_circle_51dp)
-                    sbDuration.progress = 0
-                }
             }
         }
 
@@ -237,12 +189,13 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
             }
         }
 
-        sharedVM.isComplete.observe(this){
-            it?.let{
-                if(it){
-                    if(sharedVM.soundDuration.value!! < 1000){
-                        binding.sbDuration.max = 1000
-                        binding.sbDuration.progress = 1000
+        sharedVM.isPlaying.observe(this) {
+            it?.let {
+                binding.ivPlayPause.apply {
+                    if (it) {
+                        setImageResource(R.drawable.ic_pause_circle_51dp)
+                    } else {
+                        setImageResource(R.drawable.ic_play_circle_51dp)
                     }
                 }
             }
@@ -256,9 +209,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
         val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
         return ViewPager2.PageTransformer { page: View, position: Float ->
             page.translationX = -pageTranslationX * position
-            // Next line scales the item's height. You can remove it if you don't want this effect
             page.scaleY = 1 - (0.25f * kotlin.math.abs(position))
-            // If you want a fading effect uncomment the next line:
             page.alpha = 0.25f + (1 - kotlin.math.abs(position))
         }
     }
@@ -287,9 +238,9 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
 
     private fun setupWhenPermissionGranted(type: Int, position: Int) {
         sharedVM.downloadAndSet(
-            sharedVM.soundList.value!![position].soundUrl!!,
+            soundList[position].soundUrl!!,
             type,
-            sharedVM.soundList.value!![position].title!!
+            soundList[position].title!!
         )
     }
 
@@ -303,5 +254,10 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                         + " must implement ControlPanelListener"
             )
         }
+    }
+
+    override fun onDetach() {
+        controlPanelListener.onDetachFragment()
+        super.onDetach()
     }
 }

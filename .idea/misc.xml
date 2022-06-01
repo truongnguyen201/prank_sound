@@ -128,6 +128,8 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_taser_prank.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_vector_pause.xml" value="0.18" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_vector_play.xml" value="0.22" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/img_avatar_default.xml" value="0.3415" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/img_empty_favorite.xml" value="0.3415" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/seek_bar_progress_track.xml" value="0.2985" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/seek_bar_style.xml" value="0.3125" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/seek_bar_thumb.xml" value="0.2985" />
@@ -136,10 +138,11 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/activity_splash.xml" value="0.30512820512820515" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/bottom_control_panel.xml" value="0.33" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_category.xml" value="0.30512820512820515" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_detail_category.xml" value="0.25" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_detail_category.xml" value="0.2" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_home.xml" value="0.33903133903133903" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_policy.xml" value="0.30512820512820515" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_policy.xml" value="0.25" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_setting.xml" value="0.30512820512820515" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_sound_detail.xml" value="0.32592592592592595" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_sound_funny.xml" value="0.30512820512820515" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/fragment_splash.xml" value="0.33" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_banner.xml" value="0.33055555555555555" />
@@ -148,6 +151,7 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_slider.xml" value="0.30512820512820515" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound.xml" value="0.33" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound_category.xml" value="0.33" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound_detail.xml" value="0.32592592592592595" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/layout_no_internet.xml" value="0.25" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/no_internet_layout.xml" value="0.33055555555555555" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/pop_up_window_layout.xml" value="0.25" />

@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_baseline_arrow_back"
-            app:title="Sound Funny"
+            app:title="@string/toolbar_title_sound_funny"
             app:titleTextAppearance="@style/Theme.PrankSounds.ToolbarTextAppearance"
             app:titleTextColor="@color/white" />
 
