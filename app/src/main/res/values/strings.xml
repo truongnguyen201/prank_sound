@@ -63,6 +63,7 @@
     <string name="write_setting_permission">Please allow the app to modify system settings to use this feature</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
+    <string name="unknown">Unknown</string>
 
     <!--    // setup call screen-->
     <string name="default_text">Default text</string>

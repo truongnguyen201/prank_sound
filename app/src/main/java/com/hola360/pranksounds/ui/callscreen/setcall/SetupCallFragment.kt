@@ -44,6 +44,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         if (setupCallViewModel.getCurrentCall()?.isLocal == true) {
             binding.tbSetupCallScreen.inflateMenu(R.menu.setup_call_menu_2)
             sharedViewModel.setBackToMyCaller(true)
+
         }
         binding.tbSetupCallScreen.setNavigationOnClickListener {
             requireActivity().onBackPressed()
@@ -80,6 +81,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 when (it.itemId) {
                     R.id.edit_call -> {
                         sharedViewModel.setBackToMyCaller(false)
+                        sharedViewModel.setCall(setupCallViewModel.getCurrentCall())
                         action =
                             CallerFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
                         findNavController().navigate(action as NavDirections)
@@ -124,7 +126,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                             .error(R.drawable.img_avatar_default)
                             .into(imgView)
                     }
-                    tvCallerName.text = it.name
+                    tvCallerName.text = it.name.ifEmpty {
+                        requireContext().getString(R.string.unknown)
+                    }
                     tvPhoneNumber.text = it.phone
                 }
             }

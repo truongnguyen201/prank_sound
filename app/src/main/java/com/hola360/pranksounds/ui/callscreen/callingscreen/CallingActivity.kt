@@ -77,7 +77,9 @@ class CallingActivity : AppCompatActivity() {
             rvPanel.layoutManager = gridLayoutManager
             rvPanel.setHasFixedSize(true)
 
-            tvCallerName.text = call.name
+            tvCallerName.text = call.name.ifEmpty {
+                applicationContext.getString(R.string.unknown)
+            }
             tvPhoneNumber.text = call.phone
 
             if (call.avatarUrl.isNotEmpty()) {

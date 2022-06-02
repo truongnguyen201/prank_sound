@@ -43,10 +43,8 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     }
 
     override fun initView() {
-        //args.callModel null, #null id >0
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
-
             setNavigationOnClickListener {
                 if (sharedViewModel.getCall()?.isLocal == true) {
                     sharedViewModel.setBackToMyCaller(true)
@@ -54,6 +52,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 else {
                     sharedViewModel.setBackToMyCaller(false)
                 }
+
                 requireActivity().onBackPressed()
             }
         }
@@ -67,43 +66,52 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
             }
 
             tvCallerName.doAfterTextChanged {
-                viewModel!!.setOnNameChange(tvCallerName.text.toString())
+                addCallScreenViewModel.setOnNameChange(tvCallerName.text.toString())
+                Log.e("-----", "initView share: ${sharedViewModel.myCall.value?.name}", )
+                Log.e("-----", "initView add: ${addCallScreenViewModel.getCurrentCall()?.name}", )
             }
 
             tvPhoneNumber.doAfterTextChanged {
-                viewModel!!.setOnPhoneNumberChange(tvPhoneNumber.text.toString())
+                addCallScreenViewModel.setOnPhoneNumberChange(tvPhoneNumber.text.toString())
             }
 
             btnAdd.setOnClickListener {
-                viewModel!!.addCallToLocal()
-                sharedViewModel.setCall(viewModel!!.getCurrentCall())
+                addCallScreenViewModel.addCallToLocal()
+                sharedViewModel.setCall(addCallScreenViewModel.getCurrentCall())
                 sharedViewModel.setBackToMyCaller(true)
                 Toast.makeText(requireContext(), requireContext().resources.getString(R.string.insert_success), Toast.LENGTH_LONG).show()
                 requireActivity().onBackPressed()
             }
 
             tvDefaultImg.setOnClickListener {
-                viewModel!!.setAvatarDefault()
+                addCallScreenViewModel.setAvatarDefault()
                 imgAvatar.setImageResource(R.drawable.img_avatar_default)
             }
         }
+        addCallScreenViewModel.getCurrentCall()?.let { setView(it) }
 
-        call = args.callModel
-        if (call != null) {
+
+
+//        call = args.callModel
+//        if (call != null && sharedViewModel.getCall() == null) {
+//            binding.tbAddCallScreen.title = requireActivity().getString(R.string.edit_call_screen)
+//            call?.let {
+//                setView(it)
+//                sharedViewModel.setCall(it)
+//            }
+//        }
+
+        if (sharedViewModel.getCall() != null) {
             binding.tbAddCallScreen.title = requireActivity().getString(R.string.edit_call_screen)
-            call?.let {
-                setView(it)
-                sharedViewModel.setCall(it)
-            }
+//            setView()
+//            addCallScreenViewModel.setCall(sharedViewModel.getCall()!!)
         }
-//        addCallScreenViewModel.setCall(call)
     }
 
     override fun initViewModel() {
         val factory = AddCallScreenViewModel.Factory(requireActivity().application, args.callModel)
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
-//        sharedViewModel.setCall(args.callModel)
         setDataByViewModel()
     }
 

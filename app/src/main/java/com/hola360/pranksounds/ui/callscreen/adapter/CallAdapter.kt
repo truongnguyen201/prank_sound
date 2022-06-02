@@ -23,8 +23,9 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(list: List<Call>?, status: Int) {
+
         if (!list.isNullOrEmpty())
-            listData = list
+            listData = list.reversed()
         if (status == 1) listData = listOf<Call>()
         notifyDataSetChanged()
     }
@@ -52,7 +53,9 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
         fun bind(position: Int) {
             val call = listData[position]
             binding.apply {
-                tvContactPersonName.text = call.name
+                tvContactPersonName.text = call.name.ifEmpty {
+                    binding.root.context.applicationContext.getString(R.string.unknown)
+                }
                 tvPhoneNumber.text = call.phone
                 if (call.isLocal) {
                     ivAvatarCall.let { imgView ->
@@ -62,8 +65,7 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
                             .error(R.drawable.img_avatar_default)
                             .into(imgView)
                     }
-                }
-                else {
+                } else {
                     ivAvatarCall.let { imgView ->
                         Glide.with(imgView)
                             .load(Constants.SUB_URL + call.avatarUrl)
@@ -74,19 +76,18 @@ class CallAdapter(private val onSelected: (Int) -> Unit) :
                 }
                 if (call.isLocal) {
                     icIsLocal.visibility = View.VISIBLE
-                }
-                else {
+                } else {
                     icIsLocal.visibility = View.GONE
                 }
                 root.setOnClickListener {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
                         callItemListener.onItemClick(call, position)
                     }
                     mLastClickTime = SystemClock.elapsedRealtime()
 
                 }
                 ivOptionMenu.setOnClickListener {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
                         callItemListener.onMoreClick(it, call)
                     }
                     mLastClickTime = SystemClock.elapsedRealtime()

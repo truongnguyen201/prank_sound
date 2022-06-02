@@ -22,12 +22,12 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
     }
 
     fun setOnNameChange(name: String) {
-        curCallModel!!.name = name
+        curCallModel!!.name = name.trim()
         callLiveData.value = curCallModel
     }
 
     fun setOnPhoneNumberChange(phoneNumber: String) {
-        curCallModel!!.phone = phoneNumber
+        curCallModel!!.phone = phoneNumber.trim()
         callLiveData.value = curCallModel
     }
 
@@ -56,8 +56,8 @@ class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
             newCall.avatarUrl = Constants.SUB_URL + newCall.avatarUrl
         }
         newCall.isLocal = true
-        newCall.name = newCall.name.trimStart().trimEnd()
-        newCall.phone = newCall.phone.trimStart().trimEnd()
+        newCall.name = newCall.name.trim()
+        newCall.phone = newCall.phone.trim()
         viewModelScope.launch {
             repository.addNewCallToLocal(newCall)
 //            curCallModel = repository.getLocalCallById(id)
