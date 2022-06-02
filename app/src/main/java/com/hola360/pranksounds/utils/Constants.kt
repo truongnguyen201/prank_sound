@@ -12,7 +12,7 @@ object Constants {
     const val FOLDER_PATH = "PranSounds"
     const val FILE_NAME_FILTER = "?\"*"
     const val SEEKBAR_PADDING = 70
-
+    const val MIN_CLICK_INTERVAL = 1000
     //list of recycler view in home screen
     val PRANK_LIST = listOf(
         Prank(1, R.drawable.ic_hair_cutting, R.drawable.bg_hair_cutting, "Hair Cutting"),
@@ -43,7 +43,7 @@ object Constants {
     )
 
     //delay for update seekbar
-    const val DELAY_UPDATE = 200L
+    const val DELAY_UPDATE = 50L
 
     //minimum sound duration
     const val MIN_SOUND_DURATION = 1000

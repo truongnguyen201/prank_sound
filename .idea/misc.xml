@@ -98,6 +98,7 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_text_view_popup_window_pressed.xml" value="0.3445" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_wave.xml" value="0.3675" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bt_favorite.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bt_favorite_toolbar.xml" value="0.246" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_a.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.1745" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2365" />
@@ -105,6 +106,8 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_play_circle.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_broken_screen.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_call_screen.xml" value="0.2365" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_favorite_border_toolbar.xml" value="0.246" />
+        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_favorite_toolbar.xml" value="0.246" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_hair_cutting.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_logo.xml" value="0.236" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_next.xml" value="0.2985" />

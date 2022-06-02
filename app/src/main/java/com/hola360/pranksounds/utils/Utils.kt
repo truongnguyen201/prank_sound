@@ -7,13 +7,11 @@ import android.app.Activity
 import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.PendingIntent
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
@@ -31,7 +29,6 @@ import android.webkit.MimeTypeMap
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -287,91 +284,20 @@ object Utils {
         type: Int,
         fileName: String
     ): Boolean {
-        return if (isAndroidQ()) {
-            setAsRingtone(context!!, duration, file, type, fileName)
-        } else {
-            try {
-//                val newUri = getURI(type, context!!, file, fileName, duration)
-//                RingtoneManager.setActualDefaultRingtoneUri(context, type, newUri)
-                Log.e("Im here", "HEHE")
-                setRingtone(context!!, file.absolutePath, file, fileName)
-                true
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-                false
-            }
-        }
+//        return if (isAndroidQ()) {
+//            setAsRingtone(context!!, duration, file, type, fileName)
+//        } else {
+//            try {
+//                true
+//            } catch (ex: Exception) {
+//                ex.printStackTrace()
+//                false
+//            }
+//        }
+        return setAsRingtone(context!!, duration, file, type, fileName)
     }
 
-    private fun setRingtone(context: Context, path: String, file: File, fileName: String) {
-        val contentValues = ContentValues()
-        contentValues.put(MediaStore.MediaColumns.DATA, file.absolutePath)
-        contentValues.put(MediaStore.MediaColumns.TITLE, fileName)
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3")
-        contentValues.put(MediaStore.MediaColumns.SIZE, file.length())
-        contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, true)
-        val uri = MediaStore.Audio.Media.getContentUriForPath(path)
-        val cursor: Cursor? = context.contentResolver.query(
-            uri!!,
-            null,
-            MediaStore.MediaColumns.DATA + "=?",
-            arrayOf(path),
-            null
-        )
-        if (cursor != null && cursor.moveToFirst() && cursor.count > 0) {
-            val id: String = cursor.getString(0)
-            contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, true)
-            context.contentResolver.update(
-                uri,
-                contentValues,
-                MediaStore.MediaColumns.DATA + "=?",
-                arrayOf(path)
-            )
-            val newUri = ContentUris.withAppendedId(uri, java.lang.Long.valueOf(id))
-            try {
-                RingtoneManager.setActualDefaultRingtoneUri(
-                    context,
-                    RingtoneManager.TYPE_RINGTONE,
-                    newUri
-                )
-            } catch (t: Throwable) {
-                t.printStackTrace()
-            }
-            cursor.close()
-        }
-    }
 
-    private fun getURI(
-        type: Int,
-        context: Context,
-        file: File,
-        fileName: String,
-        duration: Long
-    ): Uri {
-        val values = ContentValues()
-        values.put(MediaStore.MediaColumns.DATA, file.absolutePath)
-        values.put(MediaStore.MediaColumns.TITLE, fileName)
-        values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3")
-        values.put(MediaStore.Audio.Media.SIZE, file.length())
-//        values.put(MediaStore.Audio.Media.IS_MUSIC, true)
-        values.put(MediaStore.Audio.Media.IS_RINGTONE, true)
-        when (type) {
-            RingtoneManager.TYPE_ALARM -> values.put(MediaStore.Audio.Media.IS_ALARM, true)
-            RingtoneManager.TYPE_NOTIFICATION -> values.put(
-                MediaStore.Audio.Media.IS_NOTIFICATION,
-                true
-            )
-        }
-
-        val uri = MediaStore.Audio.Media.getContentUriForPath(file.absolutePath)
-        val filePathToDelete =
-            MediaStore.MediaColumns.DATA + "=\"" + file.absolutePath + "\""
-        context.contentResolver.delete(uri!!, filePathToDelete, null)
-
-        return context.contentResolver.insert(uri, values)!!
-    }
-
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun setAsRingtone(
         context: Context,
         duration: Long,
@@ -407,11 +333,12 @@ object Utils {
             return false
         }
         return try {
+            Log.e("URI", "$newUri")
             RingtoneManager.setActualDefaultRingtoneUri(
                 context, type, newUri
             )
             true
-        } catch (ex: Exception) {
+        } catch (ex: java.lang.Exception) {
             ex.printStackTrace()
             false
         }

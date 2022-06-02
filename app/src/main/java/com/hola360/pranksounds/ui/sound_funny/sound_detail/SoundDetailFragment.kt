@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.media.RingtoneManager
-import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
@@ -22,6 +21,7 @@ import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.ui.sound_funny.sound_detail.adapter.ViewPagerAdapter
+import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.item_decoration.HorizontalMarginItemDecoration
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
@@ -196,6 +196,19 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
                         setImageResource(R.drawable.ic_pause_circle_51dp)
                     } else {
                         setImageResource(R.drawable.ic_play_circle_51dp)
+                    }
+                }
+            }
+        }
+
+        sharedVM.isComplete.observe(this) {
+            it?.let {
+                if (it) {
+                    val duration = sharedVM.soundDuration.value!!
+                    if (duration < Constants.MIN_SOUND_DURATION
+                        || binding.sbDuration.progress < duration
+                    ) {
+                        binding.sbDuration.progress = binding.sbDuration.max
                     }
                 }
             }

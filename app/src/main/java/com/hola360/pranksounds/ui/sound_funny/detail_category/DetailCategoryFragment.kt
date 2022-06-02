@@ -183,11 +183,12 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                             detailCategoryAdapter.updateData(
                                 detailCategoryViewModel.currentPage!! > 1, newPageItems
                             )
-
                             binding.swipeRefreshLayout.isEnabled = true
                             binding.swipeRefreshLayout.isRefreshing = false
                         } else {
-                            if (args.categoryId == Constants.FAVORITE_ID) {
+                            if (args.categoryId == Constants.FAVORITE_ID &&
+                                sharedVM.favoriteList.value!!.size == 0
+                            ) {
                                 binding.apply {
                                     llEmptyFavorite.visibility = View.VISIBLE
                                     rvSound.visibility = View.GONE
@@ -225,7 +226,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
         sharedVM.favoriteList.observe(this) {
             it?.let {
-                detailCategoryAdapter.updateFavoriteData(it) 
+                detailCategoryAdapter.updateFavoriteData(it)
             }
         }
 
@@ -286,9 +287,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             it?.let {
                 if (it) {
                     val duration = sharedVM.soundDuration.value!!
-                    if (duration < Constants.MIN_SOUND_DURATION) {
-                        binding.sbDuration.max = duration
-                        binding.sbDuration.progress = duration
+                    if (duration < Constants.MIN_SOUND_DURATION
+                        || binding.sbDuration.progress < duration
+                    ) {
+                        binding.sbDuration.progress = binding.sbDuration.max
                     }
                 }
             }

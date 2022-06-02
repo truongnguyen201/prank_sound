@@ -126,12 +126,13 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
 
     fun addFavoriteSound(sound: Sound) {
         viewModelScope.launch {
-            categoryRepository.addFavoriteSound(sound)
-            Toast.makeText(
-                app.applicationContext, "Added ${sound.title} to favorite list",
-                LENGTH_SHORT
-            ).show()
-            favoriteList.value = categoryRepository.getFavoriteSoundID()
+            if(categoryRepository.addFavoriteSound(sound)){
+                Toast.makeText(
+                    app.applicationContext, "Added ${sound.title} to favorite list",
+                    LENGTH_SHORT
+                ).show()
+                favoriteList.value = categoryRepository.getFavoriteSoundID()
+            }
         }
     }
 

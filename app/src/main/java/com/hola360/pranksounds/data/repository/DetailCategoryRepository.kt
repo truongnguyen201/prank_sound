@@ -41,9 +41,14 @@ class DetailCategoryRepository(app: Application) {
         }
     }
 
-    suspend fun addFavoriteSound(sound: Sound) = withContext(Dispatchers.Default) {
-        if (isExist(sound.soundId) == 0) {
-            db.addToFavorite(sound)
+    suspend fun addFavoriteSound(sound: Sound): Boolean = withContext(Dispatchers.Default) {
+        try {
+            if (isExist(sound.soundId) == 0) {
+                db.addToFavorite(sound)
+            }
+            true
+        } catch (ex: Exception) {
+            false
         }
     }
 

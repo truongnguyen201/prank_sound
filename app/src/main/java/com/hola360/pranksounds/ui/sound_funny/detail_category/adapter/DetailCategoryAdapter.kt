@@ -28,7 +28,6 @@ class DetailCategoryAdapter(private val catID: String) :
                 notifyItemInserted(oldSize)
             }
         } else {
-            Log.e("fav size", favoriteData.size.toString())
             data.clear()
             if (!newData.isNullOrEmpty()) {
                 data.addAll(newData)
@@ -116,11 +115,25 @@ class DetailCategoryAdapter(private val catID: String) :
                 //set listener when click on the checkbox
                 cbFavorite.apply {
                     isChecked = sound.soundId in favoriteData
-                    setOnClickListener {
-                        if (cbFavorite.isChecked) {
-                            listener.onCheckedButton(sound)
-                        } else {
-                            listener.onUncheckedButton(sound)
+                    /*setOnDebouncedClickListener {
+                        if (isEnabled && isClickable) {
+                            if (cbFavorite.isChecked) {
+                                listener.onCheckedButton(sound)
+                            } else {
+                                listener.onUncheckedButton(sound)
+                            }
+                        }
+                    }*/
+
+                    setOnClickListener { view ->
+                        view.isEnabled = false
+                        synchronized(view) {
+                            if (cbFavorite.isChecked) {
+                                listener.onCheckedButton(sound)
+                            } else {
+                                listener.onUncheckedButton(sound)
+                            }
+                            view.postDelayed({ view.isEnabled = true }, 1000)
                         }
                     }
                 }
