@@ -43,7 +43,7 @@ object Constants {
     )
 
     //delay for update seekbar
-    const val DELAY_UPDATE = 50L
+    const val DELAY_UPDATE = 100L
 
     //minimum sound duration
     const val MIN_SOUND_DURATION = 1000

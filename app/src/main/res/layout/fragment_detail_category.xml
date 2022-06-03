@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.hola360.pranksounds.ui.sound_funny.detail_category.DetailCategoryViewModel" />
+
         <import type="android.view.View" />
     </data>
 
@@ -34,11 +36,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="10dp"
+            android:visibility="@{viewModel.isEmpty() ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/loadMoreProgressBar"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:visibility="@{viewModel.isEmpty() ? View.GONE : View.VISIBLE}"
                 android:id="@+id/rvSound"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

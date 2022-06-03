@@ -5,19 +5,20 @@ import android.media.MediaMetadataRetriever
 import android.media.RingtoneManager
 import android.os.Build
 import android.provider.MediaStore
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.data.repository.FileDownloadRepository
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.SingletonHolder
+import com.hola360.pranksounds.utils.ToastUtils
 import com.hola360.pranksounds.utils.Utils
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
@@ -33,10 +34,14 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
 
     // position of playing item in the list
     var currentPosition = MutableLiveData<Int>()
+
     // duration of playing item
     var soundDuration = MutableLiveData<Int>()
+
     // progress of MediaPlayer
     var seekBarProgress = MutableLiveData<Int>()
+
+    var updateDelay = MutableLiveData<Int>()
 
     companion object : SingletonHolder<SharedViewModel, Application>(::SharedViewModel)
 
@@ -87,11 +92,11 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
                     fos.close()
                 } catch (ex: Exception) {
                     ex.printStackTrace()
-                    Toast.makeText(
-                        app.applicationContext,
-                        "Cannot download the file, please check your connection and try again",
-                        LENGTH_SHORT
-                    ).show()
+                    ToastUtils.getInstance(app.applicationContext).showToast(
+                        app.resources.getString(
+                            R.string.download_error_message
+                        )
+                    )
                     return@launch
                 }
             }
@@ -120,33 +125,23 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
             } else {
                 "Something got error, please try again"
             }
-            Toast.makeText(app.applicationContext, message, LENGTH_SHORT).show()
+            ToastUtils.getInstance(app.applicationContext).showToast(message)
         }
     }
 
     fun addFavoriteSound(sound: Sound) {
         viewModelScope.launch {
-            if(categoryRepository.addFavoriteSound(sound)){
-                Toast.makeText(
-                    app.applicationContext, "Added ${sound.title} to favorite list",
-                    LENGTH_SHORT
-                ).show()
-                favoriteList.value = categoryRepository.getFavoriteSoundID()
-            }
+            categoryRepository.addFavoriteSound(sound)
+            favoriteList.value = categoryRepository.getFavoriteSoundID()
         }
     }
 
     fun removeFavoriteSound(sound: Sound) {
         viewModelScope.launch {
             categoryRepository.removeFavoriteSound(sound)
-            Toast.makeText(
-                app.applicationContext, "Removed ${sound.title} from favorite list",
-                LENGTH_SHORT
-            ).show()
             favoriteList.value = categoryRepository.getFavoriteSoundID()
         }
     }
-
 
     class Factory(private val app: Application) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

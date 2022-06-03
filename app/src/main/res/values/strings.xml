@@ -92,5 +92,7 @@
     <string name="toolbar_title_taser_prank">Taser Prank</string>
     <string name="toolbar_title_call_screen">Call Screen</string>
     <string name="favorite_sound_is_empty">Favorite Sound is Empty</string>
+
+    <string name="download_error_message">Cannot download the file, please check your connection and try again</string>
 </resources>
 

@@ -25,14 +25,6 @@ class DetailCategoryRepository(app: Application) {
         }
     }
 
-    suspend fun getFavoriteSound(): MutableList<Sound>? = withContext(Dispatchers.Default) {
-        try {
-            db.getAllFavoriteSong()
-        } catch (ex: Exception) {
-            null
-        }
-    }
-
     suspend fun getFavoriteSoundID(): MutableList<String>? = withContext(Dispatchers.Default) {
         try {
             db.getFavoriteSoundID()
@@ -41,20 +33,23 @@ class DetailCategoryRepository(app: Application) {
         }
     }
 
-    suspend fun addFavoriteSound(sound: Sound): Boolean = withContext(Dispatchers.Default) {
+    suspend fun addFavoriteSound(sound: Sound) = withContext(Dispatchers.Default) {
         try {
             if (isExist(sound.soundId) == 0) {
                 db.addToFavorite(sound)
             }
-            true
         } catch (ex: Exception) {
-            false
+            ex.printStackTrace()
         }
     }
 
     suspend fun removeFavoriteSound(sound: Sound) = withContext(Dispatchers.Default) {
-        if (isExist(sound.soundId) == 1) {
-            db.removeFromFavorite(sound)
+        try {
+            if (isExist(sound.soundId) == 1) {
+                db.removeFromFavorite(sound)
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
     }
 

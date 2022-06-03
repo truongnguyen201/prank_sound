@@ -1,18 +1,15 @@
 package com.hola360.pranksounds.ui.sound_funny.sound_detail
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.media.RingtoneManager
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Sound
@@ -30,13 +27,18 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     private val viewPagerAdapter = ViewPagerAdapter()
     private lateinit var sharedVM: SharedViewModel
     private lateinit var soundDetailViewModel: SoundDetailViewModel
-    private val args: SoundDetailFragmentArgs by navArgs()
+    private val args: SoundDetailFragmentArgs by lazy {
+        SoundDetailFragmentArgs.fromBundle(
+            requireArguments()
+        )
+    }
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popupWindow: PopupWindow
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
     private var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
     private lateinit var soundList: Array<Sound>
+    lateinit var runnable: Runnable
 
     override fun getLayout(): Int {
         return R.layout.fragment_sound_detail
@@ -171,13 +173,10 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
 
         val resource = resources
         sharedVM.seekBarProgress.observe(this) {
-            val animator = ObjectAnimator.ofInt(binding.sbDuration, "progress", it!! - 10, it)
             it.let {
                 if (!isUserControl) {
                     binding.sbDuration.apply {
-                        animator.duration = 10
-                        animator.interpolator = LinearInterpolator()
-                        animator.start()
+                        progress = it
                         thumb = Utils.createThumb(
                             it,
                             sharedVM.soundDuration.value!!,

@@ -1,12 +1,13 @@
 package com.hola360.pranksounds
 
+import android.content.ComponentCallbacks2
 import android.content.Context
 import android.graphics.Rect
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -14,14 +15,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ActivityMainBinding
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
-import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.ToastUtils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import kotlinx.coroutines.*
 
 
-class MainActivity : BaseActivity(), ControlPanelListener {
+class MainActivity : BaseActivity(), ControlPanelListener, ComponentCallbacks2 {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var sharedViewModel: SharedViewModel
@@ -66,6 +67,7 @@ class MainActivity : BaseActivity(), ControlPanelListener {
                             sharedViewModel.soundDuration.value = duration
                             start()
                             sharedViewModel.isPlaying.value = mediaPlayer.isPlaying
+                            sharedViewModel.updateDelay.value = duration / 100
                         }
                     }
                 }
@@ -97,7 +99,8 @@ class MainActivity : BaseActivity(), ControlPanelListener {
             while (mediaPlayer.isPlaying) {
                 sharedViewModel.seekBarProgress.value =
                     mediaPlayer.currentPosition
-                delay(Constants.DELAY_UPDATE)
+                Log.e("Check null", "${sharedViewModel.updateDelay.value!!.toLong()}")
+                delay(sharedViewModel.updateDelay.value!!.toLong())
             }
         }
     }
@@ -184,5 +187,27 @@ class MainActivity : BaseActivity(), ControlPanelListener {
             }
         }
         return super.dispatchTouchEvent(event)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ToastUtils.release()
+    }
+
+    override fun onTrimMemory(level: Int) {
+        when (level) {
+            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
+                finish()
+            }
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> {
+                recreate()
+            }
+        }
+        super.onTrimMemory(level)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        recreate()
     }
 }

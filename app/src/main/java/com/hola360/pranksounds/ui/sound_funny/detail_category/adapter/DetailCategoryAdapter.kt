@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.HandlerCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ItemBannerBinding
 import com.hola360.pranksounds.databinding.ItemSoundBinding
+import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.listener.SoundListener
 
 @SuppressLint("NotifyDataSetChanged")
@@ -41,7 +43,7 @@ class DetailCategoryAdapter(private val catID: String) :
             data[currentPosition!!].isPlaying = false
             notifyItemChanged(currentPosition!!)
         }
-        if (!data.isNullOrEmpty()) {
+        if (data.isNotEmpty()) {
             data[newPosition].isPlaying = isPlaying
             notifyItemChanged(newPosition)
             currentPosition = newPosition
@@ -50,7 +52,7 @@ class DetailCategoryAdapter(private val catID: String) :
 
     //update favorite data
     fun updateFavoriteData(newData: List<String>?) {
-        if (!newData.isNullOrEmpty()) {
+        if (newData != null) {
             favoriteData.clear()
             favoriteData.addAll(newData)
             notifyDataSetChanged()
@@ -102,6 +104,7 @@ class DetailCategoryAdapter(private val catID: String) :
 
     inner class SoundViewHolder(private val binding: ItemSoundBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(position: Int) {
             val sound = data[position]
             binding.apply {
@@ -115,25 +118,11 @@ class DetailCategoryAdapter(private val catID: String) :
                 //set listener when click on the checkbox
                 cbFavorite.apply {
                     isChecked = sound.soundId in favoriteData
-                    /*setOnDebouncedClickListener {
-                        if (isEnabled && isClickable) {
-                            if (cbFavorite.isChecked) {
-                                listener.onCheckedButton(sound)
-                            } else {
-                                listener.onUncheckedButton(sound)
-                            }
-                        }
-                    }*/
-
-                    setOnClickListener { view ->
-                        view.isEnabled = false
-                        synchronized(view) {
-                            if (cbFavorite.isChecked) {
-                                listener.onCheckedButton(sound)
-                            } else {
-                                listener.onUncheckedButton(sound)
-                            }
-                            view.postDelayed({ view.isEnabled = true }, 1000)
+                    setOnClickListener {
+                        if (isChecked) {
+                            listener.onCheckedButton(sound)
+                        } else {
+                            listener.onUncheckedButton(sound)
                         }
                     }
                 }

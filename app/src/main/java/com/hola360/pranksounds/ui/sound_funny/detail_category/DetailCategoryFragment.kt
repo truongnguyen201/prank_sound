@@ -45,7 +45,6 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
     private var isDestroyView = false
-
     override fun getLayout(): Int {
         return R.layout.fragment_detail_category
     }
@@ -173,7 +172,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                 when (it.loadingStatus) {
                     LoadingStatus.Success -> {
                         val data = (it as DataResponse.DataSuccess).body
-                        if (!data.isNullOrEmpty()) {
+                        if (data.isNotEmpty()) {
                             val newPageItems = mutableListOf<Sound>()
                             val bannerItem = Sound()
                             bannerItem.isBanner = true
@@ -254,13 +253,10 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
 
         val resource = resources
         sharedVM.seekBarProgress.observe(this) {
-            val animator = ObjectAnimator.ofInt(binding.sbDuration, "progress", it!! - 10, it)
             it.let {
                 if (!isUserControl) {
                     binding.sbDuration.apply {
-                        animator.duration = 10
-                        animator.interpolator = LinearInterpolator()
-                        animator.start()
+                        progress = it!!
                         thumb = Utils.createThumb(
                             it,
                             sharedVM.soundDuration.value!!,
