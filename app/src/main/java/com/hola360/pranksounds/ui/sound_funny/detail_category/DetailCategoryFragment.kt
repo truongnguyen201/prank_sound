@@ -361,7 +361,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         sharedVM.downloadAndSet(
             sharedVM.soundList.value!![position].soundUrl!!,
             type,
-            sharedVM.soundList.value!![position].title!!
+            sharedVM.soundList.value!![position].title!!,
+            sharedVM.soundList.value!![position].soundId!!
         )
     }
 

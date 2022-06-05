@@ -372,7 +372,7 @@ object Utils {
                 context, type, newUri
             )
             true
-        } catch (ex: java.lang.Exception) {
+        } catch (ex: Exception) {
             ex.printStackTrace()
             false
         }

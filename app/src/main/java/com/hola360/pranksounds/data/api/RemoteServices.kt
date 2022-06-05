@@ -3,6 +3,7 @@ package com.hola360.pranksounds.data.api
 import com.hola360.pranksounds.data.api.response.call_screen_response.PhoneBookResponse
 import com.hola360.pranksounds.data.api.response.detail_category_response.DetailCategoryResponse
 import com.hola360.pranksounds.data.api.response.sound_category_response.SoundCategoryResponse
+import com.hola360.pranksounds.data.api.response.submit_response.SubmitResponse
 import com.hola360.pranksounds.utils.Constants
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -29,4 +30,12 @@ interface RemoteServices {
     suspend fun getPhoneBook(
         @Field("type") params: String
     ): PhoneBookResponse
+
+    @FormUrlEncoded
+    @POST("/soundFuny.php")
+    suspend fun submitSound(
+        @Field("type") type: String,
+        @Field("item_id") soundId: String,
+        @Field("update_type") updateType: String
+    ) : SubmitResponse?
 }

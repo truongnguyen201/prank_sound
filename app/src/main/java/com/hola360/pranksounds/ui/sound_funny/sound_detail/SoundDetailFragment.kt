@@ -38,7 +38,6 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     private var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
     private lateinit var soundList: Array<Sound>
-    lateinit var runnable: Runnable
 
     override fun getLayout(): Int {
         return R.layout.fragment_sound_detail
@@ -252,7 +251,8 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
         sharedVM.downloadAndSet(
             soundList[position].soundUrl!!,
             type,
-            soundList[position].title!!
+            soundList[position].title!!,
+            soundList[position].soundId
         )
     }
 

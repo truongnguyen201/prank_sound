@@ -9,7 +9,6 @@ open class SingletonHolder<out T: Any, in A>(creator: (A) -> T) {
     fun getInstance(arg: A): T {
         val checkInstance = instance
         if (checkInstance != null) {
-            Log.e("Singleton", "Instance is not null, return current instance")
             return checkInstance
         }
 
@@ -18,7 +17,6 @@ open class SingletonHolder<out T: Any, in A>(creator: (A) -> T) {
             if (checkInstanceAgain != null) {
                 checkInstanceAgain
             } else {
-                Log.e("Singleton", "Instance is null, create new instance")
                 val created = creator!!(arg)
                 instance = created
                 creator = null

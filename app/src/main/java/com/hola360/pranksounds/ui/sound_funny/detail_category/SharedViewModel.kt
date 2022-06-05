@@ -11,13 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Sound
+import com.hola360.pranksounds.data.model.SubmittedSound
 import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.data.repository.FileDownloadRepository
+import com.hola360.pranksounds.data.repository.SubmitSoundRepository
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.SingletonHolder
 import com.hola360.pranksounds.utils.ToastUtils
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -26,6 +29,7 @@ import java.io.FileOutputStream
 class SharedViewModel private constructor(private val app: Application) : ViewModel() {
     private val fileDownloadRepository = FileDownloadRepository()
     private val categoryRepository = DetailCategoryRepository(app)
+    private val submitSoundRepository = SubmitSoundRepository(app)
 
     var isComplete = MutableLiveData<Boolean>()
     var isPlaying = MutableLiveData<Boolean>()
@@ -50,7 +54,7 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
         soundList.value = mutableListOf()
     }
 
-    fun downloadAndSet(url: String, type: Int, soundName: String) {
+    fun downloadAndSet(url: String, type: Int, soundName: String, soundId: String) {
         val basePath = Utils.getBasePath()
         val dirName = basePath + Constants.DIR_PATH
         val newSoundName = soundName.filterNot { Constants.FILE_NAME_FILTER.indexOf(it) > -1 }
@@ -90,6 +94,31 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
                     }
                     input.close()
                     fos.close()
+
+                    val submittedSound = submitSoundRepository.getSubmittedSound(soundId)
+                    if (submittedSound == null || !submittedSound.isDownloaded) {
+                        val submitResponse = submitSoundRepository.submitSound(
+                            Constants.SUBMIT_TYPE,
+                            soundId,
+                            Constants.SUBMIT_DOWNLOAD_TYPE
+                        )
+                        if (submitResponse!!.data.data_apps.status) {
+                            ToastUtils.getInstance(app.applicationContext)
+                                .showToast("Download Submitted")
+
+                            if (submittedSound == null) {
+                                submitSoundRepository.addSubmitted(
+                                    SubmittedSound(
+                                        soundId,
+                                        isDownloaded = true,
+                                        isLiked = false
+                                    )
+                                )
+                            } else {
+                                submitSoundRepository.updateDownloaded(soundId)
+                            }
+                        }
+                    }
                 } catch (ex: Exception) {
                     ex.printStackTrace()
                     ToastUtils.getInstance(app.applicationContext).showToast(
@@ -125,6 +154,7 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
             } else {
                 "Something got error, please try again"
             }
+            delay(1000)
             ToastUtils.getInstance(app.applicationContext).showToast(message)
         }
     }
@@ -132,6 +162,29 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
     fun addFavoriteSound(sound: Sound) {
         viewModelScope.launch {
             categoryRepository.addFavoriteSound(sound)
+            val submittedSound = submitSoundRepository.getSubmittedSound(sound.soundId)
+            if (submittedSound == null || !submittedSound.isLiked) {
+                val submitResponse = submitSoundRepository.submitSound(
+                    Constants.SUBMIT_TYPE,
+                    sound.soundId,
+                    Constants.SUBMIT_LIKE_TYPE
+                )
+                if (submitResponse!!.data.data_apps.status) {
+                    ToastUtils.getInstance(app.applicationContext)
+                        .showToast("Like Submitted")
+                    if (submittedSound == null) {
+                        submitSoundRepository.addSubmitted(
+                            SubmittedSound(
+                                sound.soundId,
+                                isDownloaded = false,
+                                isLiked = true
+                            )
+                        )
+                    } else {
+                        submitSoundRepository.updateLiked(sound.soundId)
+                    }
+                }
+            }
             favoriteList.value = categoryRepository.getFavoriteSoundID()
         }
     }

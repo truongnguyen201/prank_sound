@@ -99,7 +99,6 @@ class MainActivity : BaseActivity(), ControlPanelListener, ComponentCallbacks2 {
             while (mediaPlayer.isPlaying) {
                 sharedViewModel.seekBarProgress.value =
                     mediaPlayer.currentPosition
-                Log.e("Check null", "${sharedViewModel.updateDelay.value!!.toLong()}")
                 delay(sharedViewModel.updateDelay.value!!.toLong())
             }
         }

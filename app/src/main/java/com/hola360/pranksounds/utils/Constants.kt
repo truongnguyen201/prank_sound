@@ -87,4 +87,9 @@ object Constants {
     const val DEFAULT_GRADIENT_END_COLOR = -1603545
     //delay update time in calling screen
     const val DELAY_CALLING_TIME = 1000L
+
+    //submit api attribute
+    const val SUBMIT_TYPE = "update_count_sound"
+    const val SUBMIT_LIKE_TYPE = "like"
+    const val SUBMIT_DOWNLOAD_TYPE = "download"
 }
