@@ -41,6 +41,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     }
 
     override fun initView() {
+        //args.callModel null, #null id >
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
             setNavigationOnClickListener {
@@ -185,6 +186,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         uCrop.withOptions(getCropOptions())
         uCrop.start(requireContext(), this)
     }
+
 
     private fun getCropOptions(): UCrop.Options {
         val options = UCrop.Options()
