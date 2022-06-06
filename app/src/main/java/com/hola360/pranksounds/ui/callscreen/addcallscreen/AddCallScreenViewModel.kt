@@ -7,70 +7,86 @@ import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.launch
 
-class AddCallScreenViewModel(app: Application, val call: Call?) : ViewModel() {
+class AddCallScreenViewModel(app: Application) : ViewModel() {
     val repository = PhoneBookRepository(app)
-    val callLiveData = MutableLiveData<Call>(null)
+    private var _callLiveData = MutableLiveData<Call>(null)
+    val callLiveData: LiveData<Call> = _callLiveData
+
     var curCallModel: Call? = null
+    var officialModel: Call? = null
+    var phoneLiveData = MutableLiveData("")
 
     init {
-        curCallModel = call ?: Call()
+        curCallModel = Call()
     }
     var isUpdate = false
 
-    val isEmpty: LiveData<Boolean> = Transformations.map(callLiveData){
-        curCallModel?.phone.isNullOrEmpty()
+    val isEmpty: LiveData<Boolean> = Transformations.map(_callLiveData){
+        _callLiveData.value?.phone.isNullOrEmpty()
+    }
+    val isDefault: LiveData<Boolean> = Transformations.map(_callLiveData) {
+        _callLiveData.value?.avatarUrl == ""
     }
 
     fun setOnNameChange(name: String) {
         curCallModel!!.name = name.trim()
-        callLiveData.value = curCallModel
+        _callLiveData.postValue(curCallModel)
     }
 
     fun setOnPhoneNumberChange(phoneNumber: String) {
         curCallModel!!.phone = phoneNumber.trim()
-        callLiveData.value = curCallModel
+        _callLiveData.postValue(curCallModel)
     }
 
-    fun setAvatarDefault() {
-        curCallModel!!.avatarUrl = ""
-        callLiveData.value = curCallModel
+    fun setAvatarUrl(url: String) {
+        curCallModel!!.avatarUrl = url
+        _callLiveData.postValue(curCallModel)
     }
 
     fun setCall(callTrans: Call?) {
         callTrans?.let {
             curCallModel = it
-            callLiveData.value = curCallModel
+            _callLiveData.postValue(curCallModel)
             isUpdate = true
         }
+        if (callTrans == null) {
+            setIsLocal(true)
+        }
+        officialModel = callTrans?.copy()
+    }
+
+    fun setIsLocal(isLocal: Boolean) {
+        curCallModel!!.isLocal = isLocal
+        _callLiveData.postValue(curCallModel)
     }
 
     fun getCurrentCall(): Call? {
         return curCallModel
     }
 
-    fun addCallToLocal() {
-        callLiveData.value = curCallModel
+    fun addCallToLocal(name: String, phone: String) {
+        curCallModel!!.name = name
+        curCallModel!!.phone = phone
+        _callLiveData.postValue(curCallModel)
         val newCall: Call = curCallModel!!
-
-        if (!newCall.isLocal && call != null) {
+        if (!newCall.isLocal && newCall.avatarUrl != "") {
             newCall.avatarUrl = Constants.SUB_URL + newCall.avatarUrl
         }
         newCall.isLocal = true
         newCall.name = newCall.name.trim()
         newCall.phone = newCall.phone.trim()
+        officialModel = newCall.copy()
         viewModelScope.launch {
             repository.addNewCallToLocal(newCall)
-//            curCallModel = repository.getLocalCallById(id)
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val app: Application,val call: Call?) : ViewModelProvider.NewInstanceFactory() {
+    class Factory(private val app: Application) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(AddCallScreenViewModel::class.java)) {
-                return AddCallScreenViewModel(app,call) as T
+                return AddCallScreenViewModel(app) as T
             }
-
             throw IllegalArgumentException("Unknown ViewModel Class")
         }
     }

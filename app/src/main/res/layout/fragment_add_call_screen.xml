@@ -67,8 +67,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_4"
-
                     android:text="@string/default_image"
+                    android:visibility="@{viewModel.isDefault() ? View.GONE : View.VISIBLE}"
                     android:textAppearance="?textAppearanceBody1"
                     android:textColor="@color/design_color"
                     android:textSize="13sp" />

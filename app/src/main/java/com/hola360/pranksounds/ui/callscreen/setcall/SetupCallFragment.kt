@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -22,6 +23,7 @@ import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
+import com.hola360.pranksounds.ui.callscreen.ShareViewModelStatus
 import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingReceiver
 import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
 import com.hola360.pranksounds.utils.Constants
@@ -32,7 +34,6 @@ import java.util.*
 
 class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfirmListener {
     lateinit var setupCallViewModel: SetupCallViewModel
-    private val args: SetupCallFragmentArgs by navArgs()
     lateinit var receiver: CallingReceiver
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private lateinit var action: Any
@@ -48,6 +49,26 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         }
         binding.tbSetupCallScreen.setNavigationOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        setupCallViewModel.callLiveData.observe(this) {
+            with(binding) {
+                it?.let { thisCall ->
+                    val path =
+                        if (thisCall.isLocal) thisCall.avatarUrl else Constants.SUB_URL + thisCall.avatarUrl
+                    imgAvatar.let { imgView ->
+                        Glide.with(imgView)
+                            .load(path)
+                            .placeholder(R.drawable.img_avatar_default)
+                            .error(R.drawable.img_avatar_default)
+                            .into(imgView)
+                    }
+                    tvCallerName.text = thisCall.name.ifEmpty {
+                        requireContext().getString(R.string.unknown)
+                    }
+                    tvPhoneNumber.text = thisCall.phone
+                }
+            }
         }
 
 
@@ -70,6 +91,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
             btnSetCall.setOnClickListener {
                 if (Utils.checkDisplayOverOtherAppPermission(requireContext())) {
                     setupCallViewModel.startCalling()
+//                    Utils.setUpDialogGrantPermission(requireContext())
                 }
                 else {
                     Utils.setUpDialogGrantPermission(requireContext())
@@ -82,8 +104,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                     R.id.edit_call -> {
                         sharedViewModel.setBackToMyCaller(false)
                         sharedViewModel.setCall(setupCallViewModel.getCurrentCall())
+                        sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
                         action =
-                            CallerFragmentDirections.actionGlobalAddCallScreenFragment(setupCallViewModel.curCallModel)
+                            CallerFragmentDirections.actionGlobalAddCallScreenFragment()
                         findNavController().navigate(action as NavDirections)
                         true
                     }
@@ -106,19 +129,25 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
     }
 
     override fun initViewModel() {
-        val factory = SetupCallViewModel.Factory(requireActivity().application, args.callModel)
+        val factory = SetupCallViewModel.Factory(requireActivity().application)
         setupCallViewModel = ViewModelProvider(this, factory)[SetupCallViewModel::class.java]
         setDataByViewModel()
-        sharedViewModel.setCall(args.callModel)
     }
 
 
     private fun setDataByViewModel() {
+        if (sharedViewModel.getStatus() == ShareViewModelStatus.SetCall) {
+            setupCallViewModel.setCall(sharedViewModel.getCall())
+            Log.e("----", "ste: ${sharedViewModel.getCall()?.name} ${setupCallViewModel.getCurrentCall()?.name}", )
+        }
+        sharedViewModel.setCall(null)
+        sharedViewModel.setStatus(ShareViewModelStatus.Default)
+
         setupCallViewModel.callLiveData.observe(this) {
             with(binding) {
-                it?.let {
+                it?.let { thisCall ->
                     val path =
-                        if (it.isLocal) it.avatarUrl else Constants.SUB_URL + it.avatarUrl
+                        if (thisCall.isLocal) thisCall.avatarUrl else Constants.SUB_URL + thisCall.avatarUrl
                     imgAvatar.let { imgView ->
                         Glide.with(imgView)
                             .load(path)
@@ -126,10 +155,10 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                             .error(R.drawable.img_avatar_default)
                             .into(imgView)
                     }
-                    tvCallerName.text = it.name.ifEmpty {
+                    tvCallerName.text = thisCall.name.ifEmpty {
                         requireContext().getString(R.string.unknown)
                     }
-                    tvPhoneNumber.text = it.phone
+                    tvPhoneNumber.text = thisCall.phone
                 }
             }
         }
@@ -225,10 +254,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         setupCallViewModel.periodOfTime.observe(this) {
             binding.tvPeriod.text = it
         }
-
-        sharedViewModel.myCall.observe(this) {
-                setupCallViewModel.setCall(it)
-        }
     }
 
     private fun backToHome() {
@@ -257,13 +282,18 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         super.onDestroy()
         requireContext().unregisterReceiver(receiver)
     }
-
-
     override fun onResume() {
         super.onResume()
         if (setupCallViewModel.getCurrentCall()?.isLocal == true) {
             sharedViewModel.setBackToMyCaller(true)
         }
+        if (sharedViewModel.getCall() != null) {
+            setupCallViewModel.setCall(sharedViewModel.getCall())
+        }
+        Log.e("-----", "onResume: -${sharedViewModel.getCall()?.avatarUrl}-${sharedViewModel.getCall()?.name}", )
+        sharedViewModel.setCall(null)
+        sharedViewModel.setStatus(ShareViewModelStatus.Default)
+
     }
 
 

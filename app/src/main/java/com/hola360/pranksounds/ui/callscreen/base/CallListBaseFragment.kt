@@ -24,10 +24,7 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.repository.PhoneBookRepository
 import com.hola360.pranksounds.databinding.PopUpCallMoreBinding
-import com.hola360.pranksounds.ui.callscreen.CallItemListener
-import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
-import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
-import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
+import com.hola360.pranksounds.ui.callscreen.*
 import com.hola360.pranksounds.ui.callscreen.adapter.CallAdapter
 import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
 import com.hola360.pranksounds.ui.callscreen.popup.ActionAdapter
@@ -38,6 +35,7 @@ import kotlinx.coroutines.launch
 
 abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemListener, DeleteConfirmListener {
     protected lateinit var binding: V
+    val isBindingInitialized get() = this::binding.isInitialized
     private lateinit var repository: PhoneBookRepository
     protected var callAdapter: CallAdapter= CallAdapter { handleOnclickItem(it) }
     private lateinit var action: Any
@@ -67,7 +65,9 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.unbind()
+        if(isBindingInitialized){
+            binding.unbind()
+        }
     }
 
     private fun handleOnclickItem(p: Int) {
@@ -112,12 +112,16 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
     }
 
     private fun passCallToUpDate(call: Call) {
-        action = CallerFragmentDirections.actionGlobalAddCallScreenFragment(call)
+        sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
+        sharedViewModel.setCall(call)
+        action = CallerFragmentDirections.actionGlobalAddCallScreenFragment()
         findNavController().navigate(action as NavDirections)
     }
 
     override fun onItemClick(call: Call,position: Int) {
-        action = CallerFragmentDirections.actionGlobalSetupCallFragment(call)
+        sharedViewModel.setStatus(ShareViewModelStatus.SetCall)
+        sharedViewModel.setCall(call)
+        action = CallerFragmentDirections.actionGlobalSetupCallFragment()
         findNavController().navigate(action as NavDirections)
     }
 

@@ -22,13 +22,16 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
     override fun initView() {
         setUpProgressBar()
         binding.apply {
+            viewModel = myCallerViewModel
             rcvCall.adapter = callAdapter
             rcvCall.setHasFixedSize(true)
-        }
-        binding.viewModel = myCallerViewModel
-        binding.btnAdd.setOnClickListener {
-            action = CallerFragmentDirections.actionGlobalAddCallScreenFragment(null)
-            findNavController().navigate(action as NavDirections)
+            noResulttLayout.tvTitle.text = requireContext().getString(R.string.no_result_title)
+            noResulttLayout.tvDetail.text = requireContext().getString(R.string.no_result_try_again)
+            noResulttLayout.btRetry.text = requireContext().getString(R.string.add)
+            noResulttLayout.btRetry.setOnClickListener {
+                action = CallerFragmentDirections.actionGlobalAddCallScreenFragment()
+                findNavController().navigate(action as NavDirections)
+            }
         }
     }
 
@@ -48,12 +51,6 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
         } catch (e: Exception) {
 
         }
-
-//        myCallerViewModel.isEmpty.observe(this) {
-//            if (it) {
-//                callAdapter.updateData(null)
-//            }
-//        }
     }
 
     override fun getPhoneBook() {

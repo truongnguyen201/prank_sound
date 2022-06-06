@@ -3,9 +3,8 @@ package com.hola360.pranksounds.ui.callscreen.callingscreen
 import android.animation.ArgbEvaluator
 import android.animation.TimeAnimator
 import android.animation.ValueAnimator
-import android.app.Notification
-import android.app.NotificationManager
-import android.content.Context
+import android.app.KeyguardManager
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -13,17 +12,13 @@ import android.graphics.drawable.GradientDrawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Target
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,6 +29,7 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.ActivityCallingBinding
 import com.hola360.pranksounds.ui.callscreen.callingscreen.adapter.PanelAdapter
+import com.hola360.pranksounds.ui.callscreen.callingscreen.service.IncomingCallService
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.*
@@ -57,9 +53,10 @@ class CallingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setShowWhenScreenLock()
         binding = ActivityCallingBinding.inflate(layoutInflater)
 
-        setShowWhenScreenLock()
+
 
         val intent = intent
         var call = Call()
@@ -150,21 +147,20 @@ class CallingActivity : AppCompatActivity() {
         if (Utils.isAndroidO_MR1()) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
+            val keyguardManager = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+            keyguardManager.requestDismissKeyguard(this, null)
         }
         else {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                     or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                     or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         }
     }
 
     private fun cancelNotification() {
-        val manager: NotificationManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            applicationContext.getSystemService(NotificationManager::class.java)
-        } else {
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        }
-        manager.cancelAll()
+        sendBroadcast(Intent(IncomingCallService.ACTION_STOP_SERVICE))
+
     }
 
     private fun setupWaveAnimation(view1: View, view2: View) {

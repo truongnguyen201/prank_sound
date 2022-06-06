@@ -12,6 +12,9 @@ class CallScreenSharedViewModel(private val app: Application): ViewModel() {
     private var _myCall = MutableLiveData<Call?>()
     val myCall: LiveData<Call?> = _myCall
 
+    private var _useStatus = MutableLiveData(ShareViewModelStatus.Default)
+    val useStatus: LiveData<ShareViewModelStatus> = _useStatus
+
     var isBackToMyCaller = MutableLiveData<Boolean>(false)
 
     fun setCall(call: Call?) {
@@ -21,9 +24,17 @@ class CallScreenSharedViewModel(private val app: Application): ViewModel() {
         return _myCall.value
     }
 
+    fun setStatus(status: ShareViewModelStatus) {
+        _useStatus.postValue(status)
+    }
+    fun getStatus() : ShareViewModelStatus {
+        return _useStatus.value!!
+    }
+
     fun setBackToMyCaller(boolean: Boolean) {
         isBackToMyCaller.postValue(boolean)
     }
+
     fun isBackToMyCaller(): Boolean {
         return isBackToMyCaller.value!!
     }

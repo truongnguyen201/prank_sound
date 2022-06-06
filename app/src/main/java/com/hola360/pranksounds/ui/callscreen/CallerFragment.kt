@@ -44,7 +44,8 @@ class CallerFragment : BaseFragment<FragmentCallerBinding>() {
                 when (it.itemId) {
                     R.id.add_new_call -> {
                         sharedViewModel.setCall(null)
-                        action = CallerFragmentDirections.actionGlobalAddCallScreenFragment(null)
+                        sharedViewModel.setStatus(ShareViewModelStatus.AddCall)
+                        action = CallerFragmentDirections.actionGlobalAddCallScreenFragment()
                         findNavController().navigate(action as NavDirections)
                         true
                     }
@@ -63,7 +64,6 @@ class CallerFragment : BaseFragment<FragmentCallerBinding>() {
     }
 
     override fun onResume() {
-        Log.e("///////", "onResume: ${sharedViewModel.isBackToMyCaller()}", )
         if (sharedViewModel.isBackToMyCaller()) {
             binding.tabLayout.getTabAt(1)?.select()
         }else {

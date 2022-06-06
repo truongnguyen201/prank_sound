@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Parcelable
 import android.util.Log
+import androidx.core.app.NotificationManagerCompat
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.ui.callscreen.callingscreen.CallingActivity
 import com.hola360.pranksounds.ui.callscreen.callingscreen.service.IncomingCallService
@@ -19,6 +20,9 @@ class CallingReceiver : BroadcastReceiver() {
 
         if (intent.action == Constants.ALARM_SERVICE_ACTION) {
             startAlarmService(context!!, intent)
+        }
+        context?.apply {
+            NotificationManagerCompat.from(this).cancel(Constants.CHANNEL_ID)
         }
     }
 

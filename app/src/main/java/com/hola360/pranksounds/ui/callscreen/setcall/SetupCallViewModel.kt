@@ -18,17 +18,17 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.coroutines.coroutineContext
 
-class SetupCallViewModel(val app: Application, val call: Call?) : ViewModel() {
-    val callLiveData = MutableLiveData<Call>(null)
+class SetupCallViewModel(val app: Application) : ViewModel() {
+    var callLiveData = MutableLiveData<Call>(null)
     var curCallModel: Call? = null
     val repository = PhoneBookRepository(app)
-    var period = MutableLiveData<WaitCallPeriod>(WaitCallPeriod.Now)
+    var period = MutableLiveData(WaitCallPeriod.Now)
     val startCallingLiveData = MutableLiveData<Call?>()
 
     init {
-        curCallModel = call ?: Call()
+        curCallModel = Call()
         period.value = WaitCallPeriod.Now
-        callLiveData.value = curCallModel
+        callLiveData.postValue(curCallModel)
     }
 
 
@@ -40,11 +40,11 @@ class SetupCallViewModel(val app: Application, val call: Call?) : ViewModel() {
 
     fun setCall(call: Call?) {
         curCallModel = call
-        callLiveData.value = curCallModel
+        callLiveData.postValue(curCallModel)
     }
 
     fun getCurrentCall(): Call? {
-        return callLiveData.value
+        return curCallModel
     }
 
     fun startCalling() {
@@ -63,11 +63,11 @@ class SetupCallViewModel(val app: Application, val call: Call?) : ViewModel() {
     }
 
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val app: Application, val call: Call?) :
+    class Factory(private val app: Application) :
         ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(SetupCallViewModel::class.java)) {
-                return SetupCallViewModel(app, call) as T
+                return SetupCallViewModel(app) as T
             }
 
             throw IllegalArgumentException("Unknown ViewModel Class")
