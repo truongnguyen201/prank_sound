@@ -5,14 +5,16 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 
 class App : Application() {
     companion object {
-        val channelId: String = "channel_service"
+        const val channelId: String = "channel_service"
     }
 
     override fun onCreate() {
         super.onCreate()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         createChannelNotification()
     }
 
