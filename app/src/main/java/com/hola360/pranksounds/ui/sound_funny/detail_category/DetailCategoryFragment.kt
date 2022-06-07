@@ -23,14 +23,15 @@ import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
 import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
+import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
-class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
+class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCategoryBinding>(), SoundListener {
     private lateinit var detailCategoryViewModel: DetailCategoryViewModel
     private var mLayoutManager: LinearLayoutManager? = null
     private lateinit var sharedVM: SharedViewModel

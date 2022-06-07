@@ -17,6 +17,7 @@ class TrendCallerFragment : CallListBaseFragment<FragmentTrendCallerBinding>() {
     }
 
     override fun initView() {
+        super.initView()
         setUpProgressBar()
         binding.apply {
             rcvCall.adapter = callAdapter

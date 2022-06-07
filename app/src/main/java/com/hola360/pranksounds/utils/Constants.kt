@@ -53,7 +53,7 @@ object Constants {
     const val FAVORITE_ID = "fav_sound"
 
     //timing of splash screen before navigate to another screen
-    const val SPLASH_TIMING = 3000L
+    const val SPLASH_TIMING = 2000L
 
     //timing duration between twice back pressed to quit app
     const val BACK_PRESSED_TIMING = 2000L

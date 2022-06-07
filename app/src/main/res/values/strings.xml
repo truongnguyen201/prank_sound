@@ -39,7 +39,7 @@
     <string name="retry">Tap to retry</string>
     <string name="no_result_title">No result</string>
     <string name="no_result_try_again">Please try again!</string>
-    <string name="no_result_add_new_caller">No result, please add new caller!</string>
+    <string name="no_result_add_new_caller">List Caller is Empty!</string>
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="insert_success">Insert success!</string>

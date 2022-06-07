@@ -13,15 +13,6 @@ interface SubmittedSoundDAO {
     @Query("select * from tblSubmittedSound where sound_id = (:soundId)")
     suspend fun getSubmittedSound(soundId: String): SubmittedSound
 
-    @Query("select count(*) from tblSubmittedSound where sound_id = (:soundId)")
-    suspend fun checkIsSubmitted(soundId: String): Int
-
-    @Query("select count(*) from tblSubmittedSound where sound_id=(:soundId) and downloaded")
-    suspend fun checkIsDownloaded(soundId: String): Int
-
-    @Query("select count(*) from tblSubmittedSound where sound_id=(:soundId) and liked")
-    suspend fun checkIsLiked(soundId: String): Int
-
     @Insert
     suspend fun addSubmitted(sound: SubmittedSound)
 

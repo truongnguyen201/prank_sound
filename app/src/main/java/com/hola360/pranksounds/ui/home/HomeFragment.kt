@@ -1,6 +1,5 @@
 package com.hola360.pranksounds.ui.home
 
-import android.graphics.Color
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
@@ -9,14 +8,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentHomeBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
+import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.home.section.PrankSection
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.item_decoration.GridSpacingItemDecoration
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(), PrankSection.ClickListener {
+class HomeFragment : BaseScreenWithViewModelFragment<FragmentHomeBinding>(), PrankSection.ClickListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var action: Any
 
@@ -85,7 +85,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), PrankSection.ClickList
 //                action = HomeFragmentDirections.actionGlobalSettingFragment()
 //            }
             else -> {
-                Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
+                mainActivity.showToast("Coming soon")
                 return
             }
         }

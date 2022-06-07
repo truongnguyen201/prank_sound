@@ -138,7 +138,7 @@
 
     <action
         android:id="@+id/action_global_addCallScreenFragment"
-        app:destination="@id/addCallScreenFragment" />
+        app:destination="@id/addCallScreenFragment"/>
 
     <fragment
         android:id="@+id/callerFragment"
@@ -210,6 +210,6 @@
     </fragment>
     <action
         android:id="@+id/action_global_setupCallFragment"
-        app:destination="@id/setupCallFragment" />
+        app:destination="@id/setupCallFragment"/>
 
 </navigation>

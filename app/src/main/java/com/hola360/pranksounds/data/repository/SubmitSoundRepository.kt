@@ -27,15 +27,6 @@ class SubmitSoundRepository(app: Application) {
             }
         }
 
-    suspend fun getAllSubmittedSound(): MutableList<SubmittedSound>? = withContext(Dispatchers.Default) {
-        try {
-            db.getAllSubmittedSound()
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            null
-        }
-    }
-
     suspend fun getSubmittedSound(soundId: String): SubmittedSound? =
         withContext(Dispatchers.Default) {
             try {
@@ -45,33 +36,6 @@ class SubmitSoundRepository(app: Application) {
                 null
             }
         }
-
-    suspend fun checkIsSubmitted(soundId: String): Boolean? = withContext(Dispatchers.Default) {
-        try {
-            db.checkIsSubmitted(soundId) == 1
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            null
-        }
-    }
-
-    suspend fun checkIsDownloaded(soundId: String): Boolean? = withContext(Dispatchers.Default) {
-        try {
-            db.checkIsDownloaded(soundId) == 1
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            null
-        }
-    }
-
-    suspend fun checkIsLiked(soundId: String): Boolean? = withContext(Dispatchers.Default) {
-        try {
-            db.checkIsLiked(soundId) == 1
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            null
-        }
-    }
 
     suspend fun addSubmitted(submittedSound: SubmittedSound) = withContext(Dispatchers.Default) {
         try {

@@ -10,10 +10,11 @@ import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.SoundCategory
 import com.hola360.pranksounds.databinding.FragmentSoundFunnyBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
+import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.sound_funny.adapter.SoundCategoryAdapter
 
-class SoundFunnyFragment : BaseFragment<FragmentSoundFunnyBinding>() {
+class SoundFunnyFragment : BaseScreenWithViewModelFragment<FragmentSoundFunnyBinding>() {
 
     private val soundCategoryAdapter = SoundCategoryAdapter {
         handleOnItemClick(it)

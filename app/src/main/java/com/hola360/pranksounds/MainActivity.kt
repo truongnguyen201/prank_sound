@@ -193,6 +193,10 @@ class MainActivity : BaseActivity(), ControlPanelListener, ComponentCallbacks2 {
         return super.dispatchTouchEvent(event)
     }
 
+    fun showToast(message: String){
+        ToastUtils.getInstance(this).showToast(message)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         ToastUtils.release()

@@ -66,7 +66,6 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
         } else {
             MediaStore.Audio.Media.getContentUriForPath(fileName)
         }
-
         viewModelScope.launch {
             // check if the file is exists
             if (!File(fileName).exists()) {
@@ -103,9 +102,6 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
                             Constants.SUBMIT_DOWNLOAD_TYPE
                         )
                         if (submitResponse!!.data.data_apps.status) {
-                            ToastUtils.getInstance(app.applicationContext)
-                                .showToast("Download Submitted")
-
                             if (submittedSound == null) {
                                 submitSoundRepository.addSubmitted(
                                     SubmittedSound(
@@ -154,7 +150,6 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
             } else {
                 "Something got error, please try again"
             }
-            delay(1000)
             ToastUtils.getInstance(app.applicationContext).showToast(message)
         }
     }
@@ -170,8 +165,6 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
                     Constants.SUBMIT_LIKE_TYPE
                 )
                 if (submitResponse!!.data.data_apps.status) {
-                    ToastUtils.getInstance(app.applicationContext)
-                        .showToast("Like Submitted")
                     if (submittedSound == null) {
                         submitSoundRepository.addSubmitted(
                             SubmittedSound(
