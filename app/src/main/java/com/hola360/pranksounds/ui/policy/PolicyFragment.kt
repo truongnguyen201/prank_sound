@@ -1,7 +1,6 @@
 package com.hola360.pranksounds.ui.policy
 
 import android.content.Intent
-import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import com.hola360.pranksounds.MainActivity
 import com.hola360.pranksounds.R
@@ -20,15 +19,12 @@ class PolicyFragment : BaseFragment<FragmentPolicyBinding>() {
                 requireActivity().finish()
             }
             wvPolicy.loadUrl("file:///android_asset/policy.adp")
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
+            toolbar.apply {
+                setNavigationOnClickListener {
                     requireActivity().finish()
                 }
-            })
+            }
+        }
     }
 
     override fun initViewModel() {

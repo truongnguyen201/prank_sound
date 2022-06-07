@@ -1,12 +1,12 @@
 package com.hola360.pranksounds.ui.sound_funny.detail_category
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.media.RingtoneManager
+import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.TextView
@@ -38,6 +38,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     private lateinit var detailCategoryAdapter: DetailCategoryAdapter
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popUpWindow: PopupWindow
+    private val isPopupWindowInit get() = this::popUpWindow.isInitialized
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
     private var currentMorePosition = 0
@@ -45,8 +46,13 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
     var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
     private var isDestroyView = false
+
     override fun getLayout(): Int {
         return R.layout.fragment_detail_category
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     override fun initView() {
@@ -152,6 +158,8 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
                         .actionDetailCategoryFragmentToSoundDetailFragment()
                         .setPosition(sharedVM.currentPosition.value!!)
                         .setList(sharedVM.soundList.value!!.toTypedArray())
+                        .setCategoryId(args.categoryId)
+                        .setCategoryTitle(args.categoryTitle)
                 )
             }
 
@@ -292,7 +300,7 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
             }
         }
 
-        detailCategoryViewModel.fetchData(false, args.categoryId!!, 1)
+//        detailCategoryViewModel.fetchData(false, args.categoryId!!, 1)
     }
 
     private fun changeImageResourceOnPlay() {
@@ -421,6 +429,13 @@ class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), So
         controlPanelListener.onDetachFragment()
         sharedVM.soundList.value!!.clear()
         sharedVM.currentPosition.value = 0
+        if (isPopupWindowInit) {
+            popUpWindow.apply {
+                if (isShowing) {
+                    dismiss()
+                }
+            }
+        }
     }
 
     override fun onStart() {

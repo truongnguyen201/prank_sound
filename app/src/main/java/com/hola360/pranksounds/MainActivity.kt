@@ -7,7 +7,6 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -25,7 +24,9 @@ import kotlinx.coroutines.*
 class MainActivity : BaseActivity(), ControlPanelListener, ComponentCallbacks2 {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mediaPlayer: MediaPlayer
+    private val isMediaPlayerInitialized get() = this::mediaPlayer.isInitialized
     private lateinit var sharedViewModel: SharedViewModel
+    private val isSharedViewModelInitialized get() = this::sharedViewModel.isInitialized
     private lateinit var callScreenSharedViewModel: CallScreenSharedViewModel
     private var taskJob: Job? = null
 
@@ -167,8 +168,12 @@ class MainActivity : BaseActivity(), ControlPanelListener, ComponentCallbacks2 {
     }
 
     override fun onDetachFragment() {
-        mediaPlayer.reset()
-        sharedViewModel.isPlaying.value = false
+        if (isMediaPlayerInitialized) {
+            mediaPlayer.reset()
+        }
+        if (isSharedViewModelInitialized) {
+            sharedViewModel.isPlaying.value = false
+        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {

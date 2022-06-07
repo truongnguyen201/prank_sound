@@ -3,6 +3,7 @@ package com.hola360.pranksounds.ui.sound_funny.sound_detail
 import android.content.Context
 import android.content.res.Resources
 import android.media.RingtoneManager
+import android.util.Log
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.SeekBar
@@ -10,12 +11,14 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentSoundDetailBinding
 import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
 import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.sound_funny.SoundFunnyFragmentDirections
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.ui.sound_funny.sound_detail.adapter.ViewPagerAdapter
 import com.hola360.pranksounds.utils.Constants
@@ -34,6 +37,7 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
     }
     private lateinit var controlPanelListener: ControlPanelListener
     private lateinit var popupWindow: PopupWindow
+    private val isPopupWindowInit get() = this::popupWindow.isInitialized
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels - 100
     private var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
@@ -164,6 +168,14 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
 
         sharedVM = SharedViewModel.getInstance(requireActivity().application)
 
+        if (sharedVM.updateDelay.value == null) {
+            val action = SoundDetailFragmentDirections
+                .actionSoundDetailFragmentToDetailCategoryFragment()
+                .setCategoryId(args.categoryId)
+                .setCategoryTitle(args.categoryTitle)
+            findNavController().navigate(action)
+        }
+
         sharedVM.soundDuration.observe(this) {
             it?.let {
                 binding.sbDuration.max = it
@@ -270,6 +282,14 @@ class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
 
     override fun onDetach() {
         controlPanelListener.onDetachFragment()
+        if (isPopupWindowInit) {
+            popupWindow.apply {
+                if (isShowing) {
+                    dismiss()
+                }
+            }
+        }
         super.onDetach()
     }
+
 }

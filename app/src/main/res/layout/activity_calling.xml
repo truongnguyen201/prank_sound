@@ -33,15 +33,15 @@
             android:id="@+id/tvCallerName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_24"
             android:layout_marginTop="20dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
             android:text="@string/app_name"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:layout_marginHorizontal="@dimen/dp_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitleNTime" />
@@ -70,33 +70,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvPhoneNumber" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPanel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/glVertical1"
-            app:layout_constraintStart_toStartOf="@id/glVertical1"
-            app:layout_constraintTop_toBottomOf="@id/ivAvatar" />
-
-        <androidx.cardview.widget.CardView
+        <View
             android:id="@+id/vAnswer"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="20dp"
-            app:cardBackgroundColor="#48FFFFFF"
-            app:cardCornerRadius="50dp"
-            app:cardElevation="0dp"
+            android:background="@drawable/bg_wave"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.cardview.widget.CardView
+        <View
             android:id="@+id/vAnswerScale"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="20dp"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="50dp"
-            app:cardElevation="0dp"
+            android:background="@drawable/bg_answer_dismiss_calling"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -120,15 +108,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.cardview.widget.CardView
-            android:theme="@style/Theme.PrankSounds"
+        <View
             android:id="@+id/vDismissScale"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="20dp"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="50dp"
-            app:cardElevation="0dp"
+            android:background="@drawable/bg_answer_dismiss_calling"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -142,6 +127,14 @@
             app:layout_constraintEnd_toEndOf="@id/vDismiss"
             app:layout_constraintStart_toStartOf="@id/vDismiss"
             app:layout_constraintTop_toTopOf="@id/vDismiss" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/glVertical1"
+            app:layout_constraintStart_toStartOf="@id/glVertical1"
+            app:layout_constraintTop_toBottomOf="@id/ivAvatar" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

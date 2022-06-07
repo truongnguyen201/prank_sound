@@ -55,7 +55,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PrankSounds.NoActionBar"
             android:windowSoftInputMode="adjustPan"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity"
+            android:launchMode="singleTask"/>
+
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

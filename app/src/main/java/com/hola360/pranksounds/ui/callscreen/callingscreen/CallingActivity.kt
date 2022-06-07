@@ -13,6 +13,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
@@ -109,6 +110,17 @@ class CallingActivity : AppCompatActivity() {
                         motionLayout: MotionLayout?,
                         currentId: Int
                     ) {
+                        val currentState = if(motionLayout?.currentState == R.id.dismissState) {
+                            "dismiss state"
+                        } else {
+                            if(motionLayout?.currentState == R.id.answerState){
+                                "answer state"
+                            } else {
+                                (motionLayout?.currentState == R.id.baseState).toString()
+                            }
+                        }
+                        Log.e("Current state", currentState)
+
                         if (motionLayout?.currentState == R.id.dismissState || motionLayout?.currentState == R.id.answerState) {
                             gradientAnimator.cancel()
                             binding.root.setBackgroundColor(backgroundColor)

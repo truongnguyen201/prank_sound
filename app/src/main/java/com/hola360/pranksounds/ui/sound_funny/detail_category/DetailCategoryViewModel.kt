@@ -8,7 +8,6 @@ import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.data.repository.DetailCategoryRepository
 import com.hola360.pranksounds.utils.Constants
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -28,6 +27,7 @@ class DetailCategoryViewModel(
     init {
         soundLiveData.value = DataResponse.DataIdle()
         fetchFavoriteData()
+        fetchData(false, catId, 1)
     }
 
     val isEmpty: LiveData<Boolean> = Transformations.map(soundLiveData) {
