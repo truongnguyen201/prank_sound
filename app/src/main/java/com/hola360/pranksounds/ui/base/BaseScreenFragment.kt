@@ -4,12 +4,10 @@ import android.os.Bundle
 import androidx.databinding.ViewDataBinding
 import com.hola360.pranksounds.MainActivity
 
-abstract class BaseScreenWithViewModelFragment<V : ViewDataBinding> : BaseScreenFragment<V>() {
+abstract class BaseScreenFragment<V : ViewDataBinding> : AbsBaseFragment<V>() {
+    protected lateinit var mainActivity: MainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivity = (requireActivity() as MainActivity)
-        initViewModel()
     }
-
-    abstract fun initViewModel()
 }

@@ -26,10 +26,7 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
             viewModel = myCallerViewModel
             rcvCall.adapter = callAdapter
             rcvCall.setHasFixedSize(true)
-            noResulttLayout.tvTitle.text = requireContext().getString(R.string.no_result_title)
-            noResulttLayout.tvDetail.text = requireContext().getString(R.string.no_result_try_again)
-            noResulttLayout.btRetry.text = requireContext().getString(R.string.add)
-            noResulttLayout.btRetry.setOnClickListener {
+            btnAdd.setOnClickListener {
                 action = CallerFragmentDirections.actionGlobalAddCallScreenFragment()
                 findNavController().navigate(action as NavDirections)
             }

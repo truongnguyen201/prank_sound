@@ -1,22 +1,13 @@
 package com.hola360.pranksounds.ui.callscreen.setcall
 
-import android.app.AlarmManager
 import android.app.Application
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.*
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.repository.PhoneBookRepository
-import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingReceiver
-import com.hola360.pranksounds.utils.Constants
-import com.hola360.pranksounds.utils.Utils
+
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.coroutines.coroutineContext
+
 
 class SetupCallViewModel(val app: Application) : ViewModel() {
     var callLiveData = MutableLiveData<Call>(null)

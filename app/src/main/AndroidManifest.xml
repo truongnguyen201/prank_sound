@@ -31,10 +31,12 @@
         <activity
             android:name=".ui.callscreen.callingscreen.CallingActivity"
             android:exported="false"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:showOnLockScreen="true"
-            android:theme="@style/Theme.PrankSounds.Fullscreen" />
+            android:theme="@style/Theme.PrankSounds.Fullscreen"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.splash.SplashActivity"
