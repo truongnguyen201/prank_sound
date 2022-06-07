@@ -7,6 +7,7 @@ import android.view.View
 import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
@@ -45,13 +46,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
             setNavigationOnClickListener {
-                if (sharedViewModel.getCall()?.isLocal == true) {
-                    sharedViewModel.setBackToMyCaller(true)
-                }
-                else {
-                    sharedViewModel.setBackToMyCaller(false)
-                }
-                sharedViewModel.setCall(addCallScreenViewModel.officialModel)
+                setUpBackPress()
                 requireActivity().onBackPressed()
             }
         }
@@ -74,7 +69,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
             }
 
             btnAdd.setOnClickListener {
-                addCallScreenViewModel.addCallToLocal(tvCallerName.text.toString(), tvPhoneNumber.text.toString())
+                addCallScreenViewModel.addCallToLocal()
                 sharedViewModel.setCall(addCallScreenViewModel.getCurrentCall())
                 sharedViewModel.setBackToMyCaller(true)
                 Toast.makeText(requireContext(), requireContext().resources.getString(R.string.insert_success), Toast.LENGTH_LONG).show()
@@ -97,6 +92,11 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
         setDataByViewModel()
+
+//        val callBack = requireActivity().onBackPressedDispatcher.addCallback(this) {
+//            setUpBackPress()
+//        }
+//        callBack.handleOnBackPressed()
     }
 
     private fun setDataByViewModel() {
@@ -111,15 +111,8 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 addCallScreenViewModel.setCall(null)
             }
         }
-
-//        addCallScreenViewModel.callLiveData.observe(this) {
-//            it?.let {
-//                setView(it)
-//            }
-//        }
-
         sharedViewModel.setStatus(ShareViewModelStatus.Default)
-        sharedViewModel.setCall(null)
+//        sharedViewModel.setCall(null)
     }
 
     private fun setView(call: Call) {
@@ -158,6 +151,16 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
             }
         }
 
+    private fun setUpBackPress() {
+        if (sharedViewModel.getCall()?.isLocal == true) {
+            sharedViewModel.setBackToMyCaller(true)
+        }
+        else {
+            sharedViewModel.setBackToMyCaller(false)
+        }
+        sharedViewModel.setCall(addCallScreenViewModel.officialModel)
+    }
+
     private fun setUpDialog() {
         addCallScreenViewModel.setIsLocal(true)
         val dialog = PickPhotoDialog.create(this)
@@ -187,7 +190,6 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         uCrop.start(requireContext(), this)
     }
 
-
     private fun getCropOptions(): UCrop.Options {
         val options = UCrop.Options()
         options.setCompressionQuality(70)
@@ -205,4 +207,18 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     override fun onPickPhoto(photoModel: PhotoModel) {
         startCrop(photoModel.uri)
     }
+
+    override fun onDestroyView() {
+        setUpBackPress()
+        super.onDestroyView()
+        Log.e("----", "onDestroy: ${addCallScreenViewModel.officialModel?.name}", )
+        Log.e("----", "onDestroy: ${sharedViewModel.getCall()?.name}", )
+    }
+
+//    override fun onBackPressed(): Boolean {
+//
+//        setUpBackPress()
+//
+//        return true
+//    }
 }

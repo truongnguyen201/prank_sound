@@ -28,7 +28,7 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
 
     override fun initViewModel() {
         val factory =
-            ConfirmDeleteDialogViewModel.Factory(requireActivity().application as App, mCall)
+            ConfirmDeleteDialogViewModel.Factory(requireActivity().applicationContext, mCall)
         mViewModel = ViewModelProvider(this, factory)[ConfirmDeleteDialogViewModel::class.java]
     }
 
@@ -51,6 +51,11 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
                 dismiss()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        dismiss()
     }
 
     override fun onResume() {

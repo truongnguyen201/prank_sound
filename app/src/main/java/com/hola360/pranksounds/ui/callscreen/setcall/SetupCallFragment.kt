@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -36,6 +37,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
     lateinit var setupCallViewModel: SetupCallViewModel
     lateinit var receiver: CallingReceiver
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+    private var mLastClickTime: Long = 0
     private lateinit var action: Any
 
     override fun getLayout(): Int {
@@ -91,7 +93,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
             btnSetCall.setOnClickListener {
                 if (Utils.checkDisplayOverOtherAppPermission(requireContext())) {
                     setupCallViewModel.startCalling()
-//                    Utils.setUpDialogGrantPermission(requireContext())
                 }
                 else {
                     Utils.setUpDialogGrantPermission(requireContext())
@@ -102,16 +103,22 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.edit_call -> {
-                        sharedViewModel.setBackToMyCaller(false)
-                        sharedViewModel.setCall(setupCallViewModel.getCurrentCall())
-                        sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
-                        action =
-                            CallerFragmentDirections.actionGlobalAddCallScreenFragment()
-                        findNavController().navigate(action as NavDirections)
+                        if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
+                            sharedViewModel.setBackToMyCaller(false)
+                            sharedViewModel.setCall(setupCallViewModel.getCurrentCall())
+                            sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
+                            action =
+                                CallerFragmentDirections.actionGlobalAddCallScreenFragment()
+                            findNavController().navigate(action as NavDirections)
+                        }
+                        mLastClickTime = SystemClock.elapsedRealtime()
                         true
                     }
                     R.id.delete_call -> {
-                        confirmDelete()
+                        if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
+                            confirmDelete()
+                        }
+                        mLastClickTime = SystemClock.elapsedRealtime()
                         true
                     }
                     else -> false
@@ -263,9 +270,8 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         startActivity(intent)
     }
     private fun confirmDelete() {
-        val dialog = ConfirmDeleteDialog.create(this, setupCallViewModel.getCurrentCall()!!)
-        dialog.show(childFragmentManager, "")
-
+            val dialog = ConfirmDeleteDialog.create(this, setupCallViewModel.getCurrentCall()!!)
+            dialog.show(childFragmentManager, "")
     }
 
     override fun onOkClick(call: Call) {
@@ -295,7 +301,5 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         sharedViewModel.setStatus(ShareViewModelStatus.Default)
 
     }
-
-
 }
 

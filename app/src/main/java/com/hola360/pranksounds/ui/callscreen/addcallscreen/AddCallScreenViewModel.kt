@@ -64,17 +64,13 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
         return curCallModel
     }
 
-    fun addCallToLocal(name: String, phone: String) {
-        curCallModel!!.name = name
-        curCallModel!!.phone = phone
+    fun addCallToLocal() {
         _callLiveData.postValue(curCallModel)
         val newCall: Call = curCallModel!!
         if (!newCall.isLocal && newCall.avatarUrl != "") {
             newCall.avatarUrl = Constants.SUB_URL + newCall.avatarUrl
         }
         newCall.isLocal = true
-        newCall.name = newCall.name.trim()
-        newCall.phone = newCall.phone.trim()
         officialModel = newCall.copy()
         viewModelScope.launch {
             repository.addNewCallToLocal(newCall)

@@ -1,11 +1,12 @@
 package com.hola360.pranksounds.ui.dialog.confirmdelete
 
+import android.content.Context
 import androidx.lifecycle.*
 import com.hola360.pranksounds.App
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 
-class ConfirmDeleteDialogViewModel(app: App, call: Call): ViewModel() {
+class ConfirmDeleteDialogViewModel(context: Context, call: Call): ViewModel() {
     var callLiveData = MutableLiveData<Call>()
 
     init {
@@ -13,8 +14,8 @@ class ConfirmDeleteDialogViewModel(app: App, call: Call): ViewModel() {
     }
 
     val title: LiveData<String> = Transformations.map(callLiveData) {
-        (app.resources.getString(R.string.confirm_delete_start)
-        + it.name + app.resources.getString(R.string.confirm_delete_start_end))
+        (context.resources.getString(R.string.confirm_delete_start)
+        + it.name + context.resources.getString(R.string.confirm_delete_start_end))
     }
 
     fun getCall(): Call {
@@ -25,10 +26,10 @@ class ConfirmDeleteDialogViewModel(app: App, call: Call): ViewModel() {
         callLiveData.value = call
     }
 
-    class Factory(private val app: App, val call: Call) : ViewModelProvider.NewInstanceFactory() {
+    class Factory(private val context: Context, val call: Call) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ConfirmDeleteDialogViewModel::class.java))
-                return ConfirmDeleteDialogViewModel(app, call) as T
+                return ConfirmDeleteDialogViewModel(context, call) as T
             throw IllegalArgumentException("Unknown ViewModel class")
         }
     }

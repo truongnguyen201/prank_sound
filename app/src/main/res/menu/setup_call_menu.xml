@@ -4,6 +4,6 @@
     <item
         android:id="@+id/edit_call"
         android:icon="@drawable/ic_edit_white"
-        android:title="non"
+        android:title="@string/edit"
         app:showAsAction="ifRoom"/>
 </menu>
