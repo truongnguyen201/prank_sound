@@ -35,7 +35,7 @@ class PrankSection constructor(
         val prankHolder = holder as PrankViewHolder
         val prank = itemData[position]
 
-        prankHolder.ivBackground.setImageResource(prank.background)
+        prankHolder.ivItem.setBackgroundResource(prank.background)
         prankHolder.tvItem.text = prank.text
         prankHolder.ivItem.setImageResource(prank.img)
         prankHolder.root.setOnClickListener {
@@ -55,7 +55,6 @@ class PrankSection constructor(
 
     inner class PrankViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val root: View = itemView
-        val ivBackground: ImageView = itemView.findViewById(R.id.ivBackground)
         val ivItem: AppCompatImageView = itemView.findViewById(R.id.ivItem)
         val tvItem: TextView = itemView.findViewById(R.id.tvItem)
     }

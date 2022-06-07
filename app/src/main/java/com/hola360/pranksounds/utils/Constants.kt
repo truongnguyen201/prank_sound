@@ -17,12 +17,12 @@ object Constants {
 
     //list of recycler view in home screen
     val PRANK_LIST = listOf(
-        Prank(1, R.drawable.ic_hair_cutting, R.drawable.bg_hair_cutting, "Hair Cutting"),
-        Prank(2, R.drawable.ic_broken_screen, R.drawable.bg_broken_screen, "Broken Screen"),
-        Prank(3, R.drawable.ic_call_screen, R.drawable.bg_call_screen, "Call Screen"),
-        Prank(4, R.drawable.ic_sound_funny, R.drawable.bg_sound_funny, "Sound Funny"),
-        Prank(5, R.drawable.ic_taser_prank, R.drawable.bg_taser_prank, "Taser Prank"),
-        Prank(6, R.drawable.ic_setting, R.drawable.bg_setting, "Setting")
+        Prank(1, R.drawable.ic_hair_cutting, R.drawable.bg_action_home_hair_cutting, "Hair Cutting"),
+        Prank(2, R.drawable.ic_broken_screen, R.drawable.bg_action_home_broken, "Broken Screen"),
+        Prank(3, R.drawable.ic_call_screen, R.drawable.bg_action_home_call_screen, "Call Screen"),
+        Prank(4, R.drawable.ic_sound_funny, R.drawable.bg_action_home_sound_funny, "Sound Funny"),
+        Prank(5, R.drawable.ic_taser_prank, R.drawable.bg_action_home_broken_taser, "Taser Prank"),
+        Prank(6, R.drawable.ic_setting, R.drawable.bg_action_home_setting, "Setting")
     )
 
     //images of banner in home screen
