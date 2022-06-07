@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Parcelable
 import android.util.Log
+import androidx.core.app.NotificationManagerCompat
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.ui.callscreen.callingscreen.CallingActivity
 import com.hola360.pranksounds.ui.callscreen.callingscreen.service.IncomingCallService
@@ -17,16 +18,11 @@ class CallingReceiver : BroadcastReceiver() {
         Log.e("----", "onReceive: ${(intent?.extras?.getParcelable<Call>("call") as Call).name}", )
 
 
-        if (intent?.action == Constants.ALARM_SERVICE_ACTION) {
-//            val call = intent.extras?.getParcelable<Call>("call")
-//            i.putExtra("call", call as Parcelable)
-//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
-//                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or
-//                    Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
-//                .addCategory(Intent.CATEGORY_LAUNCHER)
-//
-//            context!!.startActivity(i)
+        if (intent.action == Constants.ALARM_SERVICE_ACTION) {
             startAlarmService(context!!, intent)
+        }
+        context?.apply {
+            NotificationManagerCompat.from(this).cancel(Constants.CHANNEL_ID)
         }
     }
 

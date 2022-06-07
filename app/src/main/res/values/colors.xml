@@ -30,6 +30,8 @@
     <color name="phone_number_color">#686868</color>
     <color name="fence">#E8E2E2</color>
     <color name="retry_button">#FCA631</color>
+    <color name="set_call_button">#FCA631</color>
+    <color name="time_button">#FCA631</color>
     <color name="background_view">#B32F2F2F</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="disable_button">#FFDDAF</color>

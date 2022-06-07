@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -22,6 +24,7 @@ import com.hola360.pranksounds.ui.base.BaseFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
+import com.hola360.pranksounds.ui.callscreen.ShareViewModelStatus
 import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingReceiver
 import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
 import com.hola360.pranksounds.utils.Constants
@@ -32,22 +35,42 @@ import java.util.*
 
 class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfirmListener {
     lateinit var setupCallViewModel: SetupCallViewModel
-    private val args: SetupCallFragmentArgs by navArgs()
     lateinit var receiver: CallingReceiver
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+    private var mLastClickTime: Long = 0
     private lateinit var action: Any
 
     override fun getLayout(): Int {
         return R.layout.fragment_setup_call
     }
-
     override fun initView() {
         if (setupCallViewModel.getCurrentCall()?.isLocal == true) {
             binding.tbSetupCallScreen.inflateMenu(R.menu.setup_call_menu_2)
             sharedViewModel.setBackToMyCaller(true)
+
         }
         binding.tbSetupCallScreen.setNavigationOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        setupCallViewModel.callLiveData.observe(this) {
+            with(binding) {
+                it?.let { thisCall ->
+                    val path =
+                        if (thisCall.isLocal) thisCall.avatarUrl else Constants.SUB_URL + thisCall.avatarUrl
+                    imgAvatar.let { imgView ->
+                        Glide.with(imgView)
+                            .load(path)
+                            .placeholder(R.drawable.img_avatar_default)
+                            .error(R.drawable.img_avatar_default)
+                            .into(imgView)
+                    }
+                    tvCallerName.text = thisCall.name.ifEmpty {
+                        requireContext().getString(R.string.unknown)
+                    }
+                    tvPhoneNumber.text = thisCall.phone
+                }
+            }
         }
 
 
@@ -70,27 +93,32 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
             btnSetCall.setOnClickListener {
                 if (Utils.checkDisplayOverOtherAppPermission(requireContext())) {
                     setupCallViewModel.startCalling()
-                } else {
+                }
+                else {
                     Utils.setUpDialogGrantPermission(requireContext())
                 }
-
-//                backToHome()
             }
         }
         with(binding.tbSetupCallScreen) {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.edit_call -> {
-                        sharedViewModel.setBackToMyCaller(false)
-                        action =
-                            CallerFragmentDirections.actionGlobalAddCallScreenFragment(
-                                setupCallViewModel.curCallModel
-                            )
-                        findNavController().navigate(action as NavDirections)
+                        if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
+                            sharedViewModel.setBackToMyCaller(false)
+                            sharedViewModel.setCall(setupCallViewModel.getCurrentCall())
+                            sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
+                            action =
+                                CallerFragmentDirections.actionGlobalAddCallScreenFragment()
+                            findNavController().navigate(action as NavDirections)
+                        }
+                        mLastClickTime = SystemClock.elapsedRealtime()
                         true
                     }
                     R.id.delete_call -> {
-                        confirmDelete()
+                        if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
+                            confirmDelete()
+                        }
+                        mLastClickTime = SystemClock.elapsedRealtime()
                         true
                     }
                     else -> false
@@ -108,28 +136,36 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
     }
 
     override fun initViewModel() {
-        val factory = SetupCallViewModel.Factory(requireActivity().application, args.callModel)
+        val factory = SetupCallViewModel.Factory(requireActivity().application)
         setupCallViewModel = ViewModelProvider(this, factory)[SetupCallViewModel::class.java]
         setDataByViewModel()
-        sharedViewModel.setCall(args.callModel)
     }
 
 
     private fun setDataByViewModel() {
+        if (sharedViewModel.getStatus() == ShareViewModelStatus.SetCall) {
+            setupCallViewModel.setCall(sharedViewModel.getCall())
+            Log.e("----", "ste: ${sharedViewModel.getCall()?.name} ${setupCallViewModel.getCurrentCall()?.name}", )
+        }
+        sharedViewModel.setCall(null)
+        sharedViewModel.setStatus(ShareViewModelStatus.Default)
+
         setupCallViewModel.callLiveData.observe(this) {
             with(binding) {
-                it?.let {
+                it?.let { thisCall ->
                     val path =
-                        if (it.isLocal) it.avatarUrl else Constants.SUB_URL + it.avatarUrl
+                        if (thisCall.isLocal) thisCall.avatarUrl else Constants.SUB_URL + thisCall.avatarUrl
                     imgAvatar.let { imgView ->
                         Glide.with(imgView)
                             .load(path)
-                            .placeholder(R.drawable.smaller_loading)
+                            .placeholder(R.drawable.img_avatar_default)
                             .error(R.drawable.img_avatar_default)
                             .into(imgView)
                     }
-                    tvCallerName.text = it.name
-                    tvPhoneNumber.text = it.phone
+                    tvCallerName.text = thisCall.name.ifEmpty {
+                        requireContext().getString(R.string.unknown)
+                    }
+                    tvPhoneNumber.text = thisCall.phone
                 }
             }
         }
@@ -173,7 +209,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 binding.btnNow.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.design_color
+                        R.color.time_button
                     )
                 )
             else binding.btnNow.setBackgroundColor(
@@ -186,7 +222,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 binding.btnFiveSeconds.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.design_color
+                        R.color.time_button
                     )
                 )
             else binding.btnFiveSeconds.setBackgroundColor(
@@ -199,7 +235,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 binding.btnThirtySeconds.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.design_color
+                        R.color.time_button
                     )
                 )
             else binding.btnThirtySeconds.setBackgroundColor(
@@ -212,7 +248,7 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
                 binding.btnOneMinute.setBackgroundColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.design_color
+                        R.color.time_button
                     )
                 )
             else binding.btnOneMinute.setBackgroundColor(
@@ -225,10 +261,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         setupCallViewModel.periodOfTime.observe(this) {
             binding.tvPeriod.text = it
         }
-
-        sharedViewModel.myCall.observe(this) {
-            setupCallViewModel.setCall(it)
-        }
     }
 
     private fun backToHome() {
@@ -237,11 +269,9 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
     }
-
     private fun confirmDelete() {
-        val dialog = ConfirmDeleteDialog.create(this, setupCallViewModel.getCurrentCall()!!)
-        dialog.show(childFragmentManager, "")
-
+            val dialog = ConfirmDeleteDialog.create(this, setupCallViewModel.getCurrentCall()!!)
+            dialog.show(childFragmentManager, "")
     }
 
     override fun onOkClick(call: Call) {
@@ -258,25 +288,18 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         super.onDestroy()
         requireContext().unregisterReceiver(receiver)
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (data?.action == "DataFix") {
-//            val fixCall: Call? = data.getParcelableExtra<Call>("CallAfterFix")
-//            if (fixCall != null) {
-//                setupCallViewModel.setCall(fixCall)
-//                Log.e("/////", "on activity reult: update call", )
-//            }
-//        }
-//    }
-
-
     override fun onResume() {
         super.onResume()
         if (setupCallViewModel.getCurrentCall()?.isLocal == true) {
             sharedViewModel.setBackToMyCaller(true)
         }
+        if (sharedViewModel.getCall() != null) {
+            setupCallViewModel.setCall(sharedViewModel.getCall())
+        }
+        Log.e("-----", "onResume: -${sharedViewModel.getCall()?.avatarUrl}-${sharedViewModel.getCall()?.name}", )
+        sharedViewModel.setCall(null)
+        sharedViewModel.setStatus(ShareViewModelStatus.Default)
+
     }
-
-
 }
 

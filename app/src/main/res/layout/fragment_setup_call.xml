@@ -192,6 +192,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dp_32"
                     android:paddingVertical="@dimen/dp_8"
+                    android:backgroundTint="@color/set_call_button"
                     android:text="@string/set_call"
                     android:textAllCaps="false"
                     android:textAppearance="?textAppearanceBody1"

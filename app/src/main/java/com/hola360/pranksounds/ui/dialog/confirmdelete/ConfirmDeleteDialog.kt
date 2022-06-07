@@ -1,11 +1,12 @@
 package com.hola360.pranksounds.ui.dialog.confirmdelete
 
-import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.graphics.Color
+import android.graphics.Point
+import android.graphics.drawable.ColorDrawable
+import android.view.Display
+import android.view.Gravity
+import android.view.Window
+import android.view.WindowManager
 import androidx.lifecycle.ViewModelProvider
 import com.hola360.pranksounds.App
 import com.hola360.pranksounds.R
@@ -17,7 +18,8 @@ import com.hola360.pranksounds.ui.dialog.base.BaseDialog
 
 class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private val mCall: Call) :
     BaseDialog<ConfirmDeleteDialogBinding>() {
-    lateinit var mviewModel: ConfirmDeleteDialogViewModel
+    lateinit var mViewModel: ConfirmDeleteDialogViewModel
+
 
 
     override fun getLayout(): Int {
@@ -25,15 +27,23 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
     }
 
     override fun initViewModel() {
-        val factory = ConfirmDeleteDialogViewModel.Factory(requireActivity().application as App, mCall)
-        mviewModel = ViewModelProvider(this, factory)[ConfirmDeleteDialogViewModel::class.java]
+        val factory =
+            ConfirmDeleteDialogViewModel.Factory(requireActivity().applicationContext, mCall)
+        mViewModel = ViewModelProvider(this, factory)[ConfirmDeleteDialogViewModel::class.java]
     }
 
     override fun initView() {
+        if (dialog != null && dialog!!.window != null) {
+            dialog!!.window?.let {
+                it.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                it.requestFeature(Window.FEATURE_NO_TITLE)
+            }
+        }
+
         with(binding) {
-            viewModel = mviewModel
+            viewModel = mViewModel
             btnOk.setOnClickListener {
-                listener.onOkClick(mviewModel.getCall())
+                listener.onOkClick(mViewModel.getCall())
                 dismiss()
             }
 
@@ -41,8 +51,25 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
                 dismiss()
             }
         }
+    }
 
-        Log.e("----", "initView: ${mviewModel.getCall().name}", )
+    override fun onDestroyView() {
+        super.onDestroyView()
+        dismiss()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val window = dialog!!.window
+        val size = Point()
+
+        val display: Display = window!!.windowManager.defaultDisplay
+        display.getSize(size)
+
+        val width: Int = size.x
+
+        window.setLayout((width * 0.9).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
+        window.setGravity(Gravity.CENTER)
     }
 
     companion object {

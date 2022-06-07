@@ -3,7 +3,8 @@ package com.hola360.pranksounds.ui.callscreen.callingscreen
 import android.animation.ArgbEvaluator
 import android.animation.TimeAnimator
 import android.animation.ValueAnimator
-import android.app.NotificationManager
+import android.app.KeyguardManager
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -28,6 +29,7 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.ActivityCallingBinding
 import com.hola360.pranksounds.ui.callscreen.callingscreen.adapter.PanelAdapter
+import com.hola360.pranksounds.ui.callscreen.callingscreen.service.IncomingCallService
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.*
@@ -69,7 +71,9 @@ class CallingActivity : AppCompatActivity() {
             rvPanel.layoutManager = gridLayoutManager
             rvPanel.setHasFixedSize(true)
 
-            tvCallerName.text = call.name
+            tvCallerName.text = call.name.ifEmpty {
+                applicationContext.getString(R.string.unknown)
+            }
             tvPhoneNumber.text = call.phone
 
             if (call.avatarUrl.isNotEmpty()) {
@@ -141,18 +145,20 @@ class CallingActivity : AppCompatActivity() {
         if (Utils.isAndroidO_MR1()) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
-        } else {
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-            )
+            val keyguardManager = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+            keyguardManager.requestDismissKeyguard(this, null)
+        }
+        else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                    or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         }
     }
 
     private fun cancelNotification() {
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancelAll()//(Constants.CHANNEL_ID)
+        sendBroadcast(Intent(IncomingCallService.ACTION_STOP_SERVICE))
+
     }
 
     private fun setupWaveAnimation(view1: View, view2: View) {

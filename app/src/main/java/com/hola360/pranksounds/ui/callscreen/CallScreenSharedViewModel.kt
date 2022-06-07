@@ -1,6 +1,7 @@
 package com.hola360.pranksounds.ui.callscreen
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,20 +9,32 @@ import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 
 class CallScreenSharedViewModel(private val app: Application): ViewModel() {
-    var myCall = MutableLiveData<Call?>()
+    private var _myCall = MutableLiveData<Call?>()
+    val myCall: LiveData<Call?> = _myCall
+
+    private var _useStatus = MutableLiveData(ShareViewModelStatus.Default)
+    val useStatus: LiveData<ShareViewModelStatus> = _useStatus
 
     var isBackToMyCaller = MutableLiveData<Boolean>(false)
 
     fun setCall(call: Call?) {
-        myCall.value = call
+        _myCall.postValue(call)
     }
     fun getCall(): Call? {
-        return myCall.value
+        return _myCall.value
+    }
+
+    fun setStatus(status: ShareViewModelStatus) {
+        _useStatus.postValue(status)
+    }
+    fun getStatus() : ShareViewModelStatus {
+        return _useStatus.value!!
     }
 
     fun setBackToMyCaller(boolean: Boolean) {
-        isBackToMyCaller.value = boolean
+        isBackToMyCaller.postValue(boolean)
     }
+
     fun isBackToMyCaller(): Boolean {
         return isBackToMyCaller.value!!
     }

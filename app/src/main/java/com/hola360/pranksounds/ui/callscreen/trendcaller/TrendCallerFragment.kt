@@ -21,9 +21,11 @@ class TrendCallerFragment : CallListBaseFragment<FragmentTrendCallerBinding>() {
         binding.apply {
             rcvCall.adapter = callAdapter
             rcvCall.setHasFixedSize(true)
+            viewModel = trendCallerViewModel
+            noInternetLayout.btRetry.setOnClickListener {
+                trendCallerViewModel.getPhoneBook()
+            }
         }
-        binding.viewModel = trendCallerViewModel
-
     }
 
     override fun initViewModel() {

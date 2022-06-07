@@ -23,6 +23,7 @@ class ListActionPopup(private val context: Context) {
         popupMenu.setAdapter(adapter)
         popupMenu.width = context.resources.getDimension(R.dimen.popup_dialog_width).toInt()
         popupMenu.anchorView = anchor
+        popupMenu.isModal = true
         popupMenu.show()
 
     }

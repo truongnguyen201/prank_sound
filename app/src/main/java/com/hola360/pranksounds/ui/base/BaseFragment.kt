@@ -30,7 +30,6 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
             binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
             binding.lifecycleOwner = this
             initView()
-
             mView = binding.root
             binding.root
         }
@@ -44,8 +43,10 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
     }
 
     open fun onBackPressed(): Boolean {
-        return false
+        return true
     }
+
+
 
     abstract fun getLayout(): Int
     abstract fun initView()

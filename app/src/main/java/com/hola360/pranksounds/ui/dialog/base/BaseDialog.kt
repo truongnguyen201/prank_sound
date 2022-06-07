@@ -13,7 +13,7 @@ import com.hola360.pranksounds.R
 
 abstract class BaseDialog<V: ViewDataBinding> : DialogFragment() {
     protected lateinit var binding: V
-
+    private val isBindingInitialized get() = this::binding.isInitialized
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
@@ -30,6 +30,12 @@ abstract class BaseDialog<V: ViewDataBinding> : DialogFragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if(isBindingInitialized){
+            binding.unbind()
+        }
+    }
 
     abstract fun initViewModel()
 

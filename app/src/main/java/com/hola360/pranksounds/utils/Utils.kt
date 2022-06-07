@@ -466,22 +466,23 @@ object Utils {
         }
     }
 
-    fun openAppInformation(context: Context) {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.data = Uri.parse("package:" + context.packageName)
+    private fun openAppInformation(context: Context) {
+//        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.packageName))
         context.startActivity(intent)
+
     }
 
     fun setUpDialogGrantPermission(context: Context) {
         val builder = AlertDialog.Builder(context)
         var res = false
         builder.setMessage(context.resources.getString(R.string.confirm_message))
+            .setTitle(context.resources.getString(R.string.confirm_display_over_title))
             .setCancelable(false)
             .setPositiveButton("Yes") { dialog, id ->
                 openAppInformation(context)
             }
-            .setNegativeButton("No") { dialog, id ->
-                // Dismiss the dialog
+            .setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()
             }
         val alert = builder.create()

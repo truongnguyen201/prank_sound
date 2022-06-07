@@ -48,6 +48,7 @@
                 android:src="@drawable/banner_no_internet" />
 
             <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -57,10 +58,12 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/tvDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
                 android:text="@string/no_internet_des"
                 android:textSize="15sp" />
 

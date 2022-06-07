@@ -37,7 +37,8 @@
 
     <!--  Call screen  -->
     <string name="retry">Tap to retry</string>
-    <string name="no_result_try_again">No result, please try again!</string>
+    <string name="no_result_title">No result</string>
+    <string name="no_result_try_again">Please try again!</string>
     <string name="no_result_add_new_caller">No result, please add new caller!</string>
     <string name="add">Add</string>
     <string name="update">Update</string>
@@ -63,6 +64,7 @@
     <string name="write_setting_permission">Please allow the app to modify system settings to use this feature</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
+    <string name="unknown">Unknown</string>
 
     <!--    // setup call screen-->
     <string name="default_text">Default text</string>
@@ -76,7 +78,8 @@
     <string name="five_seconds">5 seconds</string>
     <string name="thirty_seconds">30 seconds</string>
     <string name="one_minute">1 minute</string>
-    <string name="confirm_message">Please grant Display over other apps!</string>
+    <string name="confirm_message">You first click "YES" > Display over other apps and allow this permission</string>
+    <string name="confirm_display_over_title">Please grant Display over other apps!</string>
 
 
     <!--  Calling screen  -->
