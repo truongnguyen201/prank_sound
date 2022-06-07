@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -145,7 +146,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
     private fun setDataByViewModel() {
         if (sharedViewModel.getStatus() == ShareViewModelStatus.SetCall) {
             setupCallViewModel.setCall(sharedViewModel.getCall())
-            Log.e("----", "ste: ${sharedViewModel.getCall()?.name} ${setupCallViewModel.getCurrentCall()?.name}", )
         }
         sharedViewModel.setCall(null)
         sharedViewModel.setStatus(ShareViewModelStatus.Default)
@@ -296,7 +296,6 @@ class SetupCallFragment : BaseFragment<FragmentSetupCallBinding>(), DeleteConfir
         if (sharedViewModel.getCall() != null) {
             setupCallViewModel.setCall(sharedViewModel.getCall())
         }
-        Log.e("-----", "onResume: -${sharedViewModel.getCall()?.avatarUrl}-${sharedViewModel.getCall()?.name}", )
         sharedViewModel.setCall(null)
         sharedViewModel.setStatus(ShareViewModelStatus.Default)
 
