@@ -1,12 +1,10 @@
 package com.hola360.pranksounds.ui.sound_funny.detail_category
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.TextView
@@ -23,14 +21,15 @@ import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
 import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
+import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
-class DetailCategoryFragment : BaseFragment<FragmentDetailCategoryBinding>(), SoundListener {
+class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCategoryBinding>(), SoundListener {
     private lateinit var detailCategoryViewModel: DetailCategoryViewModel
     private var mLayoutManager: LinearLayoutManager? = null
     private lateinit var sharedVM: SharedViewModel

@@ -1,22 +1,17 @@
 package com.hola360.pranksounds.ui.callscreen
 
-import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentCallerBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
+import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.adapter.ViewPagerAdapter
 
 
-class CallerFragment : BaseFragment<FragmentCallerBinding>() {
+class CallerFragment : BaseScreenWithViewModelFragment<FragmentCallerBinding>() {
     private lateinit var action: Any
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     override fun getLayout(): Int {

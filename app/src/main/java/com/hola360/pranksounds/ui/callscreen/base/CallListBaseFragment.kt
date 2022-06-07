@@ -1,21 +1,9 @@
 package com.hola360.pranksounds.ui.callscreen.base
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Context
-import android.content.res.Resources
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
@@ -23,59 +11,32 @@ import androidx.navigation.fragment.findNavController
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.repository.PhoneBookRepository
-import com.hola360.pranksounds.databinding.PopUpCallMoreBinding
+import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.*
 import com.hola360.pranksounds.ui.callscreen.adapter.CallAdapter
-import com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment
 import com.hola360.pranksounds.ui.callscreen.popup.ActionAdapter
 import com.hola360.pranksounds.ui.callscreen.popup.ListActionPopup
 import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.launch
 
-abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemListener, DeleteConfirmListener {
-    protected lateinit var binding: V
-    val isBindingInitialized get() = this::binding.isInitialized
+abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewModelFragment<V>(), CallItemListener, DeleteConfirmListener {
     private lateinit var repository: PhoneBookRepository
     protected var callAdapter: CallAdapter= CallAdapter { handleOnclickItem(it) }
     private lateinit var action: Any
     private lateinit var popUpWindow: PopupWindow
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
-
     private val listActionPopup by lazy { ListActionPopup(requireContext()) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initViewModel()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, getLayout(), container, false)
-        binding.lifecycleOwner = this
+    override fun initView() {
         callAdapter.setListener(this)
         repository = PhoneBookRepository(requireActivity().application)
-        initView()
-
-        return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if(isBindingInitialized){
-            binding.unbind()
-        }
     }
 
     private fun handleOnclickItem(p: Int) {
-
     }
 
     private fun setupPopUpWindow(view: View, call: Call) {
-
         listActionPopup.showPopup(view, Utils.getActionPopup(call.isLocal, requireContext()), object : ActionAdapter.OnActionListener{
             override fun onItemClickListener(position: Int) {
                 when (position) {
@@ -103,11 +64,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
             getPhoneBook()
             callAdapter.notifyDataSetChanged()
         }
-        Toast.makeText(
-            requireContext(),
-            requireActivity().resources.getString(R.string.delete_complete),
-            Toast.LENGTH_SHORT
-        ).show()
+        mainActivity.showToast(getString(R.string.delete_complete))
 
     }
 
@@ -129,8 +86,5 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : Fragment(), CallItemL
         setupPopUpWindow(view, call)
     }
 
-    abstract fun getLayout(): Int
-    abstract fun initView()
-    abstract fun initViewModel()
     abstract fun getPhoneBook()
 }

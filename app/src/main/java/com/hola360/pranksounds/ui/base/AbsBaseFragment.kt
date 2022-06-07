@@ -8,16 +8,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
-@Suppress("SENSELESS_COMPARISON")
-abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
+abstract class AbsBaseFragment<V : ViewDataBinding> : Fragment() {
     protected lateinit var binding: V
-    protected val isBindingInitialized get() = this::binding.isInitialized
+    private val isBindingInitialized get() = this::binding.isInitialized
     private var mView: View? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initViewModel()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,9 +40,7 @@ abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
         return true
     }
 
-
-
     abstract fun getLayout(): Int
     abstract fun initView()
-    abstract fun initViewModel()
+
 }

@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/policyFragment"
-        android:name="com.hola360.pranksounds.ui.policy.PolicyFragment"
+        android:name="com.hola360.pranksounds.ui.splash.PolicyFragment"
         android:label="Privacy Policy"
         tools:layout="@layout/fragment_policy" />
 

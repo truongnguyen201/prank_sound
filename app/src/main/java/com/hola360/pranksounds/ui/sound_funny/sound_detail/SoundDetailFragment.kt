@@ -15,7 +15,8 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentSoundDetailBinding
 import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
+import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.ui.sound_funny.sound_detail.adapter.ViewPagerAdapter
 import com.hola360.pranksounds.utils.Constants
@@ -23,7 +24,7 @@ import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.item_decoration.HorizontalMarginItemDecoration
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 
-class SoundDetailFragment : BaseFragment<FragmentSoundDetailBinding>() {
+class SoundDetailFragment : BaseScreenWithViewModelFragment<FragmentSoundDetailBinding>() {
     private val viewPagerAdapter = ViewPagerAdapter()
     private lateinit var sharedVM: SharedViewModel
     private lateinit var soundDetailViewModel: SoundDetailViewModel

@@ -1,23 +1,22 @@
-package com.hola360.pranksounds.ui.policy
+package com.hola360.pranksounds.ui.splash
 
 import android.content.Intent
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.ViewModelProvider
 import com.hola360.pranksounds.MainActivity
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentPolicyBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
+import com.hola360.pranksounds.utils.SharedPreferenceUtils
 
-class PolicyFragment : BaseFragment<FragmentPolicyBinding>() {
-    private lateinit var policyViewModel: PolicyViewModel
-
+class PolicyFragment : AbsBaseFragment<FragmentPolicyBinding>() {
     override fun initView() {
-        //Set isAcceptPolicy as true when click on btStart
         binding.apply {
-            btStart.setOnClickListener {
-                policyViewModel.setAcceptPolicy()
-                requireActivity().startActivity(Intent(context, MainActivity::class.java))
+            toolbar.setNavigationOnClickListener{
                 requireActivity().finish()
+            }
+            btStart.setOnClickListener {
+                SharedPreferenceUtils.getInstance(requireActivity()).putAcceptPolicy(true)
+                gotoMainActivity()
             }
             wvPolicy.loadUrl("file:///android_asset/policy.adp")
         }
@@ -31,9 +30,9 @@ class PolicyFragment : BaseFragment<FragmentPolicyBinding>() {
             })
     }
 
-    override fun initViewModel() {
-        val factory = PolicyViewModel.Factory(requireActivity().application)
-        policyViewModel = ViewModelProvider(this, factory)[PolicyViewModel::class.java]
+    private fun gotoMainActivity(){
+        requireActivity().startActivity(Intent(context, MainActivity::class.java))
+        requireActivity().finish()
     }
 
     override fun getLayout(): Int {

@@ -3,23 +3,21 @@ package com.hola360.pranksounds.ui.callscreen.addcallscreen
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
-import android.view.View
-import android.os.Parcelable
+import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.hola360.pranksounds.MainActivity
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.model.PhotoModel
 import com.hola360.pranksounds.databinding.FragmentAddCallScreenBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
+import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.ShareViewModelStatus
 import com.hola360.pranksounds.ui.dialog.pickphoto.PickPhotoDialog
@@ -32,10 +30,14 @@ import java.util.*
 import kotlin.time.Duration.Companion.seconds
 
 
-class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
+class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScreenBinding>(),
     PickPhotoDialog.OnClickListener {
     private lateinit var addCallScreenViewModel: AddCallScreenViewModel
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun getLayout(): Int {
         return R.layout.fragment_add_call_screen
@@ -72,7 +74,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
                 addCallScreenViewModel.addCallToLocal()
                 sharedViewModel.setCall(addCallScreenViewModel.getCurrentCall())
                 sharedViewModel.setBackToMyCaller(true)
-                Toast.makeText(requireContext(), requireContext().resources.getString(R.string.insert_success), Toast.LENGTH_LONG).show()
+                mainActivity.showToast(getString(R.string.insert_success))
                 requireActivity().onBackPressed()
             }
 
@@ -154,8 +156,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     private fun setUpBackPress() {
         if (sharedViewModel.getCall()?.isLocal == true) {
             sharedViewModel.setBackToMyCaller(true)
-        }
-        else {
+        } else {
             sharedViewModel.setBackToMyCaller(false)
         }
         sharedViewModel.setCall(addCallScreenViewModel.officialModel)
@@ -200,7 +201,7 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
         options.setToolbarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
         options.setToolbarWidgetColor(ContextCompat.getColor(requireActivity(), R.color.white))
         options.setToolbarTitle("Crop image")
-        options.setAspectRatioOptions(0, AspectRatio("",1f, 1f))
+        options.setAspectRatioOptions(0, AspectRatio("", 1f, 1f))
         return options
     }
 
@@ -211,8 +212,8 @@ class AddCallScreenFragment : BaseFragment<FragmentAddCallScreenBinding>(),
     override fun onDestroyView() {
         setUpBackPress()
         super.onDestroyView()
-        Log.e("----", "onDestroy: ${addCallScreenViewModel.officialModel?.name}", )
-        Log.e("----", "onDestroy: ${sharedViewModel.getCall()?.name}", )
+        Log.e("----", "onDestroy: ${addCallScreenViewModel.officialModel?.name}")
+        Log.e("----", "onDestroy: ${sharedViewModel.getCall()?.name}")
     }
 
 //    override fun onBackPressed(): Boolean {

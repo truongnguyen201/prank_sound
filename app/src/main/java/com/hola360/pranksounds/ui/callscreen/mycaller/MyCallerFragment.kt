@@ -20,6 +20,7 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
     }
 
     override fun initView() {
+        super.initView()
         setUpProgressBar()
         binding.apply {
             viewModel = myCallerViewModel

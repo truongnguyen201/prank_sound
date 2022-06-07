@@ -27,7 +27,8 @@
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/drawable/option_button.xml" value="0.1655" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/drawable/outline_button_bg.xml" value="0.2265" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/font/roboto_extra_bold.xml" value="0.25726495726495724" />
-        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/activity_calling.xml" value="0.29375" />
+        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout-v28/pop_up_call_more.xml" value="0.25052083333333336" />
+        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/activity_calling.xml" value="0.16" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/activity_main.xml" value="0.31296296296296294" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/confirm_delete_dialog.xml" value="0.5" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/dialog_pick_photo.xml" value="0.25" />
@@ -35,6 +36,7 @@
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/fragment_broken_screen.xml" value="0.2833333333333333" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/fragment_call_screen.xml" value="0.2" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/fragment_caller.xml" value="0.2" />
+        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/fragment_confirm_delete_dialog.xml" value="0.2942708333333333" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/fragment_detail_category.xml" value="0.18854166666666666" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/fragment_hair_cutting.xml" value="0.2833333333333333" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/fragment_home.xml" value="0.27447916666666666" />
@@ -47,12 +49,15 @@
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/item_album.xml" value="0.33055555555555555" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/item_call.xml" value="0.33" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/item_photo.xml" value="0.33055555555555555" />
+        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/item_popup_action.xml" value="0.25885416666666666" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/item_sound.xml" value="0.3625" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/item_sound_category.xml" value="0.3625" />
-        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/pop_up_call_more.xml" value="0.9" />
+        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/no_internet_layout.xml" value="0.2515625" />
+        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/pop_up_call_more.xml" value="0.8149779735682819" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/layout/pop_up_window_layout.xml" value="0.2671875" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/menu/call_screen_menu.xml" value="0.32685185185185184" />
         <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/menu/setup_call_menu.xml" value="0.33" />
+        <entry key="..\:/3. KOTLIN PROJECT/Hola/pranksounds/app/src/main/res/menu/setup_call_menu_2.xml" value="0.3625" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/PrankSounds/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2655" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/PrankSounds/app/src/main/res/drawable/bg_bottom_layout_splash_screen.xml" value="0.2655" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/PrankSounds/app/src/main/res/drawable/bg_category_item.xml" value="0.2655" />
@@ -94,17 +99,11 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_pop_up_window.xml" value="0.2435" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_prank_item.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_retry_button.xml" value="0.267" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_seekbar_thumb.xml" value="0.257" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_sound_category_item.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_sound_funny.xml" value="0.22" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_start_button.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_taser_prank.xml" value="0.236" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_text_view_popup_window.xml" value="0.3445" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_text_view_popup_window_normal.xml" value="0.3445" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_text_view_popup_window_pressed.xml" value="0.3445" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bg_wave.xml" value="0.3675" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bt_favorite.xml" value="0.2365" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/bt_favorite_toolbar.xml" value="0.246" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_a.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.1745" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2365" />
@@ -112,8 +111,6 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_baseline_play_circle.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_broken_screen.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_call_screen.xml" value="0.2365" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_favorite_border_toolbar.xml" value="0.246" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_favorite_toolbar.xml" value="0.246" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_hair_cutting.xml" value="0.2365" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_logo.xml" value="0.236" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/ic_next.xml" value="0.2985" />
@@ -137,8 +134,6 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/seek_bar_style.xml" value="0.3125" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/seek_bar_thumb.xml" value="0.2985" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/drawable/thumb_1.xml" value="0.3125" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/font/roboto_extra_bold.xml" value="0.3527777777777778" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/activity_calling.xml" value="0.32592592592592595" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/activity_main.xml" value="0.30512820512820515" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/activity_splash.xml" value="0.30512820512820515" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/bottom_control_panel.xml" value="0.33" />
@@ -158,7 +153,6 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound_category.xml" value="0.33" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/item_sound_detail.xml" value="0.32592592592592595" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/layout_no_internet.xml" value="0.25" />
-        <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/layout_seekbar_thumb.xml" value="0.5" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/no_internet_layout.xml" value="0.33055555555555555" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/pop_up_window_layout.xml" value="0.25" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/layout/section_home_prank.xml" value="0.30512820512820515" />
@@ -174,6 +168,7 @@
         <entry key="app/src/main/res/drawable/bg_broken_screen.xml" value="0.158" />
         <entry key="app/src/main/res/drawable/bg_call_screen.xml" value="0.18" />
         <entry key="app/src/main/res/drawable/bg_hair_cutting.xml" value="0.18" />
+        <entry key="app/src/main/res/drawable/bg_prank_item.xml" value="0.1605" />
         <entry key="app/src/main/res/drawable/bg_setting.xml" value="0.18" />
         <entry key="app/src/main/res/drawable/bg_sound_funny.xml" value="0.18" />
         <entry key="app/src/main/res/drawable/bg_taser_prank.xml" value="0.18" />
@@ -181,14 +176,23 @@
         <entry key="app/src/main/res/drawable/thumb_1.xml" value="0.18" />
         <entry key="app/src/main/res/drawable/thumb_2.xml" value="0.18" />
         <entry key="app/src/main/res/drawable/thumb_3.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.215625" />
         <entry key="app/src/main/res/layout/confirm_delete_dialog.xml" value="0.2755208333333333" />
         <entry key="app/src/main/res/layout/fragment_detail_category.xml" value="0.2328125" />
+        <entry key="app/src/main/res/layout/fragment_policy.xml" value="0.2833333333333333" />
+        <entry key="app/src/main/res/layout/fragment_setup_call.xml" value="0.24375" />
+        <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.3223958333333333" />
         <entry key="app/src/main/res/layout/item_prank.xml" value="0.3007246376811594" />
         <entry key="app/src/main/res/layout/layout_seekbar_thumb.xml" value="0.2328125" />
+        <entry key="app/src/main/res/menu/call_screen_menu.xml" value="0.24375" />
+        <entry key="app/src/main/res/menu/setup_call_menu.xml" value="0.24375" />
+        <entry key="app/src/main/res/menu/setup_call_menu_2.xml" value="0.24375" />
+        <entry key="app/src/main/res/menu/sound_detail_menu.xml" value="0.24375" />
+        <entry key="app/src/main/res/menu/sound_item_pop_up_menu.xml" value="0.24375" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

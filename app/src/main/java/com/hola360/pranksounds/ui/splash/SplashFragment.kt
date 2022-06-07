@@ -6,54 +6,47 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.WindowManager
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
+import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import com.hola360.pranksounds.MainActivity
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.databinding.FragmentSplashBinding
-import com.hola360.pranksounds.ui.base.BaseFragment
+import com.hola360.pranksounds.ui.base.AbsBaseFragment
 import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.SharedPreferenceUtils
 
-class SplashFragment : BaseFragment<FragmentSplashBinding>() {
-    private lateinit var splashViewModel: SplashViewModel
-    private lateinit var handler: Handler
-    private lateinit var runnable: Runnable
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initHandler()
-    }
-
-    private fun initHandler() {
-        handler = Handler(Looper.myLooper()!!)
-        runnable = Runnable {
-            if (splashViewModel.action == null) {
-                requireActivity().startActivity(Intent(context, MainActivity::class.java))
-                requireActivity().finish()
-            } else {
-                findNavController().navigate(splashViewModel.action as NavDirections)
-            }
+class SplashFragment : AbsBaseFragment<FragmentSplashBinding>() {
+    private val handler = Handler(Looper.myLooper()!!)
+    private val runnable = Runnable {
+        if (SharedPreferenceUtils.getInstance(requireContext()).getAcceptPolicy()) {
+            requireActivity().startActivity(Intent(context, MainActivity::class.java))
+            requireActivity().finish()
+        } else {
+            findNavController().navigate(SplashFragmentDirections.actionGlobalPolicyFragment())
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    //nothing
+                }
+            })
+    }
     override fun onStart() {
         super.onStart()
         handler.postDelayed(runnable, Constants.SPLASH_TIMING)
     }
-
     override fun initView() {
 
     }
-
     override fun getLayout(): Int {
         return R.layout.fragment_splash
     }
 
-    override fun initViewModel() {
-        val factory = SplashViewModel.Factory(requireActivity().application)
-        splashViewModel = ViewModelProvider(this, factory)[SplashViewModel::class.java]
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
