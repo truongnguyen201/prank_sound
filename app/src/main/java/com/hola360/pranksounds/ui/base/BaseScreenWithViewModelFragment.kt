@@ -9,6 +9,7 @@ abstract class BaseScreenWithViewModelFragment<V : ViewDataBinding> : BaseScreen
         super.onCreate(savedInstanceState)
         mainActivity = (requireActivity() as MainActivity)
         initViewModel()
+
     }
 
     abstract fun initViewModel()

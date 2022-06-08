@@ -22,16 +22,41 @@
     <!-- Sound Funny Screen   -->
     <dimen name="sound_category_item_radius">5dp</dimen>
     <dimen name="sound_category_retry_radius">10dp</dimen>
-
+    <dimen name="thumb_nail_control_panel_size">45dp</dimen>
+    <dimen name="play_pause_control_panel_size">35dp</dimen>
+    <dimen name="title_control_panel_width">150dp</dimen>
+    <dimen name="title_control_panel_size">13sp</dimen>
+    <dimen name="play_more_height">45dp</dimen>
+    <dimen name="empty_sound_image_width">200dp</dimen>
+    <dimen name="empty_sound_image_height">300dp</dimen>
+    <dimen name="no_internet_button_height">45dp</dimen>
+    <dimen name="checkbox_sound_item_size">24dp</dimen>
+    <dimen name="more_sound_item_width">30dp</dimen>
+    <dimen name="thumb_category_item_height">200dp</dimen>
+    <dimen name="thumb_sound_detail_item_size">300dp</dimen>
     <!-- Screen call   -->
-    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_0">0dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_2">2dp</dimen>
+    <dimen name="dp_3">3dp</dimen>
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_7">7dp</dimen>
     <dimen name="dp_8">8dp</dimen>
     <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_12">12dp</dimen>
+    <dimen name="dp_15">15dp</dimen>
     <dimen name="dp_16">16dp</dimen>
-    <dimen name="dp_32">32dp</dimen>
-    <dimen name="dp_36">36dp</dimen>
+    <dimen name="dp_17">17dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
     <dimen name="dp_24">24dp</dimen>
+    <dimen name="dp_30">30dp</dimen>
+    <dimen name="dp_32">32dp</dimen>
+    <dimen name="dp_35">35dp</dimen>
+    <dimen name="dp_50">50dp</dimen>
+    <dimen name="dp_36">36dp</dimen>
+    <dimen name="dp_90">90dp</dimen>
+
     <dimen name="album_icon_width">70dp</dimen>
     <dimen name="viewpager_next_item_visible">26dp</dimen>
     <dimen name="viewpager_current_item_horizontal_margin">42dp</dimen>
@@ -39,7 +64,9 @@
     <dimen name="text_secondary">13sp</dimen>
     <dimen name="popup_dialog_width">130sp</dimen>
 
+    <dimen name="sp_13">13sp</dimen>
     <dimen name="sp_15">15sp</dimen>
     <dimen name="sp_16">16sp</dimen>
     <dimen name="sp_18">18sp</dimen>
+    <dimen name="sp_20">20sp</dimen>
 </resources>

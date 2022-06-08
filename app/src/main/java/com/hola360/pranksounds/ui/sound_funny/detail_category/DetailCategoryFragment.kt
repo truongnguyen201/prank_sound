@@ -5,12 +5,12 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -23,7 +23,6 @@ import com.hola360.pranksounds.data.api.response.LoadingStatus
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.FragmentDetailCategoryBinding
 import com.hola360.pranksounds.databinding.LayoutSeekbarThumbBinding
-import com.hola360.pranksounds.ui.base.AbsBaseFragment
 import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
 import com.hola360.pranksounds.utils.Constants
@@ -31,7 +30,8 @@ import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
-class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCategoryBinding>(), SoundListener {
+class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCategoryBinding>(),
+    SoundListener {
     private lateinit var detailCategoryViewModel: DetailCategoryViewModel
     private var mLayoutManager: LinearLayoutManager? = null
     private lateinit var sharedVM: SharedViewModel
@@ -218,8 +218,13 @@ class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCat
                         binding.swipeRefreshLayout.isRefreshing = true
                     }
                     else -> {
-                        binding.swipeRefreshLayout.isEnabled = false
-                        binding.swipeRefreshLayout.isRefreshing = false
+                        binding.apply {
+                            swipeRefreshLayout.apply{
+                                isRefreshing = false
+                                isEnabled = false
+                            }
+                            controlPanel.visibility = View.GONE
+                        }
                     }
                 }
             }
@@ -291,11 +296,13 @@ class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCat
         sharedVM.isComplete.observe(this) {
             it?.let {
                 if (it) {
-                    val duration = sharedVM.soundDuration.value!!
-                    if (duration < Constants.MIN_SOUND_DURATION
-                        || binding.sbDuration.progress < duration
-                    ) {
-                        binding.sbDuration.progress = binding.sbDuration.max
+                    val duration = sharedVM.soundDuration.value
+                    if (duration != null) {
+                        if (duration < Constants.MIN_SOUND_DURATION
+                            || binding.sbDuration.progress < duration
+                        ) {
+                            binding.sbDuration.progress = binding.sbDuration.max
+                        }
                     }
                 }
             }

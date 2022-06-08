@@ -8,9 +8,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -20,7 +17,6 @@ import com.bumptech.glide.Glide
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.FragmentSetupCallBinding
-import com.hola360.pranksounds.ui.base.AbsBaseFragment
 import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
@@ -36,8 +32,9 @@ import java.util.*
 
 class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBinding>(),
     DeleteConfirmListener {
-    lateinit var setupCallViewModel: SetupCallViewModel
-    lateinit var receiver: CallingReceiver
+    private lateinit var setupCallViewModel: SetupCallViewModel
+    private lateinit var receiver: CallingReceiver
+    private val isReceiverInitialized get() = this::receiver.isInitialized
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private var mLastClickTime: Long = 0
     private lateinit var action: Any
@@ -285,7 +282,9 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
 
     override fun onDestroy() {
         super.onDestroy()
-        requireContext().unregisterReceiver(receiver)
+        if (isReceiverInitialized) {
+            requireContext().unregisterReceiver(receiver)
+        }
     }
 
     override fun onResume() {

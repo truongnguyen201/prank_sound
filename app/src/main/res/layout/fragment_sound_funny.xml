@@ -34,8 +34,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCategory"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="10dp"
+            android:layout_height="@dimen/dp_0"
+            android:layout_margin="@dimen/dp_10"
             android:splitMotionEvents="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
@@ -55,8 +55,8 @@
             android:id="@+id/noInternetLayout"
             layout="@layout/no_internet_layout"
             android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            tools:layout_editor_absoluteX="@dimen/dp_0"
+            tools:layout_editor_absoluteY="@dimen/dp_0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

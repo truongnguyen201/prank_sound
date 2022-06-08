@@ -2,12 +2,8 @@ package com.hola360.pranksounds.ui.dialog.pickphoto
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,11 +21,15 @@ import com.hola360.pranksounds.ui.dialog.pickphoto.data.PickModelDataType
 
 class PickPhotoDialog(
     private val onClickListener: OnClickListener
-    ) : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.ListenClickItem{
+) : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.ListenClickItem {
     lateinit var viewModel: PickPhotoDialogViewModel
     lateinit var adapter: PhotoAdapter
-    lateinit var layoutManager: GridLayoutManager
-    var albumState: Parcelable? = null
+    private lateinit var layoutManager: GridLayoutManager
+    private var albumState: Parcelable? = null
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

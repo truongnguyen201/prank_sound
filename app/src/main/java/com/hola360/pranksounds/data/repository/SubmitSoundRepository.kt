@@ -22,7 +22,6 @@ class SubmitSoundRepository(app: Application) {
             try {
                 retrofitHelper.remoteServices.submitSound(type, soundId, updateType)
             } catch (ex: Exception) {
-                ex.printStackTrace()
                 null
             }
         }

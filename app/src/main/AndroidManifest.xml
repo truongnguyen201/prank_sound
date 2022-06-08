@@ -28,7 +28,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PrankSounds"
         tools:replace="android:allowBackup">
+
         <activity
+            android:configChanges="uiMode"
             android:name=".ui.callscreen.callingscreen.CallingActivity"
             android:exported="false"
             android:showOnLockScreen="true"
@@ -39,6 +41,7 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:configChanges="uiMode"
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"

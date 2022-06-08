@@ -8,6 +8,7 @@ import com.hola360.pranksounds.ui.callscreen.mycaller.MyCallerFragment
 import com.hola360.pranksounds.ui.callscreen.trendcaller.TrendCallerFragment
 
 class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
+
     override fun getItemCount(): Int {
         return 2
     }
@@ -23,9 +24,6 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): 
             else->{
                 TrendCallerFragment()
             }
-
         }
     }
-
-
 }

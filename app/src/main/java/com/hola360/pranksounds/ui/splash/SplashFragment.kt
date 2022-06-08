@@ -36,17 +36,19 @@ class SplashFragment : AbsBaseFragment<FragmentSplashBinding>() {
                 }
             })
     }
+
     override fun onStart() {
         super.onStart()
         handler.postDelayed(runnable, Constants.SPLASH_TIMING)
     }
+
     override fun initView() {
 
     }
+
     override fun getLayout(): Int {
         return R.layout.fragment_splash
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

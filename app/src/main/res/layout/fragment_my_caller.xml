@@ -41,13 +41,6 @@
                 android:layout_gravity="center"
                 android:visibility="@{viewModel.isLoading()?View.VISIBLE:View.GONE}" />
 
-<!--            <include-->
-<!--                android:id="@+id/noResulttLayout"-->
-<!--                layout="@layout/no_internet_layout"-->
-<!--                android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"-->
-<!--                tools:layout_editor_absoluteX="0dp"-->
-<!--                tools:layout_editor_absoluteY="0dp" />-->
-
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linearLayoutCompat"
                 android:layout_width="match_parent"
@@ -80,7 +73,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="@dimen/dp_10"
                             android:textStyle="bold"
                             android:text="@string/no_result_add_new_caller"
                             android:textAppearance="?textAppearanceBody1" />
@@ -99,10 +92,7 @@
                             android:textColor="@color/white"
                             android:textStyle="bold" />
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
-
-
             </androidx.appcompat.widget.LinearLayoutCompat>
         </FrameLayout>
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.PopupWindow
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
@@ -20,41 +21,58 @@ import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.launch
 
-abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewModelFragment<V>(), CallItemListener, DeleteConfirmListener {
+abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewModelFragment<V>(),
+    CallItemListener, DeleteConfirmListener {
     private lateinit var repository: PhoneBookRepository
-    protected var callAdapter: CallAdapter= CallAdapter { handleOnclickItem(it) }
+    protected var callAdapter: CallAdapter = CallAdapter { handleOnclickItem(it) }
     private lateinit var action: Any
     private lateinit var popUpWindow: PopupWindow
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private val listActionPopup by lazy { ListActionPopup(requireContext()) }
+    private lateinit var navHostFragment: Fragment
+    private var isFirstClicking = false
+    private var isSecondClicking = false
 
     override fun initView() {
         callAdapter.setListener(this)
         repository = PhoneBookRepository(requireActivity().application)
+
+        navHostFragment =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.navHostFragmentContentMain)!!
+
     }
 
-    private fun handleOnclickItem(p: Int) {
-    }
+    private fun handleOnclickItem(p: Int) {}
 
     private fun setupPopUpWindow(view: View, call: Call) {
-        listActionPopup.showPopup(view, Utils.getActionPopup(call.isLocal, requireContext()), object : ActionAdapter.OnActionListener{
-            override fun onItemClickListener(position: Int) {
-                when (position) {
-                    0 -> {
-                        passCallToUpDate(call)
-                    }
-                    else -> {
-                        setUpAlertDialog(call)
+        listActionPopup.showPopup(
+            view,
+            Utils.getActionPopup(call.isLocal, requireContext()),
+            object : ActionAdapter.OnActionListener {
+                override fun onItemClickListener(position: Int) {
+                    when (position) {
+                        0 -> {
+                            isFirstClicking = true
+                            if (!isSecondClicking) {
+                                passCallToUpDate(call)
+                                isFirstClicking = false
+                            }
+                        }
+                        1 -> {
+                            isSecondClicking = true
+                            if (!isFirstClicking) {
+                                setUpAlertDialog(call)
+                                isSecondClicking = false
+                            }
+                        }
                     }
                 }
-            }
-        })
+            })
     }
-
 
     private fun setUpAlertDialog(call: Call) {
         val dialog = ConfirmDeleteDialog.create(this, call)
-        dialog.show(childFragmentManager, "")
+        dialog.show(parentFragmentManager, "")
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -65,7 +83,6 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
             callAdapter.notifyDataSetChanged()
         }
         mainActivity.showToast(getString(R.string.delete_complete))
-
     }
 
     private fun passCallToUpDate(call: Call) {
@@ -75,7 +92,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
         findNavController().navigate(action as NavDirections)
     }
 
-    override fun onItemClick(call: Call,position: Int) {
+    override fun onItemClick(call: Call, position: Int) {
         sharedViewModel.setStatus(ShareViewModelStatus.SetCall)
         sharedViewModel.setCall(call)
         action = CallerFragmentDirections.actionGlobalSetupCallFragment()

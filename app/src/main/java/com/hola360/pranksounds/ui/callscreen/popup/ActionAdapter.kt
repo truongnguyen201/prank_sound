@@ -3,16 +3,17 @@ package com.hola360.pranksounds.ui.callscreen.popup
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.BaseAdapter
 import com.hola360.pranksounds.databinding.ItemPopupActionBinding
 
 class ActionAdapter(
     private val actions: MutableList<ActionModel>,
     private val onItemClickListener: OnActionListener?
-) : BaseAdapter(){
+) : BaseAdapter() {
 
-    interface OnActionListener{
+    private val mLastClickTime: Long = 0
+
+    interface OnActionListener {
         fun onItemClickListener(position: Int)
     }
 
@@ -27,11 +28,11 @@ class ActionAdapter(
     override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
         val actionHolder: ActionHolder
         if (view == null) {
-            val binding = ItemPopupActionBinding.inflate(LayoutInflater.from(parent?.context), parent, false)
+            val binding =
+                ItemPopupActionBinding.inflate(LayoutInflater.from(parent?.context), parent, false)
             actionHolder = ActionHolder(binding)
             actionHolder.binding.root.tag = actionHolder
-        }
-        else {
+        } else {
             actionHolder = view.tag as ActionHolder
         }
         actionHolder.bind(position)
@@ -42,7 +43,11 @@ class ActionAdapter(
         fun bind(position: Int) {
             binding.actionModel = actions[position]
             binding.myLayoutRoot.setOnClickListener {
-                onItemClickListener?.onItemClickListener(position)
+                try {
+                    onItemClickListener?.onItemClickListener(position)
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                }
             }
         }
     }

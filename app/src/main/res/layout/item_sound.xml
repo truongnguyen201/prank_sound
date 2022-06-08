@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="5dp">
+    android:layout_marginVertical="@dimen/dp_5">
 
     <CheckBox
         android:id="@+id/cbFavorite"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="@dimen/checkbox_sound_item_size"
+        android:layout_height="@dimen/checkbox_sound_item_size"
+        android:layout_marginStart="@dimen/dp_10"
         android:button="@drawable/bt_favorite"
         android:checked="false"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
@@ -22,17 +22,17 @@
         android:id="@+id/cvThumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="15dp"
-        android:layout_marginStart="15dp"
-        app:cardCornerRadius="3dp"
+        android:layout_marginVertical="@dimen/dp_15"
+        android:layout_marginStart="@dimen/dp_15"
+        app:cardCornerRadius="@dimen/dp_3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/cbFavorite"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/ivThumbnail"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="@dimen/thumb_nail_control_panel_size"
+            android:layout_height="@dimen/thumb_nail_control_panel_size"
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
             android:scaleType="fitCenter"
@@ -42,10 +42,10 @@
 
     <ImageView
         android:id="@+id/ivPlayPause"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="@dimen/dp_35"
+        android:layout_height="@dimen/dp_35"
         android:contentDescription="@string/app_name"
-        android:elevation="5dp"
+        android:elevation="@dimen/dp_5"
         android:src="@drawable/ic_play_arrow"
         app:layout_constraintBottom_toBottomOf="@id/cvThumbnail"
         app:layout_constraintEnd_toEndOf="@id/cvThumbnail"
@@ -54,24 +54,24 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="200dp"
+        android:layout_width="@dimen/title_control_panel_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/dp_12"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/app_name"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="@dimen/sp_15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/cvThumbnail"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/ivMore"
-        android:layout_width="30dp"
+        android:layout_width="@dimen/more_sound_item_width"
         android:layout_height="0dp"
-        android:layout_marginVertical="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginVertical="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
         android:background="@null"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_baseline_more_vert_24"
@@ -81,9 +81,9 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="#E8E2E2"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/line_item_sound_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cvThumbnail" />

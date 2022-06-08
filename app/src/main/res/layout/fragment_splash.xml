@@ -21,14 +21,14 @@
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glHorizontal2"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/dp_1"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.94" />
 
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
@@ -41,7 +41,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dp_0"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
                 android:id="@+id/tvContentLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/splash_line_spacing"
                 android:text="@string/content_label"
@@ -63,7 +63,7 @@
                 android:id="@+id/tvContentDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/dp_20"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/splash_line_spacing"
                 android:text="@string/content_detail"

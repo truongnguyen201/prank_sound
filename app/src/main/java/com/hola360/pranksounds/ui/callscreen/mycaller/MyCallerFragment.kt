@@ -15,6 +15,7 @@ import com.hola360.pranksounds.ui.callscreen.base.CallListBaseFragment
 class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
     private lateinit var action: Any
     private lateinit var myCallerViewModel: MyCallerViewModel
+
     override fun getLayout(): Int {
         return R.layout.fragment_my_caller
     }
@@ -65,5 +66,4 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
         super.onResume()
         getPhoneBook()
     }
-
 }

@@ -7,7 +7,7 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 
 class ConfirmDeleteDialogViewModel(context: Context, call: Call): ViewModel() {
-    var callLiveData = MutableLiveData<Call>()
+    private var callLiveData = MutableLiveData<Call>()
 
     init {
         callLiveData.value = call

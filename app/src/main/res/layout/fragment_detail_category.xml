@@ -34,8 +34,8 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="10dp"
+            android:layout_height="@dimen/dp_0"
+            android:layout_margin="@dimen/dp_10"
             android:visibility="@{viewModel.isEmpty() ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/loadMoreProgressBar"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -43,7 +43,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSound"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/dp_0"
                 app:layout_constraintBottom_toTopOf="@id/loadMoreProgressBar"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_bottom_control_panel"
-            android:padding="10dp"
+            android:padding="@dimen/dp_10"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent">
 
@@ -84,9 +84,9 @@
                 android:id="@+id/sbDuration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dp_5"
                 android:indeterminateTint="@color/design_color"
-                android:paddingVertical="2dp"
+                android:paddingVertical="@dimen/dp_2"
                 android:progress="0"
                 android:progressDrawable="@drawable/seek_bar_style"
                 android:thumb="@drawable/seek_bar_thumb"
@@ -101,16 +101,16 @@
                     android:id="@+id/cvThumbnail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="15dp"
-                    app:cardCornerRadius="3dp"
+                    android:layout_marginVertical="@dimen/dp_15"
+                    app:cardCornerRadius="@dimen/dp_3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:id="@+id/ivThumbnail"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_width="@dimen/thumb_nail_control_panel_size"
+                        android:layout_height="@dimen/thumb_nail_control_panel_size"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/app_name"
                         android:scaleType="fitCenter"
@@ -120,10 +120,10 @@
 
                 <ImageView
                     android:id="@+id/ivPlayPause"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="@dimen/play_pause_control_panel_size"
+                    android:layout_height="@dimen/play_pause_control_panel_size"
                     android:contentDescription="@string/app_name"
-                    android:elevation="5dp"
+                    android:elevation="@dimen/dp_5"
                     android:src="@drawable/ic_play_arrow"
                     app:layout_constraintBottom_toBottomOf="@id/cvThumbnail"
                     app:layout_constraintEnd_toEndOf="@id/cvThumbnail"
@@ -132,14 +132,14 @@
 
                 <TextView
                     android:id="@+id/tvTitle"
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/title_control_panel_width"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/dp_15"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@string/app_name"
                     android:textColor="@color/black"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/title_control_panel_size"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/cvThumbnail"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -148,7 +148,7 @@
                     android:id="@+id/ibNext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="@dimen/dp_10"
                     android:adjustViewBounds="true"
                     android:background="@null"
                     android:contentDescription="@string/app_name"
@@ -159,9 +159,9 @@
 
                 <ImageButton
                     android:id="@+id/ibPlayPause"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dp_10"
                     android:background="@null"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/ic_pause_circle"
@@ -173,7 +173,7 @@
                     android:id="@+id/ibPrevious"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="@dimen/dp_10"
                     android:adjustViewBounds="true"
                     android:background="@null"
                     android:contentDescription="@string/app_name"
@@ -188,7 +188,7 @@
             android:id="@+id/llEmptyFavorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="90dp"
+            android:layout_marginBottom="@dimen/dp_90"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone"
@@ -199,8 +199,8 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:layout_width="200dp"
-                android:layout_height="300dp"
+                android:layout_width="@dimen/empty_sound_image_width"
+                android:layout_height="@dimen/empty_sound_image_height"
                 android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/img_empty_favorite" />
@@ -208,24 +208,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:text="@string/favorite_sound_is_empty"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="@dimen/sp_20"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btPlayMore"
                 style="@style/Theme.AppCompat.DayNight.DarkActionBar"
                 android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="@dimen/play_more_height"
+                android:layout_marginTop="@dimen/dp_15"
                 android:background="@drawable/bg_retry_button"
-                android:paddingHorizontal="30dp"
+                android:paddingHorizontal="@dimen/dp_30"
                 android:text="@string/play_more_button"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/sp_16"
                 android:textStyle="bold"
                 android:theme="@style/MatButton"
                 app:layout_constraintBottom_toBottomOf="@id/glHorizontal2"

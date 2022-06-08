@@ -4,24 +4,19 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-
-import android.util.Log
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.FragmentFactory
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-
 import androidx.navigation.fragment.findNavController
-
 import com.bumptech.glide.Glide
-import com.hola360.pranksounds.MainActivity
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.model.PhotoModel
 import com.hola360.pranksounds.databinding.FragmentAddCallScreenBinding
-import com.hola360.pranksounds.ui.base.AbsBaseFragment
 import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.ShareViewModelStatus
@@ -35,26 +30,27 @@ import java.util.*
 import kotlin.time.Duration.Companion.seconds
 
 
+@Suppress("DEPRECATION")
 class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScreenBinding>(),
     PickPhotoDialog.OnClickListener {
     private lateinit var addCallScreenViewModel: AddCallScreenViewModel
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private var isSubmit = false
+    private lateinit var dialog: PickPhotoDialog
 
     override fun getLayout(): Int {
         return R.layout.fragment_add_call_screen
     }
 
     override fun initView() {
-        //args.callModel null, #null id >
         binding.viewModel = addCallScreenViewModel
         with(binding.tbAddCallScreen) {
             setNavigationOnClickListener {
-//                setUpBackPress()
                 requireActivity().onBackPressed()
             }
         }
         addCallScreenViewModel.getCurrentCall()?.let { setView(it) }
+
         with(binding) {
             imgAvatar.setOnClickListener {
                 if (Utils.storagePermissionGrant(requireContext())) {
@@ -80,7 +76,6 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
 
                 mainActivity.showToast(getString(R.string.insert_success))
                 requireActivity().onBackPressed()
-
             }
 
             tvDefaultImg.setOnClickListener {
@@ -99,6 +94,7 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
         setDataByViewModel()
+        retainInstance = true
     }
 
     private fun setDataByViewModel() {
@@ -162,9 +158,11 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         sharedViewModel.setCall(addCallScreenViewModel.officialModel)
     }
 
+    @Suppress("DEPRECATION")
     private fun setUpDialog() {
         addCallScreenViewModel.setIsLocal(true)
-        val dialog = PickPhotoDialog.create(this)
+        dialog = PickPhotoDialog.create(this)
+        dialog.retainInstance = true
         dialog.show(parentFragmentManager, "Pick photo")
     }
 
@@ -209,14 +207,12 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         startCrop(photoModel.uri)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback (this){
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
             if (!isSubmit)
                 setUpBackPress()
             findNavController().navigateUp()
         }
-
     }
 }

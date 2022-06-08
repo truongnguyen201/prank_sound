@@ -48,4 +48,6 @@
     <!--  calling screen   -->
     <color name="wave_color_first">#48FFFFFF</color>
     <color name="wave_color_second">#16FFFFFF</color>
+
+    <color name="line_item_sound_color">#E8E2E2</color>
 </resources>

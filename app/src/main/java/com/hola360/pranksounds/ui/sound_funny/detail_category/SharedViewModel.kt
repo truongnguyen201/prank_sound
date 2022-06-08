@@ -20,7 +20,6 @@ import com.hola360.pranksounds.utils.SingletonHolder
 import com.hola360.pranksounds.utils.ToastUtils
 import com.hola360.pranksounds.utils.Utils
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -159,24 +158,26 @@ class SharedViewModel private constructor(private val app: Application) : ViewMo
             categoryRepository.addFavoriteSound(sound)
             val submittedSound = submitSoundRepository.getSubmittedSound(sound.soundId)
             if (submittedSound == null || !submittedSound.isLiked) {
-                val submitResponse = submitSoundRepository.submitSound(
-                    Constants.SUBMIT_TYPE,
-                    sound.soundId,
-                    Constants.SUBMIT_LIKE_TYPE
-                )
-                if (submitResponse!!.data.data_apps.status) {
-                    if (submittedSound == null) {
-                        submitSoundRepository.addSubmitted(
-                            SubmittedSound(
-                                sound.soundId,
-                                isDownloaded = false,
-                                isLiked = true
+                try {
+                    val submitResponse = submitSoundRepository.submitSound(
+                        Constants.SUBMIT_TYPE,
+                        sound.soundId,
+                        Constants.SUBMIT_LIKE_TYPE
+                    )
+                    if (submitResponse!!.data.data_apps.status) {
+                        if (submittedSound == null) {
+                            submitSoundRepository.addSubmitted(
+                                SubmittedSound(
+                                    sound.soundId,
+                                    isDownloaded = false,
+                                    isLiked = true
+                                )
                             )
-                        )
-                    } else {
-                        submitSoundRepository.updateLiked(sound.soundId)
+                        } else {
+                            submitSoundRepository.updateLiked(sound.soundId)
+                        }
                     }
-                }
+                } catch (ex: Exception) { }
             }
             favoriteList.value = categoryRepository.getFavoriteSoundID()
         }

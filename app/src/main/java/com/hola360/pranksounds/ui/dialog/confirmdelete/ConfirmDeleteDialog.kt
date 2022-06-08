@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.Window
 import android.view.WindowManager
 import androidx.lifecycle.ViewModelProvider
-import com.hola360.pranksounds.App
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.ConfirmDeleteDialogBinding
@@ -19,8 +18,6 @@ import com.hola360.pranksounds.ui.dialog.base.BaseDialog
 class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private val mCall: Call) :
     BaseDialog<ConfirmDeleteDialogBinding>() {
     lateinit var mViewModel: ConfirmDeleteDialogViewModel
-
-
 
     override fun getLayout(): Int {
         return R.layout.confirm_delete_dialog
@@ -55,7 +52,11 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
 
     override fun onDestroyView() {
         super.onDestroyView()
-        dismiss()
+////        try {
+//            dismiss()
+////        } catch (ex: Exception) {
+////            ex.printStackTrace()
+////        }
     }
 
     override fun onResume() {
