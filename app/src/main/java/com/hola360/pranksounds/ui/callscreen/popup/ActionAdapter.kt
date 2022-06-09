@@ -11,8 +11,6 @@ class ActionAdapter(
     private val onItemClickListener: OnActionListener?
 ) : BaseAdapter() {
 
-    private val mLastClickTime: Long = 0
-
     interface OnActionListener {
         fun onItemClickListener(position: Int)
     }

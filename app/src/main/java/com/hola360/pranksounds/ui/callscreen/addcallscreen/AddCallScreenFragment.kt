@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.hola360.pranksounds.R
+import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.model.PhotoModel
 import com.hola360.pranksounds.databinding.FragmentAddCallScreenBinding
@@ -71,11 +72,6 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             btnAdd.setOnClickListener {
                 isSubmit = true
                 addCallScreenViewModel.addCallToLocal()
-                sharedViewModel.setCall(addCallScreenViewModel.getCurrentCall())
-                sharedViewModel.setBackToMyCaller(true)
-
-                mainActivity.showToast(getString(R.string.insert_success))
-                requireActivity().onBackPressed()
             }
 
             tvDefaultImg.setOnClickListener {
@@ -94,6 +90,19 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
         setDataByViewModel()
+
+        addCallScreenViewModel.saveCallDone.observe(this){
+            it?.let {
+                if (it is DataResponse.DataSuccess){
+                    val body  = it.body
+                    sharedViewModel.setCall(body)
+                    sharedViewModel.setBackToMyCaller(true)
+                    mainActivity.showToast(getString(R.string.insert_success))
+                    requireActivity().onBackPressed()
+                }
+            }
+        }
+
         retainInstance = true
     }
 

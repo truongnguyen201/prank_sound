@@ -26,12 +26,9 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     private lateinit var repository: PhoneBookRepository
     protected var callAdapter: CallAdapter = CallAdapter { handleOnclickItem(it) }
     private lateinit var action: Any
-    private lateinit var popUpWindow: PopupWindow
     private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private val listActionPopup by lazy { ListActionPopup(requireContext()) }
     private lateinit var navHostFragment: Fragment
-    private var isFirstClicking = false
-    private var isSecondClicking = false
 
     override fun initView() {
         callAdapter.setListener(this)
@@ -52,18 +49,10 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
                 override fun onItemClickListener(position: Int) {
                     when (position) {
                         0 -> {
-                            isFirstClicking = true
-                            if (!isSecondClicking) {
-                                passCallToUpDate(call)
-                                isFirstClicking = false
-                            }
+                            passCallToUpDate(call)
                         }
                         1 -> {
-                            isSecondClicking = true
-                            if (!isFirstClicking) {
-                                setUpAlertDialog(call)
-                                isSecondClicking = false
-                            }
+                            setUpAlertDialog(call)
                         }
                     }
                 }

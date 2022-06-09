@@ -7,16 +7,22 @@ import com.hola360.pranksounds.R
 
 class ListActionPopup(private val context: Context) {
     private val popupMenu: ListPopupWindow = ListPopupWindow(context)
+    private var isItemSelected = false;
 
     fun showPopup(
         anchor: View,
         array: MutableList<ActionModel>,
         onActionListener: ActionAdapter.OnActionListener?
         ) {
+        isItemSelected = false
         val adapter = ActionAdapter(array, object : ActionAdapter.OnActionListener{
             override fun onItemClickListener(position: Int) {
                 popupMenu.dismiss()
-                onActionListener?.onItemClickListener(position)
+                if (!isItemSelected){
+                    isItemSelected = true
+                    onActionListener?.onItemClickListener(position)
+                }
+
             }
         })
         popupMenu.setAdapter(adapter)
