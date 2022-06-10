@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -35,7 +34,9 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
     private lateinit var setupCallViewModel: SetupCallViewModel
     private lateinit var receiver: CallingReceiver
     private val isReceiverInitialized get() = this::receiver.isInitialized
-    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+
+    //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+    private lateinit var sharedViewModel: CallScreenSharedViewModel
     private var mLastClickTime: Long = 0
     private lateinit var action: Any
 
@@ -135,7 +136,9 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
     }
 
     override fun initViewModel() {
-        val factory = SetupCallViewModel.Factory(requireActivity().application)
+        sharedViewModel = CallScreenSharedViewModel.getInstance(mainActivity.application)
+
+        val factory = SetupCallViewModel.Factory(mainActivity.application)
         setupCallViewModel = ViewModelProvider(this, factory)[SetupCallViewModel::class.java]
         setDataByViewModel()
     }

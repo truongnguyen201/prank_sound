@@ -53,8 +53,8 @@
     <string name="default_image"> <u>Default image</u></string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="confirm_delete_start">Are you sure you want to delete \"</string>
-    <string name="confirm_delete_start_end">\"\?</string>
+    <string name="confirm_delete_start">Are you sure you want to delete</string>
+    <string name="confirm_delete_start_end">\?</string>
     <string name="confirm_delete_end">It cannot be undone.</string>
     <string name="confirm_title">Confirm?</string>
     <string name="delete_complete">Delete complete</string>

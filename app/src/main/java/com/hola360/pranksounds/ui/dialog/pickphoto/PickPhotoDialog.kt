@@ -1,9 +1,10 @@
 package com.hola360.pranksounds.ui.dialog.pickphoto
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,22 +19,22 @@ import com.hola360.pranksounds.generated.callback.OnClickListener
 import com.hola360.pranksounds.ui.dialog.base.BaseDialog
 import com.hola360.pranksounds.ui.dialog.pickphoto.adapter.PhotoAdapter
 import com.hola360.pranksounds.ui.dialog.pickphoto.data.PickModelDataType
+import com.hola360.pranksounds.utils.Utils
 
+@Suppress("DEPRECATION")
 class PickPhotoDialog(
     private val onClickListener: OnClickListener
 ) : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.ListenClickItem {
+
     lateinit var viewModel: PickPhotoDialogViewModel
     lateinit var adapter: PhotoAdapter
     private lateinit var layoutManager: GridLayoutManager
     private var albumState: Parcelable? = null
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = PhotoAdapter(this)
+        retainInstance = true
     }
 
     override fun initViewModel() {
@@ -122,4 +123,13 @@ class PickPhotoDialog(
     interface OnClickListener {
         fun onPickPhoto(photoModel: PhotoModel)
     }
+
+    override fun onResume() {
+        super.onResume()
+//        if(){
+//
+//        }
+    }
+
+
 }

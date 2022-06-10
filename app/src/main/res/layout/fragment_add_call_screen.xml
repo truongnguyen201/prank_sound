@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="viewModel"
             type="com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenViewModel" />
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".ui.callscreen.addcallscreen.AddCallScreenFragment">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tbAddCallScreen"
             android:layout_width="match_parent"
@@ -22,8 +27,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_baseline_arrow_back"
             app:title="Add Call Screen"
-            app:titleTextColor="@color/white"
-            app:titleTextAppearance="@style/Theme.PrankSounds.ToolbarTextAppearance"/>
+            app:titleTextAppearance="@style/Theme.PrankSounds.ToolbarTextAppearance"
+            app:titleTextColor="@color/white" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -68,10 +73,10 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_4"
                     android:text="@string/default_image"
-                    android:visibility="@{viewModel.isDefault() ? View.GONE : View.VISIBLE}"
                     android:textAppearance="?textAppearanceBody1"
                     android:textColor="@color/design_color"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:visibility="@{viewModel.isDefault() ? View.GONE : View.VISIBLE}" />
 
                 <EditText
                     android:id="@+id/tvCallerName"

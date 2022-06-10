@@ -51,9 +51,11 @@ class MainActivity : BaseActivity(), ControlPanelListener, ComponentCallbacks2 {
 
     private fun initViewModel() {
         sharedViewModel = SharedViewModel.getInstance(application)
-        val factory = CallScreenSharedViewModel.Factory(this.application)
-        callScreenSharedViewModel =
-            ViewModelProvider(this, factory)[CallScreenSharedViewModel::class.java]
+        callScreenSharedViewModel = CallScreenSharedViewModel.getInstance(application)
+
+//        val factory = CallScreenSharedViewModel.Factory(this.application)
+//        callScreenSharedViewModel =
+//            ViewModelProvider(this, factory)[CallScreenSharedViewModel::class.java]
 
         sharedViewModel.currentPosition.observe(this) {
             it?.let {

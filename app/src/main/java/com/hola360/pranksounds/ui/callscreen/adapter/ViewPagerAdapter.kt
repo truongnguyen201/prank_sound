@@ -7,7 +7,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.hola360.pranksounds.ui.callscreen.mycaller.MyCallerFragment
 import com.hola360.pranksounds.ui.callscreen.trendcaller.TrendCallerFragment
 
-class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
+class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+    FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int {
         return 2
@@ -15,13 +16,13 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): 
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0->{
+            0 -> {
                 TrendCallerFragment()
             }
-            1->{
+            1 -> {
                 MyCallerFragment()
             }
-            else->{
+            else -> {
                 TrendCallerFragment()
             }
         }

@@ -3,10 +3,12 @@ package com.hola360.pranksounds.ui.dialog.confirmdelete
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
+import android.text.SpannableStringBuilder
 import android.view.Display
 import android.view.Gravity
 import android.view.Window
 import android.view.WindowManager
+import androidx.core.text.bold
 import androidx.lifecycle.ViewModelProvider
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Call
@@ -17,7 +19,8 @@ import com.hola360.pranksounds.ui.dialog.base.BaseDialog
 
 class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private val mCall: Call) :
     BaseDialog<ConfirmDeleteDialogBinding>() {
-    lateinit var mViewModel: ConfirmDeleteDialogViewModel
+
+    private lateinit var mViewModel: ConfirmDeleteDialogViewModel
 
     override fun getLayout(): Int {
         return R.layout.confirm_delete_dialog
@@ -27,6 +30,16 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
         val factory =
             ConfirmDeleteDialogViewModel.Factory(requireActivity().applicationContext, mCall)
         mViewModel = ViewModelProvider(this, factory)[ConfirmDeleteDialogViewModel::class.java]
+
+        mViewModel.title.observe(this) {
+            it.let {
+                binding.tvMessage.text =
+                    SpannableStringBuilder()
+                    .append(requireContext().resources.getString(R.string.confirm_delete_start) + " ")
+                    .bold { append(it) }
+                    .append("?")
+            }
+        }
     }
 
     override fun initView() {
@@ -39,6 +52,7 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
 
         with(binding) {
             viewModel = mViewModel
+
             btnOk.setOnClickListener {
                 listener.onOkClick(mViewModel.getCall())
                 dismiss()

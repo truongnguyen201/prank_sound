@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.PopupWindow
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -27,7 +26,10 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     protected var callAdapter: CallAdapter = CallAdapter { handleOnclickItem(it) }
     private lateinit var action: Any
     private lateinit var popUpWindow: PopupWindow
-    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+
+    //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+    private lateinit var sharedViewModel: CallScreenSharedViewModel
+    private val isSharedViewModelInitialized get() = this::sharedViewModel.isInitialized
     private val listActionPopup by lazy { ListActionPopup(requireContext()) }
     private lateinit var navHostFragment: Fragment
     private var isFirstClicking = false
@@ -40,6 +42,13 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
         navHostFragment =
             requireActivity().supportFragmentManager.findFragmentById(R.id.navHostFragmentContentMain)!!
 
+        if (!isSharedViewModelInitialized) {
+            sharedViewModel = CallScreenSharedViewModel.getInstance(mainActivity.application)
+        }
+    }
+
+    override fun initViewModel() {
+        sharedViewModel = CallScreenSharedViewModel.getInstance(mainActivity.application)
     }
 
     private fun handleOnclickItem(p: Int) {}
@@ -88,7 +97,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     private fun passCallToUpDate(call: Call) {
         sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
         sharedViewModel.setCall(call)
-        action = CallerFragmentDirections.actionGlobalAddCallScreenFragment()
+        action = CallerFragmentDirections.actionGlobalAddCallScreenFragment().setCallModel(call)
         findNavController().navigate(action as NavDirections)
     }
 

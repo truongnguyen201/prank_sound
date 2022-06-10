@@ -12,8 +12,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.hola360.pranksounds.R
 
 abstract class BaseDialog<V: ViewDataBinding> : DialogFragment() {
+
     protected lateinit var binding: V
     private val isBindingInitialized get() = this::binding.isInitialized
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()

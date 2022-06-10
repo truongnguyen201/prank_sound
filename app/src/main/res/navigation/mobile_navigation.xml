@@ -134,16 +134,43 @@
     <fragment
         android:id="@+id/addCallScreenFragment"
         android:name="com.hola360.pranksounds.ui.callscreen.addcallscreen.AddCallScreenFragment"
-        android:label="Add Call Screen"></fragment>
+        android:label="Add Call Screen">
+        <argument
+            android:name="callModel"
+            android:defaultValue="@null"
+            app:argType="com.hola360.pranksounds.data.model.Call"
+            app:nullable="true" />
+
+        <argument
+            android:name="isAdd"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
 
     <action
         android:id="@+id/action_global_addCallScreenFragment"
-        app:destination="@id/addCallScreenFragment"/>
+        app:destination="@id/addCallScreenFragment" />
 
     <fragment
         android:id="@+id/callerFragment"
         android:name="com.hola360.pranksounds.ui.callscreen.CallerFragment"
-        android:label="CallerFragment" />
+        android:label="CallerFragment">
+
+        <action
+            android:id="@+id/action_callerFragment_to_addCallScreenFragment"
+            app:destination="@id/addCallScreenFragment">
+            <argument
+                android:name="callModel"
+                android:defaultValue="@null"
+                app:argType="com.hola360.pranksounds.data.model.Call"
+                app:nullable="true" />
+            <argument
+                android:name="isAdd"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        </action>
+
+    </fragment>
 
     <action
         android:id="@+id/action_global_callerFragment"
@@ -199,17 +226,18 @@
         app:destination="@id/soundDetailFragment"
         app:popUpTo="@id/soundDetailFragment"
         app:popUpToSaveState="true" />
+
     <fragment
         android:id="@+id/setupCallFragment"
         android:name="com.hola360.pranksounds.ui.callscreen.setcall.SetupCallFragment"
         android:label="SetupCallFragment">
-        <!--        <argument-->
-        <!--            android:name="callModel"-->
-        <!--            app:argType="com.hola360.pranksounds.data.model.Call"-->
-        <!--            app:nullable="false" />-->
+        <!--                <argument-->
+        <!--                    android:name="callModel"-->
+        <!--                    app:argType="com.hola360.pranksounds.data.model.Call"-->
+        <!--                    app:nullable="false" />-->
     </fragment>
     <action
         android:id="@+id/action_global_setupCallFragment"
-        app:destination="@id/setupCallFragment"/>
+        app:destination="@id/setupCallFragment" />
 
 </navigation>

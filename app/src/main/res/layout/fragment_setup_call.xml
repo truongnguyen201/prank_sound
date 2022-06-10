@@ -30,8 +30,8 @@
             app:menu="@menu/setup_call_menu"
             app:navigationIcon="@drawable/ic_baseline_arrow_back"
             app:title="@string/set_call"
-            app:titleTextColor="@color/white"
-            app:titleTextAppearance="@style/Theme.PrankSounds.ToolbarTextAppearance"/>
+            app:titleTextAppearance="@style/Theme.PrankSounds.ToolbarTextAppearance"
+            app:titleTextColor="@color/white" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -42,7 +42,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="UselessParent">
 
                 <ImageView
                     android:id="@+id/imgAvatar"
@@ -50,6 +51,7 @@
                     android:layout_height="130dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dp_32"
+                    android:contentDescription="@string/app_name"
                     android:src="@drawable/img_avatar_default"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -59,22 +61,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dp_10"
                     android:layout_marginHorizontal="@dimen/dp_24"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="@string/default_text"
                     android:textAppearance="?textAppearanceBody1"
                     android:textColor="@color/black"
                     android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"/>
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:ellipsize="end"
                     android:id="@+id/tvPhoneNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginHorizontal="@dimen/dp_10"
                     android:layout_marginTop="@dimen/dp_8"
+                    android:maxLines="1"
                     android:text="@string/default_text"
                     android:textAppearance="?textAppearanceBody1"
                     android:textColor="@color/phone_number_color"
@@ -191,8 +196,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dp_32"
-                    android:paddingVertical="@dimen/dp_8"
                     android:backgroundTint="@color/set_call_button"
+                    android:paddingVertical="@dimen/dp_8"
                     android:text="@string/set_call"
                     android:textAllCaps="false"
                     android:textAppearance="?textAppearanceBody1"

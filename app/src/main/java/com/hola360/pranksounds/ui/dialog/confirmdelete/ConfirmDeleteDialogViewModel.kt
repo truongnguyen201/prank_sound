@@ -13,10 +13,7 @@ class ConfirmDeleteDialogViewModel(context: Context, call: Call): ViewModel() {
         callLiveData.value = call
     }
 
-    val title: LiveData<String> = Transformations.map(callLiveData) {
-        (context.resources.getString(R.string.confirm_delete_start)
-        + it.name + context.resources.getString(R.string.confirm_delete_start_end))
-    }
+    val title: LiveData<String> = Transformations.map(callLiveData) { it.name }
 
     fun getCall(): Call {
         return callLiveData.value!!

@@ -4,12 +4,13 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.FragmentFactory
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -34,9 +35,28 @@ import kotlin.time.Duration.Companion.seconds
 class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScreenBinding>(),
     PickPhotoDialog.OnClickListener {
     private lateinit var addCallScreenViewModel: AddCallScreenViewModel
-    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+
+    //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
+    private lateinit var sharedViewModel: CallScreenSharedViewModel
     private var isSubmit = false
     private lateinit var dialog: PickPhotoDialog
+    private val args: AddCallScreenFragmentArgs by lazy {
+        AddCallScreenFragmentArgs.fromBundle(
+            requireArguments()
+        )
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        if (isBindingInitialized) {
+            setCall()
+            return mView
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun getLayout(): Int {
         return R.layout.fragment_add_call_screen
@@ -49,8 +69,7 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
                 requireActivity().onBackPressed()
             }
         }
-        addCallScreenViewModel.getCurrentCall()?.let { setView(it) }
-
+        setCall()
         with(binding) {
             imgAvatar.setOnClickListener {
                 if (Utils.storagePermissionGrant(requireContext())) {
@@ -90,11 +109,24 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
     }
 
     override fun initViewModel() {
+        retainInstance = true
+        sharedViewModel = CallScreenSharedViewModel.getInstance(mainActivity.application)
         val factory = AddCallScreenViewModel.Factory(requireActivity().application)
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
         setDataByViewModel()
-        retainInstance = true
+    }
+
+    fun setCall() {
+        addCallScreenViewModel.getCurrentCall()?.let {
+            if (it.avatarUrl.isNotBlank()) {
+                setView(it)
+            } else {
+                if (!args.isAdd) {
+                    setView(args.callModel!!)
+                }
+            }
+        }
     }
 
     private fun setDataByViewModel() {
@@ -121,7 +153,7 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
                 imgAvatar.setImageResource(R.drawable.img_avatar_default)
             } else {
                 imgAvatar.let { imgView ->
-                    Glide.with(imgView)
+                    Glide.with(requireContext())
                         .load(path)
                         .placeholder(R.drawable.img_avatar_default)
                         .error(R.drawable.img_avatar_default)

@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 
 abstract class AbsBaseFragment<V : ViewDataBinding> : Fragment() {
     protected lateinit var binding: V
-    private val isBindingInitialized get() = this::binding.isInitialized
-    private var mView: View? = null
+    val isBindingInitialized get() = this::binding.isInitialized
+    var mView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
