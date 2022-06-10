@@ -50,7 +50,7 @@ class SoundCategoryAdapter(
                 } else {
                     ivThumbnail.let {
                         Glide.with(it)
-                            .load(Constants.SUB_URL + category.thumbUrl)
+                            .load(Constants.SUB_URL + Constants.CATEGORY_THUMB_PATH + category.thumbUrl)
                             .placeholder(R.drawable.smaller_loading)
                             .error(R.drawable.default_thumbnail)
                             .into(it)

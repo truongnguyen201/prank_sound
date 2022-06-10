@@ -65,7 +65,6 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
     }
 
     fun addCallToLocal() {
-
         val newCall: Call = curCallModel!!
         if (!newCall.isLocal && newCall.avatarUrl != "") {
             newCall.avatarUrl = Constants.SUB_URL + newCall.avatarUrl

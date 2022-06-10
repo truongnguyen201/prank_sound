@@ -73,11 +73,13 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         setCall()
         with(binding) {
             imgAvatar.setOnClickListener {
-                if (Utils.storagePermissionGrant(requireContext())) {
-                    setUpDialog()
-                } else {
-                    requestStoragePermission()
-                }
+//                if (Utils.storagePermissionGrant(requireContext())) {
+//                    setUpDialog()
+//                } else {
+//                    requestStoragePermission()
+//                }
+
+                setUpDialog()
             }
 
             tvCallerName.doAfterTextChanged {
@@ -132,8 +134,10 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             if (it.avatarUrl.isNotBlank()) {
                 setView(it)
             } else {
-                if (!args.isAdd) {
+                if (!args.isAdd && args.callModel != null) {
                     setView(args.callModel!!)
+                    binding.tbAddCallScreen.title =
+                        requireActivity().getString(R.string.edit_call_screen)
                 }
             }
         }
@@ -203,7 +207,8 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
     @Suppress("DEPRECATION")
     private fun setUpDialog() {
         addCallScreenViewModel.setIsLocal(true)
-        dialog = PickPhotoDialog.create(this)
+        dialog = PickPhotoDialog.create()
+        dialog.setOnClickListener(this)
         dialog.retainInstance = true
         dialog.show(parentFragmentManager, "Pick photo")
     }

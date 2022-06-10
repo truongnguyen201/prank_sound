@@ -94,7 +94,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     override fun onItemClick(call: Call, position: Int) {
         sharedViewModel.setStatus(ShareViewModelStatus.SetCall)
         sharedViewModel.setCall(call)
-        action = CallerFragmentDirections.actionGlobalSetupCallFragment()
+        action = CallerFragmentDirections.actionGlobalSetupCallFragment().setCallModel(call)
         findNavController().navigate(action as NavDirections)
     }
 

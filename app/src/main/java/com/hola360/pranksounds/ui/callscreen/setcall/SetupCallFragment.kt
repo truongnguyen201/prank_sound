@@ -34,6 +34,11 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
     private lateinit var setupCallViewModel: SetupCallViewModel
     private lateinit var receiver: CallingReceiver
     private val isReceiverInitialized get() = this::receiver.isInitialized
+    private val args: SetupCallFragmentArgs by lazy {
+        SetupCallFragmentArgs.fromBundle(
+            requireArguments()
+        )
+    }
 
     //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private lateinit var sharedViewModel: CallScreenSharedViewModel
@@ -54,27 +59,6 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
             requireActivity().onBackPressed()
         }
 
-        setupCallViewModel.callLiveData.observe(this) {
-            with(binding) {
-                it?.let { thisCall ->
-                    val path =
-                        if (thisCall.isLocal) thisCall.avatarUrl else Constants.SUB_URL + thisCall.avatarUrl
-                    imgAvatar.let { imgView ->
-                        Glide.with(imgView)
-                            .load(path)
-                            .placeholder(R.drawable.img_avatar_default)
-                            .error(R.drawable.img_avatar_default)
-                            .into(imgView)
-                    }
-                    tvCallerName.text = thisCall.name.ifEmpty {
-                        requireContext().getString(R.string.unknown)
-                    }
-                    tvPhoneNumber.text = thisCall.phone
-                }
-            }
-        }
-
-
         with(binding) {
             btnNow.setOnClickListener {
                 setupCallViewModel.period.value = WaitCallPeriod.Now
@@ -93,7 +77,7 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
 
             btnSetCall.setOnClickListener {
                 if (Utils.checkDisplayOverOtherAppPermission(requireContext())) {
-                    setupCallViewModel.startCalling()
+                    setupCallViewModel.startCalling(args.callModel!!)
                 } else {
                     Utils.setUpDialogGrantPermission(requireContext())
                 }
@@ -110,6 +94,7 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                             sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
                             action =
                                 CallerFragmentDirections.actionGlobalAddCallScreenFragment()
+                                    .setCallModel(setupCallViewModel.getCurrentCall())
                             findNavController().navigate(action as NavDirections)
                         }
                         mLastClickTime = SystemClock.elapsedRealtime()
@@ -154,9 +139,15 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
 
         setupCallViewModel.callLiveData.observe(this) {
             with(binding) {
-                it?.let { thisCall ->
+                it?.let {
+                    val currentCall = if (it.avatarUrl.isBlank()) {
+                        args.callModel
+                    } else {
+                        it
+                    }
+
                     val path =
-                        if (thisCall.isLocal) thisCall.avatarUrl else Constants.SUB_URL + thisCall.avatarUrl
+                        if (currentCall!!.isLocal) currentCall.avatarUrl else Constants.SUB_URL + currentCall.avatarUrl
                     imgAvatar.let { imgView ->
                         Glide.with(imgView)
                             .load(path)
@@ -164,10 +155,10 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                             .error(R.drawable.img_avatar_default)
                             .into(imgView)
                     }
-                    tvCallerName.text = thisCall.name.ifEmpty {
+                    tvCallerName.text = currentCall.name.ifEmpty {
                         requireContext().getString(R.string.unknown)
                     }
-                    tvPhoneNumber.text = thisCall.phone
+                    tvPhoneNumber.text = currentCall.phone
                 }
             }
         }
@@ -301,7 +292,6 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
         }
         sharedViewModel.setCall(null)
         sharedViewModel.setStatus(ShareViewModelStatus.Default)
-
     }
 }
 

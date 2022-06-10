@@ -38,9 +38,13 @@ class SetupCallViewModel(val app: Application) : ViewModel() {
         return curCallModel
     }
 
-    fun startCalling() {
+    fun startCalling(call: Call) {
         startCallingLiveData.value = null
-        startCallingLiveData.value = curCallModel
+        startCallingLiveData.value = if (curCallModel!!.avatarUrl.isBlank()) {
+            call
+        } else {
+            curCallModel
+        }
     }
 
     val periodOfTime: LiveData<String> = Transformations.map(period) {

@@ -26,13 +26,13 @@ interface RemoteServices {
     ): DetailCategoryResponse?
 
     @FormUrlEncoded
-    @POST("/soundFuny.php")
+    @POST("soundFunnyDev.php")
     suspend fun getPhoneBook(
         @Field("type") params: String
     ): PhoneBookResponse
 
     @FormUrlEncoded
-    @POST("/soundFuny.php")
+    @POST("soundFunnyDev.php")
     suspend fun submitSound(
         @Field("type") type: String,
         @Field("item_id") soundId: String,
