@@ -32,8 +32,6 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     private val isSharedViewModelInitialized get() = this::sharedViewModel.isInitialized
     private val listActionPopup by lazy { ListActionPopup(requireContext()) }
     private lateinit var navHostFragment: Fragment
-    private var isFirstClicking = false
-    private var isSecondClicking = false
 
     override fun initView() {
         callAdapter.setListener(this)
@@ -61,18 +59,10 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
                 override fun onItemClickListener(position: Int) {
                     when (position) {
                         0 -> {
-                            isFirstClicking = true
-                            if (!isSecondClicking) {
-                                passCallToUpDate(call)
-                                isFirstClicking = false
-                            }
+                            passCallToUpDate(call)
                         }
                         1 -> {
-                            isSecondClicking = true
-                            if (!isFirstClicking) {
-                                setUpAlertDialog(call)
-                                isSecondClicking = false
-                            }
+                            setUpAlertDialog(call)
                         }
                     }
                 }

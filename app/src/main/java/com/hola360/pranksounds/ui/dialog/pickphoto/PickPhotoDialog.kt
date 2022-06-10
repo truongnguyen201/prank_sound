@@ -123,13 +123,4 @@ class PickPhotoDialog(
     interface OnClickListener {
         fun onPickPhoto(photoModel: PhotoModel)
     }
-
-    override fun onResume() {
-        super.onResume()
-//        if(){
-//
-//        }
-    }
-
-
 }

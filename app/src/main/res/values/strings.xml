@@ -75,9 +75,9 @@
     <string name="minute">minute</string>
     <string name="now">Now</string>
     <string name="set_call">Set Call</string>
-    <string name="five_seconds">5 seconds</string>
-    <string name="thirty_seconds">30 seconds</string>
-    <string name="one_minute">1 minute</string>
+    <string name="five_seconds">5 secs</string>
+    <string name="thirty_seconds">30 secs</string>
+    <string name="one_minute">1 min</string>
     <string name="confirm_message">You first click "YES" > Display over other apps and allow this permission</string>
     <string name="confirm_display_over_title">Please grant Display over other apps!</string>
 

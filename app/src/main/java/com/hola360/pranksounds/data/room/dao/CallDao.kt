@@ -13,7 +13,7 @@ interface CallDao {
     suspend fun getLocalCallById(id: String) : Call
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addCallToLocal(call: Call)
+    suspend fun addCallToLocal(call: Call): Long
 
     @Delete
     suspend fun removeCallFromLocal(call: Call)

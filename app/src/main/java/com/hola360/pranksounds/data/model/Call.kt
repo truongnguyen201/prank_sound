@@ -12,7 +12,7 @@ import java.io.Serializable
 @Entity(tableName = "tblLocalCall")
 data class Call(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    var id: Long,
 
     @SerializedName("avatar")
     @ColumnInfo(name = "avatar_url")

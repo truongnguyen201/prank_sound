@@ -99,6 +99,7 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                 }
             }
         }
+
         with(binding.tbSetupCallScreen) {
             setOnMenuItemClickListener {
                 when (it.itemId) {

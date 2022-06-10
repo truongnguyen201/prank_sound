@@ -1,6 +1,7 @@
 package com.hola360.pranksounds.ui.callscreen.addcallscreen
 import android.app.Application
 import androidx.lifecycle.*
+import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.repository.PhoneBookRepository
 import com.hola360.pranksounds.utils.Constants
@@ -10,11 +11,9 @@ import kotlinx.coroutines.launch
 class AddCallScreenViewModel(app: Application) : ViewModel() {
     val repository = PhoneBookRepository(app)
     private var _callLiveData = MutableLiveData<Call>(null)
-    val callLiveData: LiveData<Call> = _callLiveData
-
+    val saveCallDone = MutableLiveData<DataResponse<Call>>(DataResponse.DataIdle())
     var curCallModel: Call? = null
     var officialModel: Call? = null
-    var phoneLiveData = MutableLiveData("")
 
     init {
         curCallModel = Call()
@@ -24,6 +23,7 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
     val isEmpty: LiveData<Boolean> = Transformations.map(_callLiveData){
         _callLiveData.value?.phone.isNullOrEmpty()
     }
+
     val isDefault: LiveData<Boolean> = Transformations.map(_callLiveData) {
         _callLiveData.value?.avatarUrl == ""
     }
@@ -65,7 +65,7 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
     }
 
     fun addCallToLocal() {
-        _callLiveData.postValue(curCallModel)
+
         val newCall: Call = curCallModel!!
         if (!newCall.isLocal && newCall.avatarUrl != "") {
             newCall.avatarUrl = Constants.SUB_URL + newCall.avatarUrl
@@ -73,7 +73,8 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
         newCall.isLocal = true
         officialModel = newCall.copy()
         viewModelScope.launch {
-            repository.addNewCallToLocal(newCall)
+            curCallModel!!.id =   repository.addNewCallToLocal(newCall)
+            saveCallDone.value = DataResponse.DataSuccess(curCallModel!!)
         }
     }
 
