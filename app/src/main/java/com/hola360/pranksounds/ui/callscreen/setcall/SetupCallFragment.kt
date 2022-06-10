@@ -44,16 +44,8 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
         return R.layout.fragment_setup_call
     }
 
-    override fun initView() {
-        binding.tbSetupCallScreen.menu.findItem(R.id.delete_call).isVisible =
-            setupCallViewModel.getCurrentCall()?.isLocal!!
-        if (setupCallViewModel.getCurrentCall()?.isLocal!!) {
-            sharedViewModel.setBackToMyCaller(true)
-        }
-        binding.tbSetupCallScreen.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
-        }
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setupCallViewModel.callLiveData.observe(this) {
             with(binding) {
                 it?.let { thisCall ->
@@ -73,7 +65,17 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                 }
             }
         }
+    }
 
+    override fun initView() {
+        binding.tbSetupCallScreen.menu.findItem(R.id.delete_call).isVisible =
+            setupCallViewModel.getCurrentCall()?.isLocal!!
+        if (setupCallViewModel.getCurrentCall()?.isLocal!!) {
+            sharedViewModel.setBackToMyCaller(true)
+        }
+        binding.tbSetupCallScreen.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         with(binding) {
             btnNow.setOnClickListener {

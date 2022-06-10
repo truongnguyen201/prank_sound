@@ -28,7 +28,7 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
             rcvCall.adapter = callAdapter
             rcvCall.setHasFixedSize(true)
             btnAdd.setOnClickListener {
-                action = CallerFragmentDirections.actionGlobalAddCallScreenFragment()
+                action = CallerFragmentDirections.actionGlobalAddCallScreenFragment().setIsAdd(true)
                 findNavController().navigate(action as NavDirections)
             }
         }
