@@ -32,14 +32,9 @@ class MainActivity : BaseActivity(), ControlPanelListener, ComponentCallbacks2 {
     private var taskJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.e("Permission Grant", Utils.storagePermissionGrant(applicationContext).toString())
         super.onCreate(savedInstanceState)
         initMediaPlayer()
         initViewModel()
-
-        Log.e("Current Fragment",
-            navHostFragment.childFragmentManager.fragments[0]::class.java.simpleName
-        )
     }
 
     private fun initMediaPlayer() {

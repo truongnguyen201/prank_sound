@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
@@ -24,7 +23,6 @@ import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.ShareViewModelStatus
 import com.hola360.pranksounds.ui.dialog.pickphoto.PickPhotoDialog
 import com.hola360.pranksounds.utils.Constants
-import com.hola360.pranksounds.utils.Utils
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
 import java.io.File
@@ -36,11 +34,12 @@ import kotlin.time.Duration.Companion.seconds
 class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScreenBinding>(),
     PickPhotoDialog.OnClickListener {
     private lateinit var addCallScreenViewModel: AddCallScreenViewModel
-
-    //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private lateinit var sharedViewModel: CallScreenSharedViewModel
     private var isSubmit = false
     private lateinit var dialog: PickPhotoDialog
+    private var isButtonClicking = false
+    private var isImageClicking = false
+
     private val args: AddCallScreenFragmentArgs by lazy {
         AddCallScreenFragmentArgs.fromBundle(
             requireArguments()
@@ -73,13 +72,11 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         setCall()
         with(binding) {
             imgAvatar.setOnClickListener {
-//                if (Utils.storagePermissionGrant(requireContext())) {
-//                    setUpDialog()
-//                } else {
-//                    requestStoragePermission()
-//                }
-
-                setUpDialog()
+                isImageClicking = true
+                if(!isButtonClicking){
+                    setUpDialog()
+                    isImageClicking = false
+                }
             }
 
             tvCallerName.doAfterTextChanged {
@@ -91,8 +88,12 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             }
 
             btnAdd.setOnClickListener {
-                isSubmit = true
-                addCallScreenViewModel.addCallToLocal()
+                isButtonClicking = true
+                if (!isImageClicking) {
+                    isSubmit = true
+                    addCallScreenViewModel.addCallToLocal()
+                    isButtonClicking = false
+                }
             }
 
             tvDefaultImg.setOnClickListener {
@@ -135,9 +136,10 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
                 setView(it)
             } else {
                 if (!args.isAdd && args.callModel != null) {
-                    setView(args.callModel!!)
+//                    setView(args.callModel!!)
                     binding.tbAddCallScreen.title =
                         requireActivity().getString(R.string.edit_call_screen)
+                    addCallScreenViewModel.isUpdate = true
                 }
             }
         }
@@ -178,22 +180,6 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             tvPhoneNumber.setText(call.phone)
         }
     }
-
-    private fun requestStoragePermission() {
-        resultLauncher.launch(
-            Utils.getStoragePermissions()
-        )
-    }
-
-    private val resultLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            if (Utils.storagePermissionGrant(requireContext())
-            ) {
-                setUpDialog()
-            } else {
-                Utils.showAlertPermissionNotGrant(binding.root, requireActivity())
-            }
-        }
 
     private fun setUpBackPress() {
         if (sharedViewModel.getCall()?.isLocal == true) {

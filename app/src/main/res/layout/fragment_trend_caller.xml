@@ -14,7 +14,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.callscreen.CallScreenFragment">
+        tools:context=".ui.callscreen.CallScreenFragment"
+        android:background="?android:colorBackground">
 
 
         <FrameLayout
@@ -29,8 +30,7 @@
                 android:id="@+id/rcvCall"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:visibility="@{viewModel.isEmpty() ? View.GONE : View.VISIBLE}"
+                android:padding="@dimen/dp_4"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -49,15 +49,7 @@
                 tools:layout_editor_absoluteX="0dp"
                 tools:layout_editor_absoluteY="0dp" />
 
-<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--                android:id="@+id/linearLayoutCompat"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@color/background_view"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="vertical"-->
-<!--                android:visibility="@{viewModel.isEmpty()?View.VISIBLE:View.GONE}">-->
-<!--            </androidx.appcompat.widget.LinearLayoutCompat>-->
+
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

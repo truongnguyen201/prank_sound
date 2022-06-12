@@ -77,20 +77,25 @@
                             android:textStyle="bold"
                             android:text="@string/no_result_add_new_caller"
                             android:textAppearance="?textAppearanceBody1" />
-
                         <Button
                             android:id="@+id/btnAdd"
-                            style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+                            style="@style/Theme.AppCompat.DayNight.DarkActionBar"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/no_internet_button_height"
                             android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="@dimen/dp_15"
                             android:background="@drawable/bg_retry_button"
+                            android:paddingHorizontal="@dimen/dp_30"
                             android:text="@string/add"
                             android:textAllCaps="false"
                             android:textAppearance="?textAppearanceBody1"
                             android:textColor="@color/white"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:theme="@style/MatButton"
+                            app:layout_constraintBottom_toBottomOf="@id/glHorizontal2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </androidx.appcompat.widget.LinearLayoutCompat>

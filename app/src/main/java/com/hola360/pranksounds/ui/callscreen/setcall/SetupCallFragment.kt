@@ -49,6 +49,11 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
         return R.layout.fragment_setup_call
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setCall()
+    }
+
     override fun initView() {
         binding.tbSetupCallScreen.menu.findItem(R.id.delete_call).isVisible =
             setupCallViewModel.getCurrentCall()?.isLocal!!
@@ -94,7 +99,7 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                             sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
                             action =
                                 CallerFragmentDirections.actionGlobalAddCallScreenFragment()
-                                    .setCallModel(setupCallViewModel.getCurrentCall())
+                                    .setCallModel(args.callModel)
                             findNavController().navigate(action as NavDirections)
                         }
                         mLastClickTime = SystemClock.elapsedRealtime()
@@ -123,20 +128,12 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
 
     override fun initViewModel() {
         sharedViewModel = CallScreenSharedViewModel.getInstance(mainActivity.application)
-
         val factory = SetupCallViewModel.Factory(mainActivity.application)
         setupCallViewModel = ViewModelProvider(this, factory)[SetupCallViewModel::class.java]
         setDataByViewModel()
     }
 
-
-    private fun setDataByViewModel() {
-        if (sharedViewModel.getStatus() == ShareViewModelStatus.SetCall) {
-            setupCallViewModel.setCall(sharedViewModel.getCall())
-        }
-        sharedViewModel.setCall(null)
-        sharedViewModel.setStatus(ShareViewModelStatus.Default)
-
+    private fun setCall(){
         setupCallViewModel.callLiveData.observe(this) {
             with(binding) {
                 it?.let {
@@ -145,7 +142,6 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                     } else {
                         it
                     }
-
                     val path =
                         if (currentCall!!.isLocal) currentCall.avatarUrl else Constants.SUB_URL + currentCall.avatarUrl
                     imgAvatar.let { imgView ->
@@ -162,6 +158,15 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                 }
             }
         }
+    }
+
+    private fun setDataByViewModel() {
+        if (sharedViewModel.getStatus() == ShareViewModelStatus.SetCall) {
+            setupCallViewModel.setCall(sharedViewModel.getCall())
+        }
+        sharedViewModel.setCall(null)
+        sharedViewModel.setStatus(ShareViewModelStatus.Default)
+        setCall()
 
         setupCallViewModel.startCallingLiveData.observe(this) {
             it?.let {
@@ -186,6 +191,8 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                         intent,
                         Utils.getPendingIntentFlags()
                     )
+                    pendingIntent.cancel()
+                    alarmManager.cancel(pendingIntent)
                     alarmManager.setExact(
                         Utils.getAlarmManagerFlags(),
                         Calendar.getInstance().timeInMillis + Converter.convertTime(
@@ -272,7 +279,6 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
         setupCallViewModel.deleteCall()
         requireActivity().onBackPressed()
         mainActivity.showToast(getString(R.string.delete_complete))
-
     }
 
     override fun onDestroy() {
@@ -289,6 +295,8 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
         }
         if (sharedViewModel.getCall() != null) {
             setupCallViewModel.setCall(sharedViewModel.getCall())
+        } else if (setupCallViewModel.getCurrentCall()?.phone == "") {
+            requireActivity().onBackPressed()
         }
         sharedViewModel.setCall(null)
         sharedViewModel.setStatus(ShareViewModelStatus.Default)

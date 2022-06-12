@@ -37,7 +37,7 @@ class TrendCallerFragment : CallListBaseFragment<FragmentTrendCallerBinding>() {
                 val phoneBook = (it as DataResponse.DataSuccess).body
                 callAdapter.updateData(phoneBook, 0)
             } else if (it.loadingStatus == LoadingStatus.Error) {
-                callAdapter.updateData(null, 0)
+                callAdapter.updateData(null, 1)
             }
         }
         try {

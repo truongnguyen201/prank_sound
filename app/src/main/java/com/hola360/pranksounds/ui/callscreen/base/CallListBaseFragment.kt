@@ -87,6 +87,7 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     private fun passCallToUpDate(call: Call) {
         sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
         sharedViewModel.setCall(call)
+        if (call.isLocal) sharedViewModel.setBackToMyCaller(true)
         action = CallerFragmentDirections.actionGlobalAddCallScreenFragment().setCallModel(call)
         findNavController().navigate(action as NavDirections)
     }

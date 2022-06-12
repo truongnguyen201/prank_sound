@@ -1,91 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/overlay_color">
+        android:background="?android:colorBackground"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_32"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/glHorizontal1"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.45" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/glVertical1"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.1" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/glVertical2"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.9" />
-
-        <LinearLayout
-            android:layout_width="@dimen/dp_0"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:contentDescription="@string/app_name"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="@dimen/dp_10"
-            app:layout_constraintBottom_toBottomOf="@id/glHorizontal1"
-            app:layout_constraintEnd_toEndOf="@id/glVertical2"
-            app:layout_constraintStart_toStartOf="@id/glVertical1"
-            app:layout_constraintTop_toTopOf="@id/glHorizontal1">
+            android:src="@drawable/banner_no_internet" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/app_name"
-                android:gravity="center_horizontal"
-                android:src="@drawable/banner_no_internet" />
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_15"
+            android:text="@string/no_internet_title"
+            android:textAllCaps="true"
+            android:textAppearance="?textAppearanceHeadline6"
+            android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_15"
-                android:text="@string/no_internet_title"
-                android:textAllCaps="true"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_18" />
+        <TextView
+            android:id="@+id/tvDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center_horizontal"
+            android:text="@string/no_internet_des"
+            android:textAppearance="?textAppearanceBody2" />
 
-            <TextView
-                android:id="@+id/tvDetail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dp_10"
-                android:layout_marginTop="@dimen/dp_10"
-                android:gravity="center_horizontal"
-                android:text="@string/no_internet_des"
-                android:textSize="@dimen/sp_15" />
+        <Button
+            android:id="@+id/btRetry"
+            style="@style/Theme.AppCompat.DayNight.DarkActionBar"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/no_internet_button_height"
+            android:layout_marginTop="@dimen/dp_15"
+            android:background="@drawable/bg_retry_button"
+            android:paddingHorizontal="@dimen/dp_30"
+            android:text="@string/retry_button"
+            android:textAllCaps="false"
+            android:textAppearance="?textAppearanceBody1"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:theme="@style/MatButton"
+            app:layout_constraintBottom_toBottomOf="@id/glHorizontal2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/btRetry"
-                style="@style/Theme.AppCompat.DayNight.DarkActionBar"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/no_internet_button_height"
-                android:layout_marginTop="@dimen/dp_15"
-                android:background="@drawable/bg_retry_button"
-                android:paddingHorizontal="@dimen/dp_30"
-                android:text="@string/retry_button"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_16"
-                android:textStyle="bold"
-                android:theme="@style/MatButton"
-                app:layout_constraintBottom_toBottomOf="@id/glHorizontal2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="TouchTargetSizeCheck" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
