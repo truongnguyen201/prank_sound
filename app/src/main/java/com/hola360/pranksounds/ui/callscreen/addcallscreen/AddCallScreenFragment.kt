@@ -44,12 +44,6 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
     private var mLastClickTime: Long = 0
     private lateinit var dialog: PickPhotoDialog
 
-    private val args: AddCallScreenFragmentArgs by lazy {
-        AddCallScreenFragmentArgs.fromBundle(
-            requireArguments()
-        )
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,14 +70,11 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         setCall()
         with(binding) {
             imgAvatar.setOnClickListener {
-                if (SystemClock.elapsedRealtime() - mLastClickTime > resources.getInteger(R.integer.long_period)) {
                     if (Utils.storagePermissionGrant(requireContext())) {
                         setUpDialog()
                     } else {
                         requestStoragePermission()
                     }
-                }
-                mLastClickTime = SystemClock.elapsedRealtime()
             }
 
             tvCallerName.doAfterTextChanged {
@@ -95,11 +86,8 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             }
 
             btnAdd.setOnClickListener {
-                if (SystemClock.elapsedRealtime() - mLastClickTime > resources.getInteger(R.integer.long_period)) {
                     isSubmit = true
                     addCallScreenViewModel.addCallToLocal()
-                }
-                mLastClickTime = SystemClock.elapsedRealtime()
             }
 
             tvDefaultImg.setOnClickListener {
@@ -155,8 +143,6 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
                 addCallScreenViewModel.setCall(null)
             }
         }
-//        sharedViewModel.setStatus(ShareViewModelStatus.Default)
-//        sharedViewModel.setCall(null)
     }
 
     private fun setView(call: Call) {

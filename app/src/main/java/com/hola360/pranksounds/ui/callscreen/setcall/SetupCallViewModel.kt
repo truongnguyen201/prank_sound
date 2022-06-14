@@ -39,7 +39,6 @@ class SetupCallViewModel(val app: Application) : ViewModel() {
     }
 
     fun startCalling() {
-        startCallingLiveData.value = null
         startCallingLiveData.postValue(curCallModel)
     }
 
