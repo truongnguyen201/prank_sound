@@ -1,5 +1,6 @@
 package com.hola360.pranksounds.utils
 
+import android.os.SystemClock
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -14,8 +15,7 @@ fun ImageView.bindThumbFile(photoModel: PhotoModel?) {
         Glide.with(this).load(photoModel.file)
             .placeholder(R.drawable.default_image)
             .error(R.drawable.default_image).into(this)
-    }
-    else {
+    } else {
         Glide.with(this).load(R.drawable.default_image)
             .placeholder(R.drawable.default_image)
             .error(R.drawable.default_image).into(this)
@@ -30,4 +30,15 @@ fun ImageView.iconForAction(actionModel: ActionModel) {
         visibility = View.VISIBLE
         setImageResource(actionModel.icon)
     }
+}
+
+fun View.clickWithDebounce(debounceTime: Long = 100L, action: () -> Unit) {
+    this.setOnClickListener(object : View.OnClickListener {
+        private var lastClickTime: Long = 0
+        override fun onClick(v: View) {
+            if (SystemClock.elapsedRealtime() - lastClickTime < debounceTime) return
+            else action()
+            lastClickTime = SystemClock.elapsedRealtime()
+        }
+    })
 }

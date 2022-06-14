@@ -8,18 +8,14 @@ import com.github.ybq.android.spinkit.style.Circle
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
-import com.hola360.pranksounds.data.model.SoundCategory
 import com.hola360.pranksounds.databinding.FragmentSoundFunnyBinding
-import com.hola360.pranksounds.ui.base.AbsBaseFragment
 import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.sound_funny.adapter.SoundCategoryAdapter
 
-class SoundFunnyFragment : BaseScreenWithViewModelFragment<FragmentSoundFunnyBinding>() {
+class SoundFunnyFragment : BaseScreenWithViewModelFragment<FragmentSoundFunnyBinding>(),
+    SoundCategoryAdapter.ItemClick {
 
-    private val soundCategoryAdapter = SoundCategoryAdapter {
-        handleOnItemClick(it)
-    }
-
+    private val soundCategoryAdapter by lazy { SoundCategoryAdapter(this) }
     private lateinit var soundFunnyViewModel: SoundFunnyViewModel
 
     override fun getLayout(): Int {
@@ -31,6 +27,7 @@ class SoundFunnyFragment : BaseScreenWithViewModelFragment<FragmentSoundFunnyBin
             toolbar.setNavigationOnClickListener {
                 requireActivity().onBackPressed()
             }
+
             rvCategory.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
@@ -60,16 +57,16 @@ class SoundFunnyFragment : BaseScreenWithViewModelFragment<FragmentSoundFunnyBin
         }
     }
 
-    private fun handleOnItemClick(category: SoundCategory) {
-        val action = SoundFunnyFragmentDirections.actionSoundFunnyFragmentToCategoryFragment()
-            .setCategoryTitle(category.title)
-            .setCategoryId(category.categoryId)
-        findNavController().navigate(action)
-    }
-
     private fun setUpProgressBar() {
         val circle = Circle()
         circle.color = Color.parseColor("#F18924")
         binding.progressBar.indeterminateDrawable = circle
+    }
+
+    override fun itemClick(title: String, id: String) {
+        val action = SoundFunnyFragmentDirections.actionSoundFunnyFragmentToCategoryFragment()
+            .setCategoryTitle(title)
+            .setCategoryId(id)
+        findNavController().navigate(action)
     }
 }

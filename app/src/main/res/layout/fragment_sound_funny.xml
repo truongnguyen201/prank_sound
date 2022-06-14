@@ -13,10 +13,11 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/haha"
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/home_background_color"
+        android:splitMotionEvents="false"
         tools:context=".ui.sound_funny.SoundFunnyFragment">
 
         <androidx.appcompat.widget.Toolbar
