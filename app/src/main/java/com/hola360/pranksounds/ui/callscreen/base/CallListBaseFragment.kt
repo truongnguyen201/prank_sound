@@ -14,6 +14,7 @@ import com.hola360.pranksounds.data.repository.PhoneBookRepository
 import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.*
 import com.hola360.pranksounds.ui.callscreen.adapter.CallAdapter
+import com.hola360.pranksounds.ui.callscreen.data.ShareViewModelStatus
 import com.hola360.pranksounds.ui.callscreen.popup.ActionAdapter
 import com.hola360.pranksounds.ui.callscreen.popup.ListActionPopup
 import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
@@ -26,8 +27,6 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     protected var callAdapter: CallAdapter = CallAdapter { handleOnclickItem(it) }
     private lateinit var action: Any
     private lateinit var popUpWindow: PopupWindow
-
-    //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private lateinit var sharedViewModel: CallScreenSharedViewModel
     private val isSharedViewModelInitialized get() = this::sharedViewModel.isInitialized
     private val listActionPopup by lazy { ListActionPopup(requireContext()) }
@@ -70,7 +69,8 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     }
 
     private fun setUpAlertDialog(call: Call) {
-        val dialog = ConfirmDeleteDialog.create(this, call)
+        val dialog = ConfirmDeleteDialog.create()
+        dialog.setOnClickListener(this, call)
         dialog.show(parentFragmentManager, "")
     }
 
@@ -85,16 +85,14 @@ abstract class CallListBaseFragment<V : ViewDataBinding> : BaseScreenWithViewMod
     }
 
     private fun passCallToUpDate(call: Call) {
-        sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
-        sharedViewModel.setCall(call)
+        sharedViewModel.setResultData(ShareViewModelStatus.EditCall.ordinal,call)
         if (call.isLocal) sharedViewModel.setBackToMyCaller(true)
         action = CallerFragmentDirections.actionGlobalAddCallScreenFragment().setCallModel(call)
         findNavController().navigate(action as NavDirections)
     }
 
     override fun onItemClick(call: Call, position: Int) {
-        sharedViewModel.setStatus(ShareViewModelStatus.SetCall)
-        sharedViewModel.setCall(call)
+        sharedViewModel.setResultData(ShareViewModelStatus.SetCall.ordinal,call)
         action = CallerFragmentDirections.actionGlobalSetupCallFragment()
         findNavController().navigate(action as NavDirections)
     }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 class AddCallScreenViewModel(app: Application) : ViewModel() {
     val repository = PhoneBookRepository(app)
     private var _callLiveData = MutableLiveData<Call>(null)
+    val callLiveData: LiveData<Call> = _callLiveData
     val saveCallDone = MutableLiveData<DataResponse<Call>>(DataResponse.DataIdle())
     var curCallModel: Call? = null
     var officialModel: Call? = null
@@ -26,6 +27,10 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
 
     val isDefault: LiveData<Boolean> = Transformations.map(_callLiveData) {
         _callLiveData.value?.avatarUrl == ""
+    }
+
+    val imageClickable: LiveData<Boolean> = Transformations.map(saveCallDone) {
+        saveCallDone.value !is DataResponse.DataSuccess
     }
 
     fun setOnNameChange(name: String) {
@@ -65,7 +70,6 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
     }
 
     fun addCallToLocal() {
-
         val newCall: Call = curCallModel!!
         if (!newCall.isLocal && newCall.avatarUrl != "") {
             newCall.avatarUrl = Constants.SUB_URL + newCall.avatarUrl

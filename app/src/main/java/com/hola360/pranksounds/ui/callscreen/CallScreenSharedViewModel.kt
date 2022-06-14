@@ -5,13 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.hola360.pranksounds.data.api.response.ResultDataResponse
 import com.hola360.pranksounds.data.model.Call
+import com.hola360.pranksounds.ui.callscreen.data.ShareViewModelStatus
 import com.hola360.pranksounds.utils.SingletonHolder
 
 class CallScreenSharedViewModel(private val app: Application) : ViewModel() {
 
+    val resultLiveData =
+        MutableLiveData<ResultDataResponse<Call>>(ResultDataResponse.ResultDataEmpty())
+
     private var _myCall = MutableLiveData<Call?>()
     val myCall: LiveData<Call?> = _myCall
+
 
     companion object :
         SingletonHolder<CallScreenSharedViewModel, Application>(::CallScreenSharedViewModel)
@@ -29,20 +35,16 @@ class CallScreenSharedViewModel(private val app: Application) : ViewModel() {
         return _myCall.value
     }
 
-    fun setStatus(status: ShareViewModelStatus) {
-        _useStatus.postValue(status)
-    }
-
-    fun getStatus(): ShareViewModelStatus {
-        return _useStatus.value!!
-    }
-
     fun setBackToMyCaller(boolean: Boolean) {
         isBackToMyCaller.postValue(boolean)
     }
 
     fun isBackToMyCaller(): Boolean {
         return isBackToMyCaller.value!!
+    }
+
+    fun setResultData(resultCode: Int, call: Call) {
+        resultLiveData.postValue(ResultDataResponse.ResultDataSuccess(resultCode, call).copy())
     }
 
     class Factory(private val app: Application) : ViewModelProvider.NewInstanceFactory() {

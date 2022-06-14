@@ -53,7 +53,7 @@ object Constants {
     const val FAVORITE_ID = "fav_sound"
 
     //timing of splash screen before navigate to another screen
-    const val SPLASH_TIMING = 2000L
+    const val SPLASH_TIMING = 200L
 
     //timing duration between twice back pressed to quit app
     const val BACK_PRESSED_TIMING = 2000L
@@ -67,6 +67,10 @@ object Constants {
 
     // call sub url
     const val CALL_SUB_PATH = "soundFunnyDev.php"
+
+    // request code in pending intent
+    const val REQUEST_CODE = "REQUEST_CODE"
+    const val INTENT_CODE = "INTENT_CODE"
 
     //sound category parameter
     const val SOUND_CAT_PARAM = "list_category"

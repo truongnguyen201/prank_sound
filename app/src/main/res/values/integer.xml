@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="max_length_of_name">20</integer>
+    <integer name="max_length_of_name">30</integer>
     <integer name="max_length_of_phone_number">20</integer>
+    <integer name="long_period">500</integer>
+    <integer name="short_period">100</integer>
 </resources>

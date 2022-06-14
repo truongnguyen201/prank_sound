@@ -4,6 +4,8 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +18,13 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
+import com.hola360.pranksounds.data.api.response.ResultDataResponse
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.data.model.PhotoModel
 import com.hola360.pranksounds.databinding.FragmentAddCallScreenBinding
 import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
-import com.hola360.pranksounds.ui.callscreen.ShareViewModelStatus
+import com.hola360.pranksounds.ui.callscreen.data.ShareViewModelStatus
 import com.hola360.pranksounds.ui.dialog.pickphoto.PickPhotoDialog
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
@@ -36,11 +39,11 @@ import kotlin.time.Duration.Companion.seconds
 class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScreenBinding>(),
     PickPhotoDialog.OnClickListener {
     private lateinit var addCallScreenViewModel: AddCallScreenViewModel
-
-    //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private lateinit var sharedViewModel: CallScreenSharedViewModel
     private var isSubmit = false
+    private var mLastClickTime: Long = 0
     private lateinit var dialog: PickPhotoDialog
+
     private val args: AddCallScreenFragmentArgs by lazy {
         AddCallScreenFragmentArgs.fromBundle(
             requireArguments()
@@ -73,11 +76,14 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         setCall()
         with(binding) {
             imgAvatar.setOnClickListener {
-                if (Utils.storagePermissionGrant(requireContext())) {
-                    setUpDialog()
-                } else {
-                    requestStoragePermission()
+                if (SystemClock.elapsedRealtime() - mLastClickTime > resources.getInteger(R.integer.long_period)) {
+                    if (Utils.storagePermissionGrant(requireContext())) {
+                        setUpDialog()
+                    } else {
+                        requestStoragePermission()
+                    }
                 }
+                mLastClickTime = SystemClock.elapsedRealtime()
             }
 
             tvCallerName.doAfterTextChanged {
@@ -89,8 +95,11 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             }
 
             btnAdd.setOnClickListener {
-                isSubmit = true
-                addCallScreenViewModel.addCallToLocal()
+                if (SystemClock.elapsedRealtime() - mLastClickTime > resources.getInteger(R.integer.long_period)) {
+                    isSubmit = true
+                    addCallScreenViewModel.addCallToLocal()
+                }
+                mLastClickTime = SystemClock.elapsedRealtime()
             }
 
             tvDefaultImg.setOnClickListener {
@@ -99,7 +108,7 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             }
         }
 
-        if (sharedViewModel.getCall() != null) {
+        if (sharedViewModel.resultLiveData.value?.resultCode == ShareViewModelStatus.EditCall.ordinal) {
             binding.tbAddCallScreen.title = requireActivity().getString(R.string.edit_call_screen)
         }
     }
@@ -110,49 +119,44 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         val factory = AddCallScreenViewModel.Factory(requireActivity().application)
         addCallScreenViewModel =
             ViewModelProvider(this, factory)[AddCallScreenViewModel::class.java]
-        setDataByViewModel()
 
+        setDataByViewModel()
         addCallScreenViewModel.saveCallDone.observe(this) {
             it?.let {
                 if (it is DataResponse.DataSuccess) {
                     val body = it.body
-                    sharedViewModel.setCall(body)
+                    sharedViewModel.setResultData(ShareViewModelStatus.SetCall.ordinal, body)
                     sharedViewModel.setBackToMyCaller(true)
                     mainActivity.showToast(getString(R.string.insert_success))
                     requireActivity().onBackPressed()
                 }
             }
         }
-
         retainInstance = true
     }
 
     fun setCall() {
         addCallScreenViewModel.getCurrentCall()?.let {
-            if (it.avatarUrl.isNotBlank()) {
-                setView(it)
-            } else {
-                if (!args.isAdd) {
-                    setView(args.callModel!!)
-                }
-            }
+            sharedViewModel.setBackToMyCaller(it.isLocal)
+            setView(it)
         }
     }
 
     private fun setDataByViewModel() {
-        when (sharedViewModel.getStatus()) {
-            ShareViewModelStatus.AddCall -> {
+        when (sharedViewModel.resultLiveData.value?.resultCode) {
+            ShareViewModelStatus.AddCall.ordinal -> {
                 addCallScreenViewModel.setCall(null)
             }
-            ShareViewModelStatus.EditCall -> {
-                addCallScreenViewModel.setCall(sharedViewModel.getCall())
+            ShareViewModelStatus.EditCall.ordinal -> {
+                val body = (sharedViewModel.resultLiveData.value as ResultDataResponse.ResultDataSuccess).body
+                addCallScreenViewModel.setCall(body.copy())
             }
             else -> {
                 addCallScreenViewModel.setCall(null)
             }
         }
-        sharedViewModel.setStatus(ShareViewModelStatus.Default)
-        sharedViewModel.setCall(null)
+//        sharedViewModel.setStatus(ShareViewModelStatus.Default)
+//        sharedViewModel.setCall(null)
     }
 
     private fun setView(call: Call) {
@@ -197,13 +201,13 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         } else {
             sharedViewModel.setBackToMyCaller(false)
         }
-        sharedViewModel.setCall(addCallScreenViewModel.officialModel)
     }
 
     @Suppress("DEPRECATION")
     private fun setUpDialog() {
         addCallScreenViewModel.setIsLocal(true)
-        dialog = PickPhotoDialog.create(this)
+        dialog = PickPhotoDialog.create()
+        dialog.setOnClickListener(this)
         dialog.retainInstance = true
         dialog.show(parentFragmentManager, "Pick photo")
     }

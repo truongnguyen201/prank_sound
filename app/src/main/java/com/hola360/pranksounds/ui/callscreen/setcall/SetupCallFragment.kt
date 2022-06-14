@@ -1,26 +1,31 @@
 package com.hola360.pranksounds.ui.callscreen.setcall
 
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.hola360.pranksounds.R
+import com.hola360.pranksounds.data.api.response.ResultDataResponse
 import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.FragmentSetupCallBinding
 import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
-import com.hola360.pranksounds.ui.callscreen.ShareViewModelStatus
+import com.hola360.pranksounds.ui.callscreen.data.ShareViewModelStatus
 import com.hola360.pranksounds.ui.callscreen.callingscreen.receiver.CallingReceiver
 import com.hola360.pranksounds.ui.dialog.confirmdelete.ConfirmDeleteDialog
 import com.hola360.pranksounds.utils.Constants
@@ -106,10 +111,10 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.edit_call -> {
-                        if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime > resources.getInteger(R.integer.short_period)) {
+                            val body = (sharedViewModel.resultLiveData.value as ResultDataResponse.ResultDataSuccess).body
                             sharedViewModel.setBackToMyCaller(false)
-                            sharedViewModel.setCall(setupCallViewModel.getCurrentCall())
-                            sharedViewModel.setStatus(ShareViewModelStatus.EditCall)
+                            sharedViewModel.setResultData(ShareViewModelStatus.EditCall.ordinal, body)
                             action =
                                 CallerFragmentDirections.actionGlobalAddCallScreenFragment()
                             findNavController().navigate(action as NavDirections)
@@ -118,7 +123,7 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                         true
                     }
                     R.id.delete_call -> {
-                        if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime > resources.getInteger(R.integer.short_period)) {
                             confirmDelete()
                         }
                         mLastClickTime = SystemClock.elapsedRealtime()
@@ -143,16 +148,33 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
 
         val factory = SetupCallViewModel.Factory(mainActivity.application)
         setupCallViewModel = ViewModelProvider(this, factory)[SetupCallViewModel::class.java]
+
+        sharedViewModel.resultLiveData.observe(this){
+            it?.let {
+                val body = (it as ResultDataResponse.ResultDataSuccess).body
+                setupCallViewModel.setCall(body)
+//                if (it.resultCode == ShareViewModelStatus.EditCall.ordinal){
+//                    val body = (it as ResultDataResponse.ResultDataSuccess).body
+//                    setupCallViewModel.setCall(body)
+//                }
+//                else if (it.resultCode == ShareViewModelStatus.SetCall.ordinal){
+//                    val body = (it as ResultDataResponse.ResultDataSuccess).body
+//                    setupCallViewModel.setCall(body)
+//                }
+            }
+        }
         setDataByViewModel()
     }
 
 
+    @SuppressLint("CommitPrefEdits")
     private fun setDataByViewModel() {
-        if (sharedViewModel.getStatus() == ShareViewModelStatus.SetCall) {
-            setupCallViewModel.setCall(sharedViewModel.getCall())
+        if (sharedViewModel.resultLiveData.value?.resultCode == ShareViewModelStatus.SetCall.ordinal) {
+            val body = (sharedViewModel.resultLiveData.value as ResultDataResponse.ResultDataSuccess).body
+            setupCallViewModel.setCall(body)
         }
-        sharedViewModel.setCall(null)
-        sharedViewModel.setStatus(ShareViewModelStatus.Default)
+//        sharedViewModel.setCall(null)
+//        sharedViewModel.setStatus(ShareViewModelStatus.Default)
 
         setupCallViewModel.callLiveData.observe(this) {
             with(binding) {
@@ -184,6 +206,8 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                     requireContext(),
                     CallingReceiver::class.java
                 )
+                val pref: SharedPreferences = requireContext().getSharedPreferences(Constants.REQUEST_CODE, MODE_PRIVATE)
+                val requestCode = pref.getInt(Constants.INTENT_CODE, 1000001)
 
                 val bundle = Bundle()
                 bundle.putParcelable("call", it)
@@ -191,12 +215,24 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
                 if (setupCallViewModel.period.value == WaitCallPeriod.Now) {
                     requireActivity().sendBroadcast(intent)
                 } else {
+                    alarmManager.cancel(PendingIntent.getBroadcast(
+                        requireActivity(),
+                        requestCode,
+                        intent,
+                        Utils.getPendingIntentFlags()
+                    ))
+
+                    val code = Random().nextInt(19934775)
+                    pref.edit().putInt(Constants.INTENT_CODE, code).commit()
+
+
                     val pendingIntent = PendingIntent.getBroadcast(
-                        requireContext(),
-                        Random().nextInt(123123),
+                        requireActivity(),
+                        code,
                         intent,
                         Utils.getPendingIntentFlags()
                     )
+
                     alarmManager.setExact(
                         Utils.getAlarmManagerFlags(),
                         Calendar.getInstance().timeInMillis + Converter.convertTime(
@@ -275,7 +311,8 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
     }
 
     private fun confirmDelete() {
-        val dialog = ConfirmDeleteDialog.create(this, setupCallViewModel.getCurrentCall()!!)
+        val dialog = ConfirmDeleteDialog.create()
+        dialog.setOnClickListener(this, setupCallViewModel.getCurrentCall()!!)
         dialog.show(childFragmentManager, "")
     }
 
@@ -295,15 +332,7 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
 
     override fun onResume() {
         super.onResume()
-        if (setupCallViewModel.getCurrentCall()?.isLocal == true) {
-            sharedViewModel.setBackToMyCaller(true)
-        }
-        if (sharedViewModel.getCall() != null) {
-            setupCallViewModel.setCall(sharedViewModel.getCall())
-        }
-        sharedViewModel.setCall(null)
-        sharedViewModel.setStatus(ShareViewModelStatus.Default)
-
+//        val body = (sharedViewModel.resultLiveData.value as ResultDataResponse.ResultDataSuccess).body
     }
 }
 

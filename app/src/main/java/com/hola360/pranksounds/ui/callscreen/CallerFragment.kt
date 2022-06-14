@@ -1,15 +1,20 @@
 package com.hola360.pranksounds.ui.callscreen
 
+import android.util.Log
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hola360.pranksounds.R
+import com.hola360.pranksounds.data.api.response.ResultDataResponse
+import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.FragmentCallerBinding
 import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.callscreen.adapter.ViewPagerAdapter
+import com.hola360.pranksounds.ui.callscreen.data.ShareViewModelStatus
 
 
-class CallerFragment : BaseScreenWithViewModelFragment<FragmentCallerBinding>() {
+class CallerFragment : BaseScreenWithViewModelFragment<FragmentCallerBinding>(){
     private lateinit var action: Any
 
     //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
@@ -38,12 +43,13 @@ class CallerFragment : BaseScreenWithViewModelFragment<FragmentCallerBinding>() 
             }
         }.attach()
 
+//        onTabLayoutChange()
+
         with(binding.tbCallScreen) {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.add_new_call -> {
-                        sharedViewModel.setCall(null)
-                        sharedViewModel.setStatus(ShareViewModelStatus.AddCall)
+                        sharedViewModel.setResultData(ShareViewModelStatus.AddCall.ordinal, Call())
                         action = CallerFragmentDirections.actionGlobalAddCallScreenFragment()
                             .setIsAdd(true)
                         findNavController().navigate(action as NavDirections)
@@ -61,7 +67,41 @@ class CallerFragment : BaseScreenWithViewModelFragment<FragmentCallerBinding>() 
 
     override fun initViewModel() {
         sharedViewModel = CallScreenSharedViewModel.getInstance(mainActivity.application)
+        sharedViewModel.resultLiveData.observe(this){
+            it?.let {
+                if (it.resultCode == ShareViewModelStatus.AddCall.ordinal){
+                    val body = (it as ResultDataResponse.ResultDataSuccess).body
+
+                }
+            }
+        }
     }
+
+    private fun onTabLayoutChange() {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                updateShareViewModel(tab?.position)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                doNothing()
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                updateShareViewModel(tab?.position)
+            }
+        })
+    }
+
+    private fun updateShareViewModel(position: Int?) {
+        Log.e("----", "updateShareViewModel: $position", )
+        when (position) {
+            0 -> sharedViewModel.setBackToMyCaller(false)
+            1 -> sharedViewModel.setBackToMyCaller(true)
+            else -> sharedViewModel.setBackToMyCaller(false)
+        }
+    }
+    private fun doNothing(){}
 
     override fun onResume() {
         if (sharedViewModel.isBackToMyCaller()) {
@@ -69,10 +109,7 @@ class CallerFragment : BaseScreenWithViewModelFragment<FragmentCallerBinding>() 
                 tabLayout.getTabAt(1)?.select()
                 vpCaller.setCurrentItem(tabLayout.selectedTabPosition, false)
             }
-        } else {
-            binding.tabLayout.getTabAt(0)?.select()
         }
-
         sharedViewModel.setBackToMyCaller(false)
         super.onResume()
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,14 +23,13 @@ import com.hola360.pranksounds.ui.dialog.pickphoto.data.PickModelDataType
 import com.hola360.pranksounds.utils.Utils
 
 @Suppress("DEPRECATION")
-class PickPhotoDialog(
-    private val onClickListener: OnClickListener
-) : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.ListenClickItem {
+class PickPhotoDialog() : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.ListenClickItem {
 
     lateinit var viewModel: PickPhotoDialogViewModel
     lateinit var adapter: PhotoAdapter
     private lateinit var layoutManager: GridLayoutManager
     private var albumState: Parcelable? = null
+    private lateinit var onClickListener: OnClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +81,31 @@ class PickPhotoDialog(
             recycleView.adapter = adapter
         }
         binding.viewModel = viewModel
-        viewModel.loadData()
+        if (Utils.storagePermissionGrant(requireContext())) {
+            viewModel.loadData()
+        } else {
+            requestStoragePermission()
+        }
+//        viewModel.loadData()
     }
+
+    private fun requestStoragePermission() {
+        resultLauncher.launch(
+            Utils.getStoragePermissions()
+        )
+    }
+
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            if (Utils.storagePermissionGrant(requireContext())
+            ) {
+                viewModel.loadData()
+            } else {
+                Utils.showAlertPermissionNotGrant(binding.root, requireActivity())
+                dismiss()
+            }
+        }
+
 
     override fun getLayout(): Int {
         return R.layout.dialog_pick_photo
@@ -115,9 +138,15 @@ class PickPhotoDialog(
 
     companion object {
         const val COLUMNS = 3
-        fun create(listener: PickPhotoDialog.OnClickListener): PickPhotoDialog {
-            return PickPhotoDialog(listener)
+
+        @JvmStatic
+        fun create(): PickPhotoDialog {
+            return PickPhotoDialog()
         }
+    }
+
+    fun setOnClickListener(listener: PickPhotoDialog.OnClickListener) {
+        this.onClickListener = listener
     }
 
     interface OnClickListener {

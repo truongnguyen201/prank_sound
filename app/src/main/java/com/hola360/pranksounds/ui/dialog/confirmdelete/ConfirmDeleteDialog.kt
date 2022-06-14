@@ -17,9 +17,9 @@ import com.hola360.pranksounds.ui.callscreen.DeleteConfirmListener
 import com.hola360.pranksounds.ui.dialog.base.BaseDialog
 
 
-class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private val mCall: Call) :
-    BaseDialog<ConfirmDeleteDialogBinding>() {
-
+class ConfirmDeleteDialog() : BaseDialog<ConfirmDeleteDialogBinding>() {
+    private lateinit var listener: DeleteConfirmListener
+    private var mCall: Call = Call()
     private lateinit var mViewModel: ConfirmDeleteDialogViewModel
 
     override fun getLayout(): Int {
@@ -50,6 +50,8 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
             }
         }
 
+        if (mCall.id == 0L) dismiss()
+
         with(binding) {
             viewModel = mViewModel
 
@@ -66,30 +68,32 @@ class ConfirmDeleteDialog(private val listener: DeleteConfirmListener, private v
 
     override fun onDestroyView() {
         super.onDestroyView()
-////        try {
-//            dismiss()
-////        } catch (ex: Exception) {
-////            ex.printStackTrace()
-////        }
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 
     override fun onResume() {
         super.onResume()
         val window = dialog!!.window
         val size = Point()
-
         val display: Display = window!!.windowManager.defaultDisplay
         display.getSize(size)
-
         val width: Int = size.x
-
         window.setLayout((width * 0.9).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
         window.setGravity(Gravity.CENTER)
     }
 
+
     companion object {
-        fun create(listener: DeleteConfirmListener, call: Call): ConfirmDeleteDialog {
-            return ConfirmDeleteDialog(listener, call)
+        fun create(): ConfirmDeleteDialog {
+            return ConfirmDeleteDialog()
         }
+    }
+
+    fun setOnClickListener(listener: DeleteConfirmListener, call: Call) {
+        this.listener = listener
+        this.mCall = call
     }
 }
