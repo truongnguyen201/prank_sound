@@ -170,6 +170,15 @@
                 app:argType="boolean" />
         </action>
 
+        <action
+            android:id="@+id/action_callerFragment_to_setupCallFragment"
+            app:destination="@id/setupCallFragment">
+            <argument
+                android:name="callModel"
+                android:defaultValue="@null"
+                app:argType="com.hola360.pranksounds.data.model.Call"
+                app:nullable="true" />
+        </action>
     </fragment>
 
     <action
@@ -231,11 +240,13 @@
         android:id="@+id/setupCallFragment"
         android:name="com.hola360.pranksounds.ui.callscreen.setcall.SetupCallFragment"
         android:label="SetupCallFragment">
-        <!--                <argument-->
-        <!--                    android:name="callModel"-->
-        <!--                    app:argType="com.hola360.pranksounds.data.model.Call"-->
-        <!--                    app:nullable="false" />-->
+        <argument
+            android:name="callModel"
+            android:defaultValue="@null"
+            app:argType="com.hola360.pranksounds.data.model.Call"
+            app:nullable="true" />
     </fragment>
+
     <action
         android:id="@+id/action_global_setupCallFragment"
         app:destination="@id/setupCallFragment" />

@@ -59,14 +59,11 @@ object Constants {
     const val BACK_PRESSED_TIMING = 2000L
 
     //base URL of API
-    const val BASE_URL = "https://devops.hola360.com/meme_sound/"
+    const val BASE_URL = "https://r22.newmobile.rocks/"
 
     //sub url for images and sound
     const val SUB_URL = "https://files.newmobile.rocks/meme-sound/"
-    const val SOUND_FUNNY_PATH = "/soundFuny.php"
-
-    // call sub url
-    const val CALL_SUB_PATH = "soundFunnyDev.php"
+    const val SOUND_FUNNY_PATH = "soundFuny.php"
 
     // request code in pending intent
     const val REQUEST_CODE = "REQUEST_CODE"

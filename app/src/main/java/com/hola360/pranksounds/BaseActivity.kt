@@ -8,7 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 
 abstract class BaseActivity : AppCompatActivity() {
-    private lateinit var navHostFragment: NavHostFragment
+    lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {

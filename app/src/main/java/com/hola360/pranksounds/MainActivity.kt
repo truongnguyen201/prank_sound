@@ -7,16 +7,17 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
 import com.hola360.pranksounds.data.model.Sound
 import com.hola360.pranksounds.databinding.ActivityMainBinding
 import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.sound_funny.detail_category.SharedViewModel
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.ToastUtils
+import com.hola360.pranksounds.utils.Utils
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import kotlinx.coroutines.*
 
@@ -195,7 +196,7 @@ class MainActivity : BaseActivity(), ControlPanelListener, ComponentCallbacks2 {
         return super.dispatchTouchEvent(event)
     }
 
-    fun showToast(message: String){
+    fun showToast(message: String) {
         ToastUtils.getInstance(this).showToast(message)
     }
 

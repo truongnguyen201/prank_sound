@@ -403,10 +403,10 @@ class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCat
 
     override fun onMoreIconClick(view: View, position: Int) {
         currentMorePosition = position
-        val yPosition = if (view.y > screenHeight - 400) {
+        val yPosition = if (view.y > screenHeight - 600) {
             ((-view.height) * 2.5).toInt()
         } else {
-            ((-view.height) * 2)
+            ((-view.height) * 1)
         }
         popUpWindow.showAsDropDown(
             view, (screenWidth * 0.6).toInt(),
