@@ -67,7 +67,6 @@ class PickPhotoDialog() : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.Lis
             it?.let {
                 if (it) {
                     dismiss()
-//                    onClickListener?.onClickDismiss()
                 }
             }
         }
@@ -84,27 +83,9 @@ class PickPhotoDialog() : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.Lis
         if (Utils.storagePermissionGrant(requireContext())) {
             viewModel.loadData()
         } else {
-            requestStoragePermission()
+            dismiss()
         }
-//        viewModel.loadData()
     }
-
-    private fun requestStoragePermission() {
-        resultLauncher.launch(
-            Utils.getStoragePermissions()
-        )
-    }
-
-    private val resultLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            if (Utils.storagePermissionGrant(requireContext())
-            ) {
-                viewModel.loadData()
-            } else {
-                Utils.showAlertPermissionNotGrant(binding.root, requireActivity())
-                dismiss()
-            }
-        }
 
 
     override fun getLayout(): Int {

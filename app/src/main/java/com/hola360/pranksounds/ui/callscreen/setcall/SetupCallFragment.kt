@@ -40,7 +40,6 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
     private lateinit var receiver: CallingReceiver
     private val isReceiverInitialized get() = this::receiver.isInitialized
 
-    //    private val sharedViewModel by activityViewModels<CallScreenSharedViewModel>()
     private lateinit var sharedViewModel: CallScreenSharedViewModel
     private var mLastClickTime: Long = 0
     private lateinit var action: Any
@@ -151,31 +150,22 @@ class SetupCallFragment : BaseScreenWithViewModelFragment<FragmentSetupCallBindi
 
         sharedViewModel.resultLiveData.observe(this){
             it?.let {
-                val body = (it as ResultDataResponse.ResultDataSuccess).body
-                setupCallViewModel.setCall(body)
-//                if (it.resultCode == ShareViewModelStatus.EditCall.ordinal){
-//                    val body = (it as ResultDataResponse.ResultDataSuccess).body
-//                    setupCallViewModel.setCall(body)
-//                }
-//                else if (it.resultCode == ShareViewModelStatus.SetCall.ordinal){
-//                    val body = (it as ResultDataResponse.ResultDataSuccess).body
-//                    setupCallViewModel.setCall(body)
-//                }
+                try {
+                    val body = (it as ResultDataResponse.ResultDataSuccess).body
+                    setupCallViewModel.setCall(body)
+                } catch (e: Exception) {
+                    requireActivity().onBackPressed()
+                }
             }
         }
         setDataByViewModel()
     }
-
-
     @SuppressLint("CommitPrefEdits")
     private fun setDataByViewModel() {
         if (sharedViewModel.resultLiveData.value?.resultCode == ShareViewModelStatus.SetCall.ordinal) {
             val body = (sharedViewModel.resultLiveData.value as ResultDataResponse.ResultDataSuccess).body
             setupCallViewModel.setCall(body)
         }
-//        sharedViewModel.setCall(null)
-//        sharedViewModel.setStatus(ShareViewModelStatus.Default)
-
         setupCallViewModel.callLiveData.observe(this) {
             with(binding) {
                 it?.let { thisCall ->

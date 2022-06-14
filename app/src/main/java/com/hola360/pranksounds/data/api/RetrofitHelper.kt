@@ -33,7 +33,6 @@ class RetrofitHelper : BaseRetrofitHelper() {
             }
             private set
     }
-
     init {
         initRemoteService()
     }
