@@ -70,14 +70,11 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
         setCall()
         with(binding) {
             imgAvatar.setOnClickListener {
-                if (SystemClock.elapsedRealtime() - mLastClickTime > resources.getInteger(R.integer.long_period)) {
                     if (Utils.storagePermissionGrant(requireContext())) {
                         setUpDialog()
                     } else {
                         requestStoragePermission()
                     }
-                }
-                mLastClickTime = SystemClock.elapsedRealtime()
             }
 
             tvCallerName.doAfterTextChanged {
@@ -89,11 +86,8 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             }
 
             btnAdd.setOnClickListener {
-                if (SystemClock.elapsedRealtime() - mLastClickTime > resources.getInteger(R.integer.long_period)) {
                     isSubmit = true
                     addCallScreenViewModel.addCallToLocal()
-                }
-                mLastClickTime = SystemClock.elapsedRealtime()
             }
 
             tvDefaultImg.setOnClickListener {
