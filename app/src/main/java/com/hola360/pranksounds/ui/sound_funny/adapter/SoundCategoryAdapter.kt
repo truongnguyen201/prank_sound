@@ -2,6 +2,7 @@ package com.hola360.pranksounds.ui.sound_funny.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -9,9 +10,10 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.SoundCategory
 import com.hola360.pranksounds.databinding.ItemSoundCategoryBinding
 import com.hola360.pranksounds.utils.Constants
+import com.hola360.pranksounds.utils.clickWithDebounce
 
 class SoundCategoryAdapter(
-    private val onItemClick: (soundCategory: SoundCategory) -> Unit
+    private val itemClick: ItemClick
 ) :
     RecyclerView.Adapter<SoundCategoryAdapter.CategoryViewHolder>() {
     val data = mutableListOf<SoundCategory>()
@@ -57,9 +59,13 @@ class SoundCategoryAdapter(
                     }
                 }
                 root.setOnClickListener {
-                    onItemClick(category)
+                    itemClick.itemClick(category.title, category.categoryId)
                 }
             }
         }
+    }
+
+    interface ItemClick {
+        fun itemClick(title: String, id: String)
     }
 }

@@ -5,12 +5,12 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -27,6 +27,7 @@ import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
+import com.hola360.pranksounds.utils.clickWithDebounce
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
@@ -43,7 +44,7 @@ class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCat
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private val screenHeight = Resources.getSystem().displayMetrics.heightPixels
     private var currentMorePosition = 0
-    private var playingItem = 0
+    private var mLastClickTime: Long = 0
     var isUserControl = false
     private lateinit var seekbarBinding: LayoutSeekbarThumbBinding
     private var isDestroyView = false
@@ -219,7 +220,7 @@ class DetailCategoryFragment : BaseScreenWithViewModelFragment<FragmentDetailCat
                     }
                     else -> {
                         binding.apply {
-                            swipeRefreshLayout.apply{
+                            swipeRefreshLayout.apply {
                                 isRefreshing = false
                                 isEnabled = false
                             }

@@ -129,7 +129,17 @@
         android:id="@+id/action_global_detailCategoryFragment"
         app:destination="@id/detailCategoryFragment"
         app:popUpTo="@id/soundDetailFragment"
-        app:popUpToSaveState="true" />
+        app:popUpToSaveState="true">
+        <argument
+            android:name="position"
+            android:defaultValue="1"
+            app:argType="integer" />
+        <argument
+            android:name="list"
+            android:defaultValue="@null"
+            app:argType="com.hola360.pranksounds.data.model.Sound[]"
+            app:nullable="true" />
+    </action>
 
     <fragment
         android:id="@+id/addCallScreenFragment"

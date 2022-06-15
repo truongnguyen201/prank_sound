@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:splitMotionEvents="false"
         tools:context=".ui.sound_funny.detail_category.DetailCategoryFragment">
 
         <androidx.appcompat.widget.Toolbar

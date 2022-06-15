@@ -29,7 +29,7 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
         _callLiveData.value?.avatarUrl == ""
     }
 
-    val imageClickable: LiveData<Boolean> = Transformations.map(saveCallDone) {
+    public val imageClickable: LiveData<Boolean> = Transformations.map(saveCallDone) {
         saveCallDone.value !is DataResponse.DataSuccess
     }
 

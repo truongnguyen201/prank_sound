@@ -13,10 +13,11 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/haha"
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/home_background_color"
+        android:splitMotionEvents="false"
         tools:context=".ui.sound_funny.SoundFunnyFragment">
 
         <androidx.appcompat.widget.Toolbar
@@ -54,7 +55,11 @@
         <include
             android:id="@+id/noInternetLayout"
             layout="@layout/no_internet_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             tools:layout_editor_absoluteX="@dimen/dp_0"
             tools:layout_editor_absoluteY="@dimen/dp_0" />
 
