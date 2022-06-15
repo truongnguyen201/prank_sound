@@ -55,7 +55,11 @@
         <include
             android:id="@+id/noInternetLayout"
             layout="@layout/no_internet_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             tools:layout_editor_absoluteX="@dimen/dp_0"
             tools:layout_editor_absoluteY="@dimen/dp_0" />
 
