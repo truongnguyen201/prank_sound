@@ -108,5 +108,9 @@ class PhotoAdapter(
             pickModelDataType: PickModelDataType,
             photoModel: PhotoModel
         )
+
+//        fun onClickWrongImage()
     }
+
+
 }

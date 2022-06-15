@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -142,7 +141,8 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
                 addCallScreenViewModel.setCall(null)
             }
             ShareViewModelStatus.EditCall.ordinal -> {
-                val body = (sharedViewModel.resultLiveData.value as ResultDataResponse.ResultDataSuccess).body
+                val body =
+                    (sharedViewModel.resultLiveData.value as ResultDataResponse.ResultDataSuccess).body
                 addCallScreenViewModel.setCall(body.copy())
             }
             else -> {
@@ -230,7 +230,6 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
     private fun getCropOptions(): UCrop.Options {
         val options = UCrop.Options()
         options.setCompressionQuality(70)
-
         options.setHideBottomControls(false)
         options.setFreeStyleCropEnabled(false)
         options.setStatusBarColor(ContextCompat.getColor(requireActivity(), R.color.design_color))
@@ -244,6 +243,7 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
     override fun onPickPhoto(photoModel: PhotoModel) {
         startCrop(photoModel.uri)
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
