@@ -10,7 +10,6 @@ import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.SoundCategory
 import com.hola360.pranksounds.databinding.ItemSoundCategoryBinding
 import com.hola360.pranksounds.utils.Constants
-import com.hola360.pranksounds.utils.clickWithDebounce
 
 class SoundCategoryAdapter(
     private val itemClick: ItemClick

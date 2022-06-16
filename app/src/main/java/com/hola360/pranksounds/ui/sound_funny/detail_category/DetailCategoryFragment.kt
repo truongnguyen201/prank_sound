@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.SeekBar
@@ -27,7 +26,6 @@ import com.hola360.pranksounds.ui.base.BaseScreenWithViewModelFragment
 import com.hola360.pranksounds.ui.sound_funny.detail_category.adapter.DetailCategoryAdapter
 import com.hola360.pranksounds.utils.Constants
 import com.hola360.pranksounds.utils.Utils
-import com.hola360.pranksounds.utils.clickWithDebounce
 import com.hola360.pranksounds.utils.listener.ControlPanelListener
 import com.hola360.pranksounds.utils.listener.SoundListener
 
