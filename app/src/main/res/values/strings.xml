@@ -43,6 +43,7 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="insert_success">Insert success!</string>
+    <string name="invalid_photo">Invalid photo!</string>
     <string name="caller_name">Caller name</string>
     <string name="phone_number">Phone number</string>
     <string name="empty_list">Empty list</string>
@@ -78,7 +79,7 @@
     <string name="five_seconds">5 secs</string>
     <string name="thirty_seconds">30 secs</string>
     <string name="one_minute">1 min</string>
-    <string name="confirm_message">You first click "YES" > Display over other apps and allow this permission</string>
+    <string name="confirm_message">You first click \"YES\" > Find \"Prank sound\" app and allow this permission</string>
     <string name="confirm_display_over_title">Please grant Display over other apps!</string>
 
 

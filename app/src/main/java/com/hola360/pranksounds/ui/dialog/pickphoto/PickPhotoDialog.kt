@@ -1,10 +1,11 @@
 package com.hola360.pranksounds.ui.dialog.pickphoto
 
-import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +22,7 @@ import com.hola360.pranksounds.ui.dialog.base.BaseDialog
 import com.hola360.pranksounds.ui.dialog.pickphoto.adapter.PhotoAdapter
 import com.hola360.pranksounds.ui.dialog.pickphoto.data.PickModelDataType
 import com.hola360.pranksounds.utils.Utils
+import java.io.InputStream
 
 @Suppress("DEPRECATION")
 class PickPhotoDialog() : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.ListenClickItem {
@@ -106,8 +108,13 @@ class PickPhotoDialog() : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.Lis
             viewModel.loadAlbumDetail(photoModel.albumId)
             viewModel.albumName = photoModel.albumName
         } else {
-            dismiss()
-            onClickListener.onPickPhoto(photoModel)
+            if (checkImage(photoModel.uri)) {
+                dismiss()
+                onClickListener.onPickPhoto(photoModel)
+            }
+            else {
+                Toast.makeText(requireActivity(), getString(R.string.invalid_photo), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -132,5 +139,21 @@ class PickPhotoDialog() : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.Lis
 
     interface OnClickListener {
         fun onPickPhoto(photoModel: PhotoModel)
+    }
+    private fun checkImage(uri: Uri): Boolean {
+        val input: InputStream? = requireContext().contentResolver.openInputStream(uri)
+
+        val onlyBoundsOptions = BitmapFactory.Options()
+        onlyBoundsOptions.inJustDecodeBounds = true
+        onlyBoundsOptions.inDither = true
+
+        onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888
+
+        BitmapFactory.decodeStream(input, null, onlyBoundsOptions)
+        input?.close()
+        if (onlyBoundsOptions.outWidth == -1 || onlyBoundsOptions.outHeight == -1) {
+            return false
+        }
+        return true
     }
 }
