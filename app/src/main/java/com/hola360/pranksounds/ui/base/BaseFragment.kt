@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 
 @Suppress("SENSELESS_COMPARISON")
 abstract class BaseFragment<V : ViewDataBinding> : Fragment() {
+    abstract val mainActivity: Any
     protected lateinit var binding: V
     protected val isBindingInitialized get() = this::binding.isInitialized
     private var mView: View? = null
