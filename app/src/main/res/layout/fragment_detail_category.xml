@@ -242,7 +242,9 @@
             android:layout_height="0dp"
             android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:layout_editor_absoluteX="@dimen/dp_0"
+            tools:layout_editor_absoluteY="@dimen/dp_0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
