@@ -118,9 +118,12 @@ class AddCallScreenFragment : BaseScreenWithViewModelFragment<FragmentAddCallScr
             it?.let {
                 if (it is DataResponse.DataSuccess) {
                     val body = it.body
+                    if (sharedViewModel.resultLiveData.value?.resultCode == ShareViewModelStatus.EditCall.ordinal)
+                        mainActivity.showToast(getString(R.string.update_success))
+                    else
+                        mainActivity.showToast(getString(R.string.insert_success))
                     sharedViewModel.setResultData(ShareViewModelStatus.SetCall.ordinal, body)
                     sharedViewModel.setBackToMyCaller(true)
-                    mainActivity.showToast(getString(R.string.insert_success))
                     requireActivity().onBackPressed()
                 }
             }

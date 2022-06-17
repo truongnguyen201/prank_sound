@@ -25,6 +25,10 @@ class AddCallScreenViewModel(app: Application) : ViewModel() {
         _callLiveData.value?.phone.isNullOrEmpty()
     }
 
+    val isLocal: LiveData<Boolean> = Transformations.map(_callLiveData){
+        _callLiveData.value?.isLocal
+    }
+
     val isDefault: LiveData<Boolean> = Transformations.map(_callLiveData) {
         _callLiveData.value?.avatarUrl == ""
     }

@@ -94,7 +94,6 @@ class CallerFragment : BaseScreenWithViewModelFragment<FragmentCallerBinding>(){
     }
 
     private fun updateShareViewModel(position: Int?) {
-        Log.e("----", "updateShareViewModel: $position", )
         when (position) {
             0 -> sharedViewModel.setBackToMyCaller(false)
             1 -> sharedViewModel.setBackToMyCaller(true)

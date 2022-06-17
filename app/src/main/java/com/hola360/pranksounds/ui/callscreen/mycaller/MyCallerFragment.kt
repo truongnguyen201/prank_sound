@@ -8,13 +8,17 @@ import com.github.ybq.android.spinkit.style.Circle
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.api.response.DataResponse
 import com.hola360.pranksounds.data.api.response.LoadingStatus
+import com.hola360.pranksounds.data.model.Call
 import com.hola360.pranksounds.databinding.FragmentMyCallerBinding
+import com.hola360.pranksounds.ui.callscreen.CallScreenSharedViewModel
 import com.hola360.pranksounds.ui.callscreen.CallerFragmentDirections
 import com.hola360.pranksounds.ui.callscreen.base.CallListBaseFragment
+import com.hola360.pranksounds.ui.callscreen.data.ShareViewModelStatus
 
 class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
     private lateinit var action: Any
     private lateinit var myCallerViewModel: MyCallerViewModel
+    private lateinit var sharedViewModel: CallScreenSharedViewModel
 
     override fun getLayout(): Int {
         return R.layout.fragment_my_caller
@@ -28,6 +32,7 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
             rcvCall.adapter = callAdapter
             rcvCall.setHasFixedSize(true)
             btnAdd.setOnClickListener {
+                sharedViewModel.setResultData(ShareViewModelStatus.AddCall.ordinal, Call())
                 action = CallerFragmentDirections.actionGlobalAddCallScreenFragment().setIsAdd(true)
                 findNavController().navigate(action as NavDirections)
             }
@@ -35,6 +40,7 @@ class MyCallerFragment : CallListBaseFragment<FragmentMyCallerBinding>() {
     }
 
     override fun initViewModel() {
+        sharedViewModel = CallScreenSharedViewModel.getInstance(mainActivity.application)
         val factory = MyCallerViewModel.Factory(requireActivity().application)
         myCallerViewModel = ViewModelProvider(this, factory)[MyCallerViewModel::class.java]
         myCallerViewModel.phoneBookLiveData.observe(this) {

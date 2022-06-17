@@ -141,7 +141,13 @@ class PickPhotoDialog() : BaseDialog<DialogPickPhotoBinding>(), PhotoAdapter.Lis
         fun onPickPhoto(photoModel: PhotoModel)
     }
     private fun checkImage(uri: Uri): Boolean {
-        val input: InputStream? = requireContext().contentResolver.openInputStream(uri)
+        var input: InputStream?
+        try {
+            input = requireContext().contentResolver.openInputStream(uri)
+        } catch (ex: Exception) {
+            return false
+        }
+
 
         val onlyBoundsOptions = BitmapFactory.Options()
         onlyBoundsOptions.inJustDecodeBounds = true

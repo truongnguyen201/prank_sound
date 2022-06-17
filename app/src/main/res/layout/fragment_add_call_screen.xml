@@ -114,7 +114,7 @@
                     android:layout_marginTop="@dimen/dp_32"
                     android:backgroundTint="@{viewModel.isEmpty()?@color/disable_button:@color/enable_button}"
                     android:enabled="@{!viewModel.isEmpty()}"
-                    android:text="@{viewModel.isUpdate()?@string/update:@string/add}"
+                    android:text="@{viewModel.isUpdate()? (viewModel.isLocal() ? @string/update : @string/add_to_my_caller) : @string/add}"
                     android:textAllCaps="false"
                     android:textAppearance="?textAppearanceBody1"
                     android:textColor="@color/white"
