@@ -187,6 +187,34 @@
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/menu/call_screen_menu.xml" value="0.2449074074074074" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/menu/setup_call_menu.xml" value="0.2449074074074074" />
         <entry key="..\:/Users/khang/AndroidStudioProjects/Work/pranksounds/app/src/main/res/menu/sound_item_pop_up_menu.xml" value="0.33055555555555555" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/banner_no_internet.xml" value="0.2885" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/bg_action_home_broken.xml" value="0.2885" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/bg_retry_button.xml" value="0.35" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/thumb_1.xml" value="0.2885" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/thumb_2.xml" value="0.2885" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/thumb_3.xml" value="0.2885" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/thumb_5.xml" value="0.2885" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/thumb_7.xml" value="0.2885" />
+        <entry key="..\:/pranksounds/app/src/main/res/drawable/thumb_8.xml" value="0.2885" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/activity_calling.xml" value="0.371875" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/activity_main.xml" value="0.371875" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/activity_splash.xml" value="0.371875" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/app_bar_main.xml" value="0.371875" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/bottom_control_panel.xml" value="0.371875" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/fragment_add_call_screen.xml" value="0.1925925925925926" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/fragment_broken_screen.xml" value="0.359375" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/fragment_caller.xml" value="0.359375" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/fragment_detail_category.xml" value="0.1" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/fragment_my_caller.xml" value="0.1" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/fragment_sound_detail.xml" value="0.359375" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/fragment_sound_funny.xml" value="0.31443298969072164" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/item_panel.xml" value="0.10185185185185185" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/item_photo.xml" value="0.10185185185185185" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/item_popup_action.xml" value="0.10185185185185185" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/item_prank.xml" value="0.10185185185185185" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/item_sound_detail.xml" value="0.371875" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/item_trimmer.xml" value="0.10185185185185185" />
+        <entry key="..\:/pranksounds/app/src/main/res/layout/no_internet_layout.xml" value="0.359375" />
         <entry key="app/src/main/res/drawable-v24/bg_action_home_hair_cutting.xml" value="0.18" />
         <entry key="app/src/main/res/drawable/banner_no_internet.xml" value="0.1605" />
         <entry key="app/src/main/res/drawable/bg_action_home_broken.xml" value="0.158" />

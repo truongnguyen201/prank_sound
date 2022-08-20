@@ -3,8 +3,10 @@ package com.hola360.pranksounds.utils
 import com.hola360.pranksounds.R
 import com.hola360.pranksounds.data.model.Prank
 import com.hola360.pranksounds.data.model.SoundCategory
+import com.hola360.pranksounds.data.model.Taser
 
 object Constants {
+    const val PRANK_OPTION_NUMBER_COLUMNS = 2
     const val PREFERENCE_NAME = "PRANK_SOUNDS"
     const val ALARM_SERVICE_ACTION = "com.hola360.pranksounds.ACTION_CALL"
     const val CHANNEL_ID = 101
@@ -21,6 +23,12 @@ object Constants {
         Prank(4, R.drawable.ic_sound_funny, R.drawable.bg_action_home_sound_funny, "Sound Funny"),
         Prank(5, R.drawable.ic_taser_prank, R.drawable.bg_action_home_broken_taser, "Taser Prank"),
         Prank(6, R.drawable.ic_setting, R.drawable.bg_action_home_setting, "Setting")
+    )
+    val TASER_LIST = listOf(
+        Taser(1, R.drawable.taser_prank_1, R.drawable.taser_prank_1),
+        Taser(2, R.drawable.taser_prank_1, R.drawable.taser_prank_1),
+        Taser(3, R.drawable.taser_prank_1, R.drawable.taser_prank_1),
+        Taser(4, R.drawable.taser_prank_1, R.drawable.taser_prank_1)
     )
 
     //images of banner in home screen

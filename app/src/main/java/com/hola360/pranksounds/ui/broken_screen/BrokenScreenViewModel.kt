@@ -12,7 +12,6 @@ class BrokenScreenViewModel(app: Application) : ViewModel() {
             if(modelClass.isAssignableFrom(BrokenScreenViewModel::class.java)){
                 return BrokenScreenViewModel(app) as T
             }
-
             throw IllegalArgumentException("Unknown ViewModel Class")
         }
     }
